@@ -1,1 +1,1 @@
-include ':app', ':kotlintest'
+include ':crazy'

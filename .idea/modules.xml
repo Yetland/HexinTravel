@@ -3,8 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HexinTravel.iml" filepath="$PROJECT_DIR$/HexinTravel.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/kotlintest/kotlintest.iml" filepath="$PROJECT_DIR$/kotlintest/kotlintest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/crazy/kotlintest.iml" filepath="$PROJECT_DIR$/crazy/kotlintest.iml" />
     </modules>
   </component>
 </project>
