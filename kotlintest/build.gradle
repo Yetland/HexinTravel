@@ -2,14 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 android {
-    signingConfigs {
-        config {
-            storeFile file('D:/WorkSpace/AndroidStudio/HexinTravel/kotlintest/asp3w0871.keystore')
-            storePassword 'aspire@2016'
-            keyAlias 'asp3w0871.keystore'
-            keyPassword '0871aspire@2016'
-        }
-    }
+    
     compileSdkVersion 26
     buildToolsVersion "26.0.0"
     defaultConfig {
@@ -22,15 +15,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-        debug {
-            signingConfig signingConfigs.config
-        }
-    }
+   
 }
 
 dependencies {
