@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.ynchinamobile.hexinlvxing.bundle.travel.TravelActivity">
+    tools:context="com.ynchinamobile.hexinlvxing.com.ynchinamobile.crazy.bundle.travel.TravelActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_travel"

@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.ynchinamobile.hexinlvxing.bundle.user.UserDataActivity">
+    tools:context="com.ynchinamobile.hexinlvxing.com.ynchinamobile.crazy.bundle.user.UserDataActivity">
 
-    <com.ynchinamobile.hexinlvxing.core.base.BaseRecyclerView
+    <com.yetland.crazy.core.base.BaseRecyclerView
         android:id="@+id/baseRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ynchinamobile.hexinlvxing.bundle.welcome.WelcomeActivity">
+    tools:context="com.ynchinamobile.hexinlvxing.com.ynchinamobile.crazy.bundle.welcome.WelcomeActivity">
     <ImageView
         android:id="@+id/iv_welcome"
         android:src="@mipmap/welcome_bg"

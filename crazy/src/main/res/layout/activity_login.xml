@@ -5,13 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.ynchinamobile.hexinlvxing.LoginActivity">
-
-    <Button
-        android:id="@+id/bt_quick_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="quickLogin" />
+    tools:context="com.ynchinamobile.hexinlvxing.com.ynchinamobile.crazy.bundle.user.login.LoginActivity">
 
     <EditText
         android:id="@+id/et_phone"
