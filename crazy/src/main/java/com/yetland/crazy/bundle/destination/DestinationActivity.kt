@@ -6,10 +6,8 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.LinearLayout
 import com.ynchinamobile.hexinlvxing.R
-import com.yetland.crazy.bundle.destination.bean.Car
 import com.yetland.crazy.core.base.BaseMultiTypeAdapter
-import com.yetland.crazy.bundle.destination.bean.Dog
-import com.yetland.crazy.bundle.destination.bean.Visitable
+import com.yetland.crazy.core.entity.ActivityInfo
 
 class DestinationActivity : AppCompatActivity() {
 
@@ -18,22 +16,10 @@ class DestinationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_destination)
 
         val rvList = findViewById<RecyclerView>(R.id.rv_destination)
-        val list: ArrayList<Visitable> = ArrayList()
-        val dog: Dog = Dog("Dog1")
-        val car: Car = Car("Car1")
-        list.add(dog)
-        list.add(car)
-        list.add(dog)
-        list.add(car)
-        list.add(car)
-        list.add(dog)
-        list.add(dog)
-        list.add(dog)
-        list.add(car)
-        list.add(dog)
+        val list: ArrayList<ActivityInfo> = ArrayList()
 
         val adapter = BaseMultiTypeAdapter()
-        adapter.mList = list
+//        adapter.mList = list
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayout.VERTICAL
         rvList.layoutManager = layoutManager

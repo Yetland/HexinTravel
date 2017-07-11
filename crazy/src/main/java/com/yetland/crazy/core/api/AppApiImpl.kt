@@ -56,11 +56,11 @@ class AppApiImpl : AppApi {
         }
     }
 
-    override fun getActivities(include: String): Observable<Data<ActivityInfo>> {
+    override fun getActivities(include: String, skip: Int, limit: Int): Observable<Data<ActivityInfo>> {
         Observable.empty<Any>().subscribe()
         return Observable.create { subscriber: Subscriber<in Data<ActivityInfo>> ->
             try {
-                val response = RestApi().appService.getActivity(include).execute()
+                val response = RestApi().appService.getActivity(include, skip, limit).execute()
 
                 if (response.isSuccessful) {
                     subscriber.onNext(response.body())

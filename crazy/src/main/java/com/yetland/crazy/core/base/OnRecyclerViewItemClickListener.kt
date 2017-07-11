@@ -9,7 +9,7 @@ interface OnRecyclerViewItemClickListener{
     fun onRecyclerViewItemClick(position: Int)
 }
 
-interface OnRecyclerViewListener {
+interface RecyclerViewListener {
     fun onRefresh()
     fun onLoadMore()
 }

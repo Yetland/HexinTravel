@@ -1,5 +1,6 @@
 package com.yetland.crazy.core.api
 
+import com.yetland.crazy.core.constant.DEFAULT_LIMIT
 import com.yetland.crazy.core.entity.ActivityInfo
 import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.entity.Data
@@ -21,9 +22,9 @@ interface AppService {
     fun login(@Query("username") username: String, @Query("password") password: String): Call<User>
 
     @GET("users")
-    fun register(@Body user: User) : Call<BaseEntity>
+    fun register(@Body user: User): Call<BaseEntity>
 
     @GET("classes/Activity")
-    fun getActivity(@Query("include") creator: String): Call<Data<ActivityInfo>>
+    fun getActivity(@Query("include") creator: String, @Query("skip") skip: Int, @Query("limit") limit: Int = DEFAULT_LIMIT): Call<Data<ActivityInfo>>
 
 }

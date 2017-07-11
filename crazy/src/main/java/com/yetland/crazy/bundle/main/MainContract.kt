@@ -5,6 +5,7 @@ import com.yetland.crazy.core.base.BaseModel
 import com.yetland.crazy.core.base.BasePresenter
 import com.yetland.crazy.core.base.BaseView
 import com.yetland.crazy.core.base.RxSchedulers
+import com.yetland.crazy.core.constant.DEFAULT_LIMIT
 import com.yetland.crazy.core.entity.ActivityInfo
 import com.yetland.crazy.core.entity.Data
 import rx.Observable
@@ -16,6 +17,7 @@ import rx.Observable
  */
 interface MainContract {
     interface View : BaseView {
+        fun getActivities(skip: Int)
         fun onLoading(msg: String)
         fun onError(msg: String)
         fun onComplete(activityModel: Data<ActivityInfo>)
@@ -23,12 +25,12 @@ interface MainContract {
 
     interface Model : BaseModel {
         // 获取首页数据
-        fun getActivities(): Observable<Data<ActivityInfo>>
+        fun getActivities(skip: Int): Observable<Data<ActivityInfo>>
     }
 
     abstract class Presenter(model: Model, view: View) : BasePresenter<Model, View>(model, view) {
 
-        abstract fun getActivityModel()
+        abstract fun getActivities(skip: Int)
 
         override fun onStart() {
 
@@ -36,9 +38,9 @@ interface MainContract {
     }
 }
 
-class MainPresent(model: MainModel, view: MainContract.View) : MainContract.Presenter(model,view) {
-    override fun getActivityModel() {
-        rxManager.add(mModel.getActivities().subscribe({
+class MainPresent(model: MainModel, view: MainContract.View) : MainContract.Presenter(model, view) {
+    override fun getActivities(skip: Int) {
+        rxManager.add(mModel.getActivities(skip).subscribe({
             activityInfoData ->
             mView.onComplete(activityInfoData)
         })
@@ -49,8 +51,8 @@ class MainPresent(model: MainModel, view: MainContract.View) : MainContract.Pres
 
 }
 
-class MainModel: MainContract.Model {
-    override fun getActivities(): Observable<Data<ActivityInfo>> {
-        return AppApiImpl().getActivities("creator").compose(RxSchedulers.new_thread())
+class MainModel : MainContract.Model {
+    override fun getActivities(skip: Int): Observable<Data<ActivityInfo>> {
+        return AppApiImpl().getActivities("creator", skip * DEFAULT_LIMIT, DEFAULT_LIMIT).compose(RxSchedulers.new_thread())
     }
 }

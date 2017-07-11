@@ -5,24 +5,22 @@ import android.view.View
 import android.view.ViewGroup
 import com.yetland.crazy.bundle.destination.bean.TypeFactory
 import com.yetland.crazy.bundle.destination.bean.TypeFactoryForList
-import com.yetland.crazy.bundle.destination.bean.Visitable
-import com.yetland.crazy.core.base.BaseAdapter
-import com.yetland.crazy.core.base.BaseViewHolder
+import com.yetland.crazy.core.entity.BaseEntity
 
 /**
  * @Name:           BaseMultiTypeAdapter
  * @Author:         yeliang
  * @Date:           2017/7/7
  */
-class BaseMultiTypeAdapter : BaseAdapter<Visitable>() {
+class BaseMultiTypeAdapter : BaseAdapter<BaseEntity>() {
 
     var typeFactory: TypeFactory = TypeFactoryForList()
 
-    override fun onBindViewHolder(holder: BaseViewHolder<Visitable>?, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder<BaseEntity>?, position: Int) {
         holder?.setData(mList[position], position, this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): BaseViewHolder<Visitable> {
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): BaseViewHolder<BaseEntity> {
         val view: View = LayoutInflater.from(parent?.context).inflate(viewType, parent, false)
 
         return typeFactory.createViewHolder(viewType, view)

@@ -11,10 +11,10 @@ import rx.Observable
  * @Author:         yeliang
  * @Date:           2017/7/6
  */
-interface AppApi{
+interface AppApi {
 
-    fun login(username : String,password :String) : Observable<User>
-    fun register(user : User) : Observable<BaseEntity>
+    fun login(username: String, password: String): Observable<User>
+    fun register(user: User): Observable<BaseEntity>
 
-    fun getActivities(include : String) : Observable<Data<ActivityInfo>>
+    fun getActivities(include: String, skip: Int, limit: Int): Observable<Data<ActivityInfo>>
 }

@@ -1,34 +1,20 @@
 package com.yetland.crazy.bundle.user
 
-import android.annotation.SuppressLint
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
-import android.util.Log
 import com.ynchinamobile.hexinlvxing.R
-import com.yetland.crazy.bundle.destination.bean.Car
-import com.yetland.crazy.bundle.destination.bean.Dog
-import com.yetland.crazy.bundle.destination.bean.Footer
-import com.yetland.crazy.bundle.destination.bean.Visitable
-import com.yetland.crazy.core.base.BaseAdapter
 import com.yetland.crazy.core.base.BaseMultiTypeAdapter
-import com.yetland.crazy.core.base.BaseRecyclerView
-import com.yetland.crazy.core.base.OnRecyclerViewListener
-import kotlinx.android.synthetic.main.activity_user_data.*
-import kotlinx.android.synthetic.main.activity_user_data.view.*
+import com.yetland.crazy.core.entity.BaseEntity
 
 class UserDataActivity : AppCompatActivity() {
 
     val TAG = "UserDataActivity"
     var adapter = BaseMultiTypeAdapter()
-    var list = ArrayList<Visitable>()
+    var list = ArrayList<BaseEntity>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_data)
-        val baseRecyclerView = findViewById <BaseRecyclerView<String>>(R.id.baseRecyclerView)
-
-        val list: ArrayList<Visitable> = ArrayList()
+        /*val baseRecyclerView = findViewById <BaseRecyclerView>(R.id.baseRecyclerView)
 
         var i = 0
         val j = 10
@@ -45,13 +31,12 @@ class UserDataActivity : AppCompatActivity() {
         baseRecyclerView.adapter = adapter
         baseRecyclerView.recyclerView.adapter = adapter
         baseRecyclerView.recyclerViewListener = refreshListener
-        baseRecyclerView.onComplete()
+        baseRecyclerView.onComplete()*/
     }
-
-    var refreshListener = (object : OnRecyclerViewListener {
+/*
+    var refreshListener = (object : RecyclerViewListener {
 
         override fun onRefresh() {
-            list = adapter.mList
             Log.e(TAG, "onRefresh,list.size = ${list.size}")
             val i = list.size
             if (i % 2 == 0) {
@@ -64,7 +49,6 @@ class UserDataActivity : AppCompatActivity() {
         }
 
         override fun onLoadMore() {
-            list = adapter.mList
             Log.e(TAG, "onLoadMore,list.size = ${list.size}")
             list.add(Footer())
             adapter.mList = list
@@ -90,7 +74,6 @@ class UserDataActivity : AppCompatActivity() {
 
     fun onLoadMoreComplete() {
         Log.e(TAG, "onLoadMoreComplete,list.size = ${list.size}")
-        list = adapter.mList
         list.removeAt(list.size - 1)
         var i = list.size
         val j = i + 9
@@ -104,7 +87,7 @@ class UserDataActivity : AppCompatActivity() {
         }
         adapter.mList = list
         baseRecyclerView.onComplete()
-    }
+    }*/
 
     val ON_REFRESH_COMPLETE = 1
     val ON_LOAD_MORE_COMPLETE = 2
