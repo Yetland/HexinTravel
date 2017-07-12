@@ -15,10 +15,10 @@ import retrofit2.http.*
 interface AppService {
 
     @GET("login")
-    fun login(@Query("username") username: String, @Query("password") password: String): Call<User>
+    fun login(@Query("username") username: String, @Query("password") password: String): Call<_User>
 
     @POST("users")
-    fun register(@Body user: User): Call<BaseResult>
+    fun register(@Body user: _User): Call<BaseResult>
 
     @GET("classes/Activity")
     fun getActivity(@Query("include") creator: String, @Query("skip") skip: Int, @Query("limit") limit: Int = DEFAULT_LIMIT): Call<Data<ActivityInfo>>
@@ -28,4 +28,7 @@ interface AppService {
 
     @POST("classes/Follow")
     fun follow(@Query("followUserId") followUserId: String, @Query("followerUserId") followerUserId: String): Call<BaseEntity>
+
+    @GET("classes/Comment")
+    fun getComment(@Query("include") include: String, @Query("activity") activityPoint: Point, @Query("skip") skip: Int, @Query("limit") limit: Int = DEFAULT_LIMIT): Call<Data<Comment>>
 }

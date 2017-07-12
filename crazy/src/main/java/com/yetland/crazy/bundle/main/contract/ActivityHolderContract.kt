@@ -1,4 +1,4 @@
-package com.yetland.crazy.bundle.main.holder
+package com.yetland.crazy.bundle.main.contract
 
 import com.yetland.crazy.core.api.AppApiImpl
 import com.yetland.crazy.core.base.BaseModel

@@ -3,15 +3,13 @@ package com.yetland.crazy.bundle.user.register
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.text.TextUtils
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import com.yetland.crazy.bundle.main.MainActivity
 import com.yetland.crazy.bundle.user.login.LoginActivity
 import com.yetland.crazy.core.base.BaseActivity
-import com.yetland.crazy.core.entity.User
+import com.yetland.crazy.core.entity._User
 import com.yetland.crazy.core.utils.ActivityManager
 import com.yetland.crazy.core.utils.FileUtil
 import com.yetland.crazy.core.utils.makeShortToast
@@ -45,7 +43,7 @@ class RegisterActivity : BaseActivity(), RegisterContract.View, View.OnClickList
         }
     }
 
-    override fun register(user: User) {
+    override fun register(user: _User) {
         presenter.register(user)
     }
 
@@ -64,7 +62,7 @@ class RegisterActivity : BaseActivity(), RegisterContract.View, View.OnClickList
     lateinit var etUserName: EditText
     lateinit var etPassword: EditText
     lateinit var etEmail: EditText
-    val user = User()
+    val user = _User()
 
     val model = RegisterModel()
     val presenter = RegisterPresenter(model, this)

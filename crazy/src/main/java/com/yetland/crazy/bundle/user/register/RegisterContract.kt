@@ -6,7 +6,7 @@ import com.yetland.crazy.core.base.BasePresenter
 import com.yetland.crazy.core.base.BaseView
 import com.yetland.crazy.core.base.RxSchedulers
 import com.yetland.crazy.core.entity.BaseResult
-import com.yetland.crazy.core.entity.User
+import com.yetland.crazy.core.entity._User
 import rx.Observable
 
 /**
@@ -17,23 +17,23 @@ import rx.Observable
 class RegisterContract {
 
     interface View : BaseView {
-        fun register(user: User)
+        fun register(user: _User)
         fun success()
         fun failed(msg: String)
     }
 
     interface Model : BaseModel {
-        fun register(user: User): Observable<BaseResult>
+        fun register(user: _User): Observable<BaseResult>
     }
 
     abstract class Presenter constructor(model: Model, view: View) :
             BasePresenter<Model, View>(model, view) {
-        abstract fun register(user: User)
+        abstract fun register(user: _User)
     }
 }
 
 class RegisterModel : RegisterContract.Model {
-    override fun register(user: User): Observable<BaseResult> {
+    override fun register(user: _User): Observable<BaseResult> {
         return AppApiImpl().register(user).compose(RxSchedulers.new_thread())
     }
 }
@@ -44,7 +44,7 @@ class RegisterPresenter constructor(registerModel: RegisterModel, view: Register
 
     }
 
-    override fun register(user: User) {
+    override fun register(user: _User) {
         rxManager.add(mModel.register(user).subscribe({
             mView.success()
         }, {

@@ -4,11 +4,9 @@ import android.content.Context
 import android.text.TextUtils
 import android.util.Log
 import java.io.*
-import android.R.id.edit
-import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.yetland.crazy.core.constant.FILE_KEY_USER
-import com.yetland.crazy.core.entity.User
+import com.yetland.crazy.core.entity._User
 
 
 /**
@@ -24,20 +22,20 @@ class FileUtil {
         editor.apply()
     }
 
-    fun saveUserInfo(context: Context, user: User) {
+    fun saveUserInfo(context: Context, user: _User) {
         val clientPreferences = context.getSharedPreferences(FILE_KEY_USER, 0)
         val prefEditor = clientPreferences.edit()
         prefEditor.putString(FILE_KEY_USER, Gson().toJson(user))
         prefEditor.apply()
     }
 
-    fun getUserInfo(context: Context): User {
+    fun getUserInfo(context: Context): _User {
         val clientPreferences = context.getSharedPreferences(FILE_KEY_USER, 0)
         val userString = clientPreferences.getString(FILE_KEY_USER, "")
         if (userString.isEmpty()) {
-            return User()
+            return _User()
         }
-        return Gson().fromJson(userString, User::class.java)
+        return Gson().fromJson(userString, _User::class.java)
     }
 
     /**

@@ -12,4 +12,5 @@ interface OnRecyclerViewItemClickListener{
 interface RecyclerViewListener {
     fun onRefresh()
     fun onLoadMore()
+    fun onErrorClick()
 }

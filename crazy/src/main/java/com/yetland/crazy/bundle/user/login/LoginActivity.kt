@@ -9,7 +9,7 @@ import android.widget.EditText
 import com.yetland.crazy.bundle.user.register.RegisterActivity
 import com.yetland.crazy.bundle.main.MainActivity
 import com.yetland.crazy.core.base.BaseActivity
-import com.yetland.crazy.core.entity.User
+import com.yetland.crazy.core.entity._User
 import com.yetland.crazy.core.utils.FileUtil
 import com.yetland.crazy.core.utils.isNetworkAvailable
 import com.yetland.crazy.core.utils.makeShortToast
@@ -75,7 +75,7 @@ class LoginActivity : BaseActivity(), LoginContract.View {
         loginPresenter.login(username, password)
     }
 
-    override fun loginSuccess(user: User) {
+    override fun loginSuccess(user: _User) {
         FileUtil().saveUserInfo(activity, user)
         val intent = Intent(applicationContext, MainActivity::class.java)
         startActivity(intent)

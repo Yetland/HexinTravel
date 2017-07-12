@@ -3,7 +3,6 @@ package com.yetland.crazy.core.base
 import android.app.Activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.MenuItem
 import com.yetland.crazy.core.utils.ActivityManager
 
 /**
@@ -24,5 +23,10 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         ActivityManager().removeActivity(this)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return super.onSupportNavigateUp()
     }
 }

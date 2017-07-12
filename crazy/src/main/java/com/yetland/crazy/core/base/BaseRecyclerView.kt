@@ -6,7 +6,6 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -100,7 +99,10 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
                 }
             }))
         }
+        errorImage.setOnClickListener { View.OnClickListener { recyclerViewListener?.onErrorClick() } }
+
         recyclerView.layoutManager = layoutManager
+
     }
 
     fun onComplete(list: ArrayList<BaseEntity>, noMoreData: Boolean = false) {

@@ -8,8 +8,6 @@ import android.os.Message
 import com.yetland.crazy.bundle.main.MainActivity
 import com.yetland.crazy.bundle.user.login.LoginActivity
 import com.yetland.crazy.core.base.BaseActivity
-import com.yetland.crazy.core.constant.FILE_KEY_USER
-import com.yetland.crazy.core.constant.FILE_NAME_USER
 import com.yetland.crazy.core.utils.FileUtil
 import com.ynchinamobile.hexinlvxing.R
 

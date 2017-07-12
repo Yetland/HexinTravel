@@ -5,7 +5,7 @@ import com.yetland.crazy.core.base.BaseModel
 import com.yetland.crazy.core.base.BasePresenter
 import com.yetland.crazy.core.base.BaseView
 import com.yetland.crazy.core.base.RxSchedulers
-import com.yetland.crazy.core.entity.User
+import com.yetland.crazy.core.entity._User
 import rx.Observable
 
 /**
@@ -14,13 +14,13 @@ import rx.Observable
 interface LoginContract {
     interface View : BaseView {
         fun login(username: String, password: String)
-        fun loginSuccess(user: User)
+        fun loginSuccess(user: _User)
         fun loginFailed(msg: String)
         fun goToRegister()
     }
 
     interface Model : BaseModel {
-        fun login(username: String, password: String): Observable<User>
+        fun login(username: String, password: String): Observable<_User>
     }
 
     abstract class Presenter constructor(model: Model, view: View) : BasePresenter<Model, View>(model, view) {
@@ -46,7 +46,7 @@ class LoginPresenter(model: LoginContract.Model, view: LoginContract.View) : Log
 }
 
 class LoginModel : LoginContract.Model {
-    override fun login(username: String, password: String): Observable<User> {
+    override fun login(username: String, password: String): Observable<_User> {
         return AppApiImpl().login(username, password).compose(RxSchedulers.new_thread())
     }
 

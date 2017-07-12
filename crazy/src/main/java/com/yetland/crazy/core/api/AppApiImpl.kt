@@ -1,10 +1,10 @@
 package com.yetland.crazy.core.api
 
 import com.yetland.crazy.core.entity.*
+import okhttp3.RequestBody
 import rx.Observable
 import rx.Subscriber
 import java.io.IOException
-import okhttp3.RequestBody
 
 /**
  * @Name:           AppApiImpl
@@ -12,6 +12,28 @@ import okhttp3.RequestBody
  * @Date:           2017/7/6
  */
 class AppApiImpl : AppApi {
+    override fun getComment(activityPoint: Point, skip: Int, limit: Int): Observable<Data<Comment>> {
+        Observable.empty<Comment>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in Data<Comment>> ->
+            try {
+                val response = RestApi().appService.getComment("activityId,creator", activityPoint, skip, limit).execute()
+                if (response.isSuccessful) {
+                    subscriber.onNext(response.body())
+                } else {
+                    subscriber.onError(Throwable("获取评论失败"))
+                }
+                subscriber.onCompleted()
+
+            } catch (e: IOException) {
+                e.printStackTrace()
+                subscriber.onError(Throwable("获取评论失败"))
+                subscriber.onCompleted()
+            }
+
+        })
+    }
+
     override fun followUser(followUserId: String, followerUserId: String): Observable<BaseEntity> {
         Observable.empty<BaseEntity>().subscribe()
         return Observable.create({
@@ -55,8 +77,8 @@ class AppApiImpl : AppApi {
         })
     }
 
-    override fun register(user: User): Observable<BaseResult> {
-        Observable.empty<User>().subscribe()
+    override fun register(user: _User): Observable<BaseResult> {
+        Observable.empty<_User>().subscribe()
         return Observable.create { subscriber: Subscriber<in BaseResult> ->
             try {
                 val response = RestApi().appService.register(user).execute()
@@ -75,9 +97,9 @@ class AppApiImpl : AppApi {
 
     }
 
-    override fun login(username: String, password: String): Observable<User> {
+    override fun login(username: String, password: String): Observable<_User> {
         Observable.empty<Any>().subscribe()
-        return Observable.create { subscriber: Subscriber<in User> ->
+        return Observable.create { subscriber: Subscriber<in _User> ->
             try {
                 val response = RestApi().appService.login(username, password).execute()
 

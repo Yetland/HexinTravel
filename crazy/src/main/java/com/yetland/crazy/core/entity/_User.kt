@@ -5,7 +5,7 @@ import com.yetland.crazy.bundle.destination.bean.TypeFactory
 /**
  * Created by yeliang on 2017/7/10.
  */
-class User : BaseEntity() {
+class _User : BaseEntity() {
     override fun type(typeFactory: TypeFactory): Int {
         // TODO
         return 1
@@ -14,8 +14,8 @@ class User : BaseEntity() {
     var avatarUrl: String? = null
     var sessionToken: String? = null
     var authData: String? = null
-    var username: String? = null
-    var password: String? = null
+    var username: String? = ""
+    var password: String? = ""
     var mobilePhoneNumber: String? = null
     var mobilePhoneVerified: Boolean = false
     var email: String? = null

@@ -1,18 +1,43 @@
 package com.yetland.crazy.bundle.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.yetland.crazy.bundle.destination.bean.Footer
-import com.yetland.crazy.core.base.*
+import com.yetland.crazy.bundle.main.contract.MainContract
+import com.yetland.crazy.bundle.main.contract.MainModel
+import com.yetland.crazy.bundle.main.contract.MainPresent
+import com.yetland.crazy.core.base.BaseActivity
+import com.yetland.crazy.core.base.BaseRecyclerView
+import com.yetland.crazy.core.base.RecyclerViewListener
 import com.yetland.crazy.core.entity.ActivityInfo
 import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.entity.Data
 import com.ynchinamobile.hexinlvxing.R
 
-class MainActivity : BaseActivity(), MainContract.View {
+class MainActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
+
+    override fun onRefresh() {
+        currentPage = 0
+        getActivities(currentPage)
+    }
+
+    override fun onLoadMore() {
+        currentPage++
+        Log.e("MainActivity", "onLoadMore")
+        rvList.adapter.mList.add(Footer())
+        rvList.adapter.notifyDataSetChanged()
+        getActivities(currentPage)
+    }
+
+    override fun onErrorClick() {
+        onLoading("Loading")
+        currentPage = 0
+        getActivities(currentPage)
+    }
 
     override fun getActivities(skip: Int) {
-
+        mainPresent.getActivities(currentPage)
     }
 
     var mainModel = MainModel()
@@ -58,21 +83,6 @@ class MainActivity : BaseActivity(), MainContract.View {
             list.addAll(results)
             rvList.onComplete(list)
         }
-
-        rvList.recyclerViewListener = (object : RecyclerViewListener {
-            override fun onRefresh() {
-                currentPage = 0
-                mainPresent.getActivities(currentPage)
-            }
-
-            override fun onLoadMore() {
-                currentPage++
-                Log.e("MainActivity", "onLoadMore")
-                rvList.adapter.mList.add(Footer())
-                rvList.adapter.notifyDataSetChanged()
-                mainPresent.getActivities(currentPage)
-            }
-        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,7 +90,12 @@ class MainActivity : BaseActivity(), MainContract.View {
         setContentView(R.layout.activity_main)
 
         rvList = findViewById(R.id.rv_list)
+        rvList.recyclerViewListener = this
         onLoading("Loading")
-        mainPresent.getActivities(currentPage)
+        getActivities(currentPage)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
     }
 }

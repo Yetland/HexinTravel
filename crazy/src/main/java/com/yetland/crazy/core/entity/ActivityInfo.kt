@@ -15,7 +15,7 @@ class ActivityInfo : BaseEntity() {
 
     var title: String? = null// 活动的标题
     var content: String? = null// 活动内容简介
-    var creator: User? = null
+    var creator: _User? = null
     var comment: String? = null
     var like: String = ""
 }

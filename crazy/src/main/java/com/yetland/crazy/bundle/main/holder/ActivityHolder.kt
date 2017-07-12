@@ -1,9 +1,8 @@
 package com.yetland.crazy.bundle.main.holder
 
+import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.os.Build
-import android.support.annotation.RequiresApi
+import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -12,11 +11,15 @@ import android.widget.TextView
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
+import com.yetland.crazy.bundle.main.contract.ActivityHolderContract
+import com.yetland.crazy.bundle.main.contract.ActivityHolderModel
+import com.yetland.crazy.bundle.main.contract.ActivityHolderPresenter
+import com.yetland.crazy.bundle.main.detail.DetailActivity
 import com.yetland.crazy.core.base.BaseAdapter
 import com.yetland.crazy.core.base.BaseViewHolder
 import com.yetland.crazy.core.entity.ActivityInfo
 import com.yetland.crazy.core.entity.BaseEntity
-import com.yetland.crazy.core.entity.User
+import com.yetland.crazy.core.entity._User
 import com.yetland.crazy.core.utils.FileUtil
 import com.yetland.crazy.core.utils.makeShortToast
 import com.ynchinamobile.hexinlvxing.R
@@ -86,9 +89,8 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     var updatedActivityInfo = ActivityInfo()
     var adapter = BaseAdapter<BaseEntity>()
     var holderPosition = 0
-    var currentUser = User()
+    var currentUser = _User()
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>) {
         this.adapter = adapter
         this.holderPosition = position
@@ -104,7 +106,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                 if (currentUser.username!!.isNotEmpty()) {
                     val like = activityInfo.like
                     if (like.contains(currentUser.objectId.toString())) {
-                        tvLike.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.mipmap.liked), null, null, null)
+                        tvLike.setCompoundDrawablesWithIntrinsicBounds(context.resources.getDrawable(R.mipmap.liked), null, null, null)
                     }
                 }
                 tvLike.text = (activityInfo.like.split(";").size.minus(1)).toString()
@@ -132,18 +134,26 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                         .load(user?.avatarUrl)
                         .placeholder(R.mipmap.huas)
                         .into(ivAvatar)
+            } else {
+                ivAvatar.setImageDrawable(context.resources.getDrawable(R.mipmap.huas))
             }
 
-            itemView.setOnClickListener(this)
-            tvLike.setOnClickListener(this)
-            tvComment.setOnClickListener(this)
-
+            if (activityInfo.clickable) {
+                itemView.setOnClickListener(this)
+                tvLike.setOnClickListener(this)
+                tvComment.setOnClickListener(this)
+            }
         }
     }
 
     override fun onClick(view: View) {
         if (view == itemView) {
             Log.e(TAG, "itemViewClick")
+            val intent = Intent(context, DetailActivity::class.java)
+            val bundle = Bundle()
+            bundle.putSerializable("activityInfo", updatedActivityInfo)
+            intent.putExtras(bundle)
+            context.startActivity(intent)
         }
         when (view.id) {
             R.id.bt_follow -> {
