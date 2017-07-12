@@ -25,6 +25,7 @@ class ActivityManager {
      * @param activity
      */
     fun removeActivity(activity: Activity) {
+        activity.finish()
         allActivity.remove(activity)
     }
 

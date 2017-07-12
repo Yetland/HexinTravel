@@ -18,6 +18,7 @@ class BaseMultiTypeAdapter : BaseAdapter<BaseEntity>() {
 
     override fun onBindViewHolder(holder: BaseViewHolder<BaseEntity>?, position: Int) {
         holder?.setData(mList[position], position, this)
+        super.onBindViewHolder(holder, position)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): BaseViewHolder<BaseEntity> {

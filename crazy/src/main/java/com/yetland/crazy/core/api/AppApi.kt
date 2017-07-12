@@ -1,9 +1,6 @@
 package com.yetland.crazy.core.api
 
-import com.yetland.crazy.core.entity.ActivityInfo
-import com.yetland.crazy.core.entity.BaseEntity
-import com.yetland.crazy.core.entity.Data
-import com.yetland.crazy.core.entity.User
+import com.yetland.crazy.core.entity.*
 import rx.Observable
 
 /**
@@ -14,7 +11,9 @@ import rx.Observable
 interface AppApi {
 
     fun login(username: String, password: String): Observable<User>
-    fun register(user: User): Observable<BaseEntity>
+    fun register(user: User): Observable<BaseResult>
 
     fun getActivities(include: String, skip: Int, limit: Int): Observable<Data<ActivityInfo>>
+    fun likeActivity(activityId: String, like: String): Observable<BaseResult>
+    fun followUser(followUserId: String, followerUserId: String): Observable<BaseEntity>
 }

@@ -1,21 +1,25 @@
 package com.yetland.crazy.bundle.main.holder
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
 import com.yetland.crazy.core.base.BaseAdapter
 import com.yetland.crazy.core.base.BaseViewHolder
 import com.yetland.crazy.core.entity.ActivityInfo
 import com.yetland.crazy.core.entity.BaseEntity
+import com.yetland.crazy.core.entity.User
+import com.yetland.crazy.core.utils.FileUtil
+import com.yetland.crazy.core.utils.makeShortToast
 import com.ynchinamobile.hexinlvxing.R
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
-
 
 
 /**
@@ -23,51 +27,163 @@ import android.opengl.ETC1.getWidth
  * @Author:         yeliang
  * @Date:           2017/7/11
  */
-class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(itemView) {
+class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(itemView), View.OnClickListener,
+        ActivityHolderContract.View {
+
+    var model = ActivityHolderModel()
+    var presenter = ActivityHolderPresenter(model, this)
+
+    override fun like(activityId: String, like: String) {
+
+        val map = HashMap<String, String>()
+        map.put("like", like)
+        val body = Gson().toJson(map)
+        Log.e(TAG, body)
+        presenter.like(activityId, body)
+    }
+
+    override fun cancelLike(activityId: String, like: String) {
+        val map = HashMap<String, String>()
+        map.put("like", like)
+        val body = Gson().toJson(map)
+        presenter.cancelLike(activityId, body)
+    }
+
+    override fun follow(followUserId: String, followerUserId: String) {
+        presenter.follow(followUserId, followerUserId)
+    }
+
+    override fun likeSuccess() {
+        activityInfo = updatedActivityInfo
+        adapter.mList[holderPosition] = updatedActivityInfo
+        adapter.notifyItemChanged(holderPosition)
+        Log.e(TAG, "likeSuccess")
+    }
+
+    override fun cancelLikeSuccess() {
+        Log.e(TAG, "cancelLikeSuccess")
+    }
+
+    override fun followSuccess() {
+        Log.e(TAG, "followSuccess")
+    }
+
+    override fun fail(errorMsg: String) {
+        makeShortToast(context, errorMsg)
+    }
+
+    val TAG = "ActivityHolder"
     var tvTitle: TextView = itemView.findViewById(R.id.tv_title)
     var tvContent: TextView = itemView.findViewById(R.id.tv_content)
     var ivPhoto = itemView.findViewById<ImageView>(R.id.iv_photo)
     var ivAvatar = itemView.findViewById<ImageView>(R.id.iv_avatar)
     var tvUserName = itemView.findViewById<TextView>(R.id.tv_user_name)
+    var tvTime: TextView = itemView.findViewById<TextView>(R.id.tv_time)
+    var tvLike: TextView = itemView.findViewById<TextView>(R.id.tv_like)
+    var tvComment: TextView = itemView.findViewById<TextView>(R.id.tv_comment)
 
+    var activityInfo = ActivityInfo()
+    var updatedActivityInfo = ActivityInfo()
+    var adapter = BaseAdapter<BaseEntity>()
+    var holderPosition = 0
+    var currentUser = User()
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>) {
+        this.adapter = adapter
+        this.holderPosition = position
+        currentUser = FileUtil().getUserInfo(context)
         if (t is ActivityInfo) {
-            tvTitle.text = t.title
-            tvContent.text = t.content
-            if (!TextUtils.isEmpty(t.url)) {
-                Picasso.with(itemView.context)
-                        .load(t.url!!.split(";")[0])
-                        .transform(transform)
+            activityInfo = t
+            updatedActivityInfo = activityInfo
+            tvTitle.text = activityInfo.title
+            tvContent.text = activityInfo.content
+            tvTime.text = activityInfo.createdAt
+
+            if (activityInfo.like.isNotEmpty()) {
+                if (currentUser.username!!.isNotEmpty()) {
+                    val like = activityInfo.like
+                    if (like.contains(currentUser.objectId.toString())) {
+                        tvLike.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(R.mipmap.liked), null, null, null)
+                    }
+                }
+                tvLike.text = (activityInfo.like.split(";").size.minus(1)).toString()
+            } else {
+                tvLike.text = "0"
+            }
+            if (!TextUtils.isEmpty(activityInfo.comment)) {
+                tvComment.text = activityInfo.comment?.split(";")?.size?.minus(1).toString()
+            } else {
+                tvComment.text = "0"
+            }
+
+            if (!TextUtils.isEmpty(activityInfo.url)) {
+                ivPhoto.adjustViewBounds = true
+                Picasso.with(context)
+                        .load(activityInfo.url!!.split(";")[0])
+//                        .transform(transform)
                         .placeholder(R.mipmap.img_custom)
                         .into(ivPhoto)
             }
-            val user = t.creator
+            val user = activityInfo.creator
             tvUserName.text = user?.username
             if (!TextUtils.isEmpty(user?.avatarUrl)) {
-                Picasso.with(itemView.context)
+                Picasso.with(context)
                         .load(user?.avatarUrl)
                         .placeholder(R.mipmap.huas)
                         .into(ivAvatar)
+            }
+
+            itemView.setOnClickListener(this)
+            tvLike.setOnClickListener(this)
+            tvComment.setOnClickListener(this)
+
+        }
+    }
+
+    override fun onClick(view: View) {
+        if (view == itemView) {
+            Log.e(TAG, "itemViewClick")
+        }
+        when (view.id) {
+            R.id.bt_follow -> {
+                Log.e(TAG, "followClick")
+            }
+            R.id.tv_like -> {
+                Log.e(TAG, "likeClick")
+                if (currentUser.objectId!!.isNotEmpty()) {
+                    updatedActivityInfo.like = updatedActivityInfo.like + currentUser.objectId + ";"
+                    like(activityInfo.objectId!!, updatedActivityInfo.like)
+                } else {
+                    makeShortToast(context, "UserId is null")
+                }
+            }
+            R.id.tv_comment -> {
+                Log.e(TAG, "commentClick")
             }
         }
     }
 
     val transform = (object : Transformation {
-        override fun transform(source: Bitmap?): Bitmap {
-//            val size = Math.min(source?.width, source?.height)
-            val size = 10
-//            val x = (source?.width - size) / 2
-            val x = 100
-//            val y = (source?.height - size) / 2
-            val y = 100
+        override fun transform(source: Bitmap): Bitmap {
+            val size = minOf(source.width, source.height)
+            val x = (source.width.minus(size)).div(2)
+            val y = (source.height.minus(size)).div(2)
+            Log.e("transformBefore", "width = ${source.width}, " +
+                    "height = ${source.height} , " +
+                    "size = $size , " +
+                    "x = $x , " +
+                    "y = $y")
             val result = Bitmap.createBitmap(source, x, y, size, size)
             if (result != source) {
-                source?.recycle()
+                source.recycle()
             }
+            Log.e("transformAfter", "width = ${result.width}, " +
+                    "height = ${result.height} , " +
+                    "size = $size")
             return result
         }
 
-        override fun key(): String = ""
+        override fun key(): String = "square()"
     })
 }

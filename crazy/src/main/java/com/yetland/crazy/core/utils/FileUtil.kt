@@ -4,6 +4,11 @@ import android.content.Context
 import android.text.TextUtils
 import android.util.Log
 import java.io.*
+import android.R.id.edit
+import android.content.SharedPreferences
+import com.google.gson.Gson
+import com.yetland.crazy.core.constant.FILE_KEY_USER
+import com.yetland.crazy.core.entity.User
 
 
 /**
@@ -17,6 +22,22 @@ class FileUtil {
         val editor = context.getSharedPreferences(fileName, 0).edit()
         editor.clear()
         editor.apply()
+    }
+
+    fun saveUserInfo(context: Context, user: User) {
+        val clientPreferences = context.getSharedPreferences(FILE_KEY_USER, 0)
+        val prefEditor = clientPreferences.edit()
+        prefEditor.putString(FILE_KEY_USER, Gson().toJson(user))
+        prefEditor.apply()
+    }
+
+    fun getUserInfo(context: Context): User {
+        val clientPreferences = context.getSharedPreferences(FILE_KEY_USER, 0)
+        val userString = clientPreferences.getString(FILE_KEY_USER, "")
+        if (userString.isEmpty()) {
+            return User()
+        }
+        return Gson().fromJson(userString, User::class.java)
     }
 
     /**
@@ -39,7 +60,7 @@ class FileUtil {
             //将对象序列化写入byte缓存
             os.writeObject(obj)
             //将序列化的数据转为16进制保存
-            val bytesToHexString = bytesToHexString(bos.toByteArray())
+            val bytesToHexString = bos.toString("UTF-8")
             //保存该16进制数组
             sharedData.putString(key, bytesToHexString)
             sharedData.apply()

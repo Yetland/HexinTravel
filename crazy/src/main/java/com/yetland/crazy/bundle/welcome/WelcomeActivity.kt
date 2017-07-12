@@ -5,8 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
+import com.yetland.crazy.bundle.main.MainActivity
 import com.yetland.crazy.bundle.user.login.LoginActivity
 import com.yetland.crazy.core.base.BaseActivity
+import com.yetland.crazy.core.constant.FILE_KEY_USER
+import com.yetland.crazy.core.constant.FILE_NAME_USER
+import com.yetland.crazy.core.utils.FileUtil
 import com.ynchinamobile.hexinlvxing.R
 
 class WelcomeActivity : BaseActivity() {
@@ -26,8 +30,14 @@ class WelcomeActivity : BaseActivity() {
             val intent = Intent()
             when (msg?.what) {
                 GO_HOME -> {
-                    intent.setClass(applicationContext, LoginActivity::class.java)
+                    val user = FileUtil().getUserInfo(activity)
+                    if (user.username!!.isNotEmpty()) {
+                        intent.setClass(activity, MainActivity::class.java)
+                    } else {
+                        intent.setClass(activity, LoginActivity::class.java)
+                    }
                     startActivity(intent)
+                    finish()
                 }
             }
         }

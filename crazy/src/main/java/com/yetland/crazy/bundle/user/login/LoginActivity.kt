@@ -6,11 +6,9 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import com.yetland.crazy.RegisterActivity
+import com.yetland.crazy.bundle.user.register.RegisterActivity
 import com.yetland.crazy.bundle.main.MainActivity
 import com.yetland.crazy.core.base.BaseActivity
-import com.yetland.crazy.core.constant.FILE_KEY_USER
-import com.yetland.crazy.core.constant.FILE_NAME_USER
 import com.yetland.crazy.core.entity.User
 import com.yetland.crazy.core.utils.FileUtil
 import com.yetland.crazy.core.utils.isNetworkAvailable
@@ -34,6 +32,7 @@ class LoginActivity : BaseActivity(), LoginContract.View {
         etPhone = findViewById<EditText>(R.id.et_phone)
         etPassword = findViewById<EditText>(R.id.et_password)
 
+        supportActionBar?.title = "Login"
         findViewById<Button>(R.id.bt_login).setOnClickListener(click)
         findViewById<Button>(R.id.bt_register).setOnClickListener(click)
         btForgetPassword!!.setOnClickListener(click)
@@ -77,9 +76,10 @@ class LoginActivity : BaseActivity(), LoginContract.View {
     }
 
     override fun loginSuccess(user: User) {
-        FileUtil().saveObject(activity, FILE_KEY_USER, user, FILE_NAME_USER)
+        FileUtil().saveUserInfo(activity, user)
         val intent = Intent(applicationContext, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     override fun loginFailed(msg: String) {

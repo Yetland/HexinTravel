@@ -18,7 +18,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.yetland.crazy.bundle.welcome.WelcomeActivity">
+        <activity
+            android:name="com.yetland.crazy.bundle.welcome.WelcomeActivity"
+            android:theme="@style/ThemeFullScreen">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,12 +29,8 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name="com.cmcc.hysso.service.SsoService"
-            android:process=":HYSsoService" />
-
         <activity android:name="com.yetland.crazy.bundle.user.login.LoginActivity" />
-        <activity android:name="com.yetland.crazy.RegisterActivity" />
+        <activity android:name="com.yetland.crazy.bundle.user.register.RegisterActivity" />
         <activity android:name="com.yetland.crazy.bundle.main.MainActivity" />
         <activity android:name="com.yetland.crazy.bundle.travel.TravelActivity" />
         <activity android:name="com.yetland.crazy.bundle.destination.DestinationActivity" />

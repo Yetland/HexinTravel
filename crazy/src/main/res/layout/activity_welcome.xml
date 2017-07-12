@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ynchinamobile.hexinlvxing.com.ynchinamobile.crazy.bundle.welcome.WelcomeActivity">
+    android:orientation="vertical"
+    tools:context="com.yetland.crazy.bundle.welcome.WelcomeActivity">
+
     <ImageView
         android:id="@+id/iv_welcome"
-        android:src="@mipmap/welcome_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@string/desc_welcome_bg" />
+        android:contentDescription="@string/desc_welcome_bg"
+        android:scaleType="fitXY"
+        android:src="@mipmap/welcome_bg" />
 </LinearLayout>

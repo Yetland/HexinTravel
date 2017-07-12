@@ -1,14 +1,10 @@
 package com.yetland.crazy.core.api
 
 import com.yetland.crazy.core.constant.DEFAULT_LIMIT
-import com.yetland.crazy.core.entity.ActivityInfo
-import com.yetland.crazy.core.entity.BaseEntity
-import com.yetland.crazy.core.entity.Data
-import com.yetland.crazy.core.entity.User
+import com.yetland.crazy.core.entity.*
+import okhttp3.RequestBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.*
 
 /**
  * @Name:           AppService
@@ -21,10 +17,15 @@ interface AppService {
     @GET("login")
     fun login(@Query("username") username: String, @Query("password") password: String): Call<User>
 
-    @GET("users")
-    fun register(@Body user: User): Call<BaseEntity>
+    @POST("users")
+    fun register(@Body user: User): Call<BaseResult>
 
     @GET("classes/Activity")
     fun getActivity(@Query("include") creator: String, @Query("skip") skip: Int, @Query("limit") limit: Int = DEFAULT_LIMIT): Call<Data<ActivityInfo>>
 
+    @PUT("classes/Activity/{name}")
+    fun like(@Path("name") objectId: String, @Body like: RequestBody): Call<BaseResult>
+
+    @POST("classes/Follow")
+    fun follow(@Query("followUserId") followUserId: String, @Query("followerUserId") followerUserId: String): Call<BaseEntity>
 }
