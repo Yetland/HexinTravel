@@ -1,6 +1,7 @@
 package com.yetland.crazy.core.base
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
@@ -37,7 +38,7 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
     var layoutManager: RecyclerView.LayoutManager
     var swipeRefreshLayout: SwipeRefreshLayout
     var recyclerView: RecyclerView
-    var adapter = BaseMultiTypeAdapter()
+    lateinit var adapter: BaseMultiTypeAdapter
     var recyclerViewListener: RecyclerViewListener? = null
 
     var loadType = 0
@@ -62,10 +63,10 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
         (layoutManager as LinearLayoutManager).orientation = LinearLayout.VERTICAL
 
         addView(layout)
-        initView()
     }
 
-    private fun initView() {
+    fun initView(activity: Activity) {
+        adapter = BaseMultiTypeAdapter(activity)
         recyclerView.layoutManager = layoutManager
         swipeRefreshLayout.setOnRefreshListener {
             if (canRefresh && !isRefreshing && !isLoadingMore) {

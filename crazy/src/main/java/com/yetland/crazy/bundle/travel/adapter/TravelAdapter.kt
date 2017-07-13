@@ -1,5 +1,6 @@
 package com.yetland.crazy.bundle.travel.adapter
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,7 @@ import com.ynchinamobile.hexinlvxing.R
  * @Author:         yeliang
  * @Date:           2017/7/7
  */
-class TravelAdapter<String> : BaseAdapter<String>() {
+class TravelAdapter<String> constructor(activity: Activity) : BaseAdapter<String>(activity) {
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): BaseViewHolder<String> {
         val view: View
@@ -30,7 +31,7 @@ class TravelAdapter<String> : BaseAdapter<String>() {
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<String>?, position: Int) {
-        holder?.setData(mList[position], position, this)
+        holder?.setData(mList[position], position, this, mActivity)
         super.onBindViewHolder(holder, position)
     }
 

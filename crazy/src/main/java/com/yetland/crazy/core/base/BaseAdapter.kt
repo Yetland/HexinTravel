@@ -1,5 +1,6 @@
 package com.yetland.crazy.core.base
 
+import android.app.Activity
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,17 +13,18 @@ import com.ynchinamobile.hexinlvxing.R
  * @Author:         yeliang
  * @Date:           2017/7/6
  */
-open class BaseAdapter<T> : RecyclerView.Adapter<BaseViewHolder<T>>() {
+open class BaseAdapter<T> constructor(activity: Activity) : RecyclerView.Adapter<BaseViewHolder<T>>() {
 
     val TAG = "BaseAdapter"
     var mList = ArrayList<T>()
     val isHasFooter = 0
     val isHasHeader = 0
+    val mActivity = activity
 
     override fun onBindViewHolder(holder: BaseViewHolder<T>?, position: Int) {
         if (holder is BaseItemViewHolder) {
             Log.e(TAG, "setData : ${mList[position]}")
-            holder.setData(mList[position], position, this)
+            holder.setData(mList[position], position, this, mActivity)
         }
         if (onItemClickListener != null && holder != null) {
             holder.itemView.setOnClickListener({

@@ -1,5 +1,6 @@
 package com.yetland.crazy.bundle.main.holder
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.text.TextUtils
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
@@ -83,15 +85,19 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     var tvUserName = itemView.findViewById<TextView>(R.id.tv_user_name)
     var tvTime: TextView = itemView.findViewById<TextView>(R.id.tv_time)
     var tvLike: TextView = itemView.findViewById<TextView>(R.id.tv_like)
+    var ivLike: ImageView = itemView.findViewById(R.id.iv_like)
+    var llLike: LinearLayout = itemView.findViewById(R.id.ll_like)
+    var llComment: LinearLayout = itemView.findViewById(R.id.ll_comment)
     var tvComment: TextView = itemView.findViewById<TextView>(R.id.tv_comment)
 
     var activityInfo = ActivityInfo()
     var updatedActivityInfo = ActivityInfo()
-    var adapter = BaseAdapter<BaseEntity>()
+    lateinit var adapter: BaseAdapter<BaseEntity>
     var holderPosition = 0
     var currentUser = _User()
 
-    override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>) {
+    override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>, activity: Activity) {
+        mActivity = activity
         this.adapter = adapter
         this.holderPosition = position
         currentUser = FileUtil().getUserInfo(context)
@@ -106,7 +112,9 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                 if (currentUser.username!!.isNotEmpty()) {
                     val like = activityInfo.like
                     if (like.contains(currentUser.objectId.toString())) {
-                        tvLike.setCompoundDrawablesWithIntrinsicBounds(context.resources.getDrawable(R.mipmap.liked), null, null, null)
+                        ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.liked))
+                    } else {
+                        ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.like))
                     }
                 }
                 tvLike.text = (activityInfo.like.split(";").size.minus(1)).toString()
@@ -140,8 +148,8 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
 
             if (activityInfo.clickable) {
                 itemView.setOnClickListener(this)
-                tvLike.setOnClickListener(this)
-                tvComment.setOnClickListener(this)
+                llLike.setOnClickListener(this)
+                llComment.setOnClickListener(this)
             }
         }
     }
@@ -149,17 +157,17 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     override fun onClick(view: View) {
         if (view == itemView) {
             Log.e(TAG, "itemViewClick")
-            val intent = Intent(context, DetailActivity::class.java)
+            val intent = Intent(mActivity, DetailActivity::class.java)
             val bundle = Bundle()
             bundle.putSerializable("activityInfo", updatedActivityInfo)
             intent.putExtras(bundle)
-            context.startActivity(intent)
+            mActivity.startActivityForResult(intent, 11)
         }
         when (view.id) {
             R.id.bt_follow -> {
                 Log.e(TAG, "followClick")
             }
-            R.id.tv_like -> {
+            R.id.ll_like -> {
                 Log.e(TAG, "likeClick")
                 if (currentUser.objectId!!.isNotEmpty()) {
                     updatedActivityInfo.like = updatedActivityInfo.like + currentUser.objectId + ";"
@@ -168,7 +176,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                     makeShortToast(context, "UserId is null")
                 }
             }
-            R.id.tv_comment -> {
+            R.id.ll_comment -> {
                 Log.e(TAG, "commentClick")
             }
         }

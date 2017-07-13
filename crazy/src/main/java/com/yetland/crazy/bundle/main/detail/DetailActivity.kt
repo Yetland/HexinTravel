@@ -1,5 +1,6 @@
 package com.yetland.crazy.bundle.main.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import com.yetland.crazy.bundle.destination.bean.Footer
@@ -91,9 +92,16 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View {
         activityInfo = bundle.getSerializable("activityInfo") as ActivityInfo
         activityInfo.clickable = false
         rvDetailList = findViewById(R.id.rv_activity_detail)
+        rvDetailList.initView(this)
         rvDetailList.onLoading()
         point = Point("Activity", activityInfo.objectId.toString())
         Log.e("DetailActivity", "name : ${point.className}, id = ${point.objectId}")
         getComment(point, 0)
+    }
+
+    override fun onBackPressed() {
+        Log.e("DetailActivity", "onBackPressed")
+        setResult(1, Intent().putExtra("from", "Detail"))
+        super.onBackPressed()
     }
 }

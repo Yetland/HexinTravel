@@ -11,14 +11,14 @@ class _User : BaseEntity() {
         return 1
     }
 
-    var avatarUrl: String? = null
+    var avatarUrl: String? = ""
     var sessionToken: String? = null
     var authData: String? = null
     var username: String? = ""
     var password: String? = ""
     var mobilePhoneNumber: String? = null
     var mobilePhoneVerified: Boolean = false
-    var email: String? = null
+    var email: String? = ""
     var emailVerified: Boolean = false
     var sex: String? = null
     var sign: String? = null

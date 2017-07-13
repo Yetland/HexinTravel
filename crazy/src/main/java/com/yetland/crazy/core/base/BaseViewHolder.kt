@@ -1,5 +1,6 @@
 package com.yetland.crazy.core.base
 
+import android.app.Activity
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -13,6 +14,6 @@ import android.view.View
 abstract class BaseViewHolder<T> constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var context: Context = itemView.context
-
-    abstract fun setData(t: T, position: Int, adapter: BaseAdapter<T>)
+    lateinit var mActivity: Activity
+    abstract fun setData(t: T, position: Int, adapter: BaseAdapter<T>, activity: Activity)
 }

@@ -1,5 +1,6 @@
 package com.yetland.crazy.core.base
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +13,12 @@ import com.yetland.crazy.core.entity.BaseEntity
  * @Author:         yeliang
  * @Date:           2017/7/7
  */
-class BaseMultiTypeAdapter : BaseAdapter<BaseEntity>() {
+class BaseMultiTypeAdapter constructor(activity: Activity) : BaseAdapter<BaseEntity>(activity) {
 
     var typeFactory: TypeFactory = TypeFactoryForList()
 
     override fun onBindViewHolder(holder: BaseViewHolder<BaseEntity>?, position: Int) {
-        holder?.setData(mList[position], position, this)
+        holder?.setData(mList[position], position, this, mActivity)
         super.onBindViewHolder(holder, position)
     }
 

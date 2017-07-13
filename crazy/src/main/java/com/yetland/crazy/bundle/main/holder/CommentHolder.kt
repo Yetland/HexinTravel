@@ -1,5 +1,6 @@
 package com.yetland.crazy.bundle.main.holder
 
+import android.app.Activity
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -23,7 +24,7 @@ class CommentHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view) {
     val ivAvatar: ImageView = view.findViewById(R.id.iv_avatar)
     var tvCommentContent: TextView = view.findViewById(R.id.tv_comment_content)
     var tvCommentTime: TextView = view.findViewById(R.id.tv_comment_time)
-    override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>) {
+    override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>, activity: Activity) {
 
         if (t is Comment) {
             comment = t

@@ -1,5 +1,6 @@
 package com.yetland.crazy.core.base
 
+import android.app.Activity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -17,7 +18,7 @@ class BaseFooterViewHolder constructor(itemView: View) : BaseViewHolder<BaseEnti
     val llLoading = itemView.findViewById<LinearLayout>(R.id.ll_footer_loading)
     val tvNoMore = itemView.findViewById<TextView>(R.id.tv_no_more)
 
-    override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>) {
+    override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>, activity: Activity) {
         if (t is Footer) {
             if (t.noMore) {
                 noMoreData()

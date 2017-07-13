@@ -14,6 +14,14 @@ import retrofit2.http.*
 
 interface AppService {
 
+    /**
+     * POST /classes/{class} 创建对象
+     * PUT /classes/{class}/{objectId} 更新对象
+     * GET /classes/{class}/{objectId} 获得单个对象
+     * GET /classes/{class} 查询对象
+     * DELETE /classes/{class}/{objectId} 删除对象
+     */
+
     @GET("login")
     fun login(@Query("username") username: String, @Query("password") password: String): Call<_User>
 
@@ -30,5 +38,5 @@ interface AppService {
     fun follow(@Query("followUserId") followUserId: String, @Query("followerUserId") followerUserId: String): Call<BaseEntity>
 
     @GET("classes/Comment")
-    fun getComment(@Query("include") include: String, @Query("activity") activityPoint: Point, @Query("skip") skip: Int, @Query("limit") limit: Int = DEFAULT_LIMIT): Call<Data<Comment>>
+    fun getComment(@Query("include") include: String, @Query("where") where: String, @Query("skip") skip: Int, @Query("limit") limit: Int = DEFAULT_LIMIT): Call<Data<Comment>>
 }

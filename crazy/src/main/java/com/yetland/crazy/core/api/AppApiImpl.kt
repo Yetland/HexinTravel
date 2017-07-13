@@ -1,5 +1,6 @@
 package com.yetland.crazy.core.api
 
+import com.google.gson.Gson
 import com.yetland.crazy.core.entity.*
 import okhttp3.RequestBody
 import rx.Observable
@@ -17,7 +18,11 @@ class AppApiImpl : AppApi {
         return Observable.create({
             subscriber: Subscriber<in Data<Comment>> ->
             try {
-                val response = RestApi().appService.getComment("activityId,creator", activityPoint, skip, limit).execute()
+                val map = HashMap<String, String>()
+                map.put("activityId", activityPoint.objectId!!)
+                val body = Gson().toJson(map)
+
+                val response = RestApi().appService.getComment("activity,creator", body, skip, limit).execute()
                 if (response.isSuccessful) {
                     subscriber.onNext(response.body())
                 } else {

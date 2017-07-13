@@ -22,7 +22,7 @@ class TravelActivity : AppCompatActivity() {
         for (x in s) {
             data.add(x.toString())
         }
-        val adapter = TravelAdapter<String>()
+        val adapter = TravelAdapter<String>(this)
 
         Log.e("TravelActivity", data.toString())
         adapter.mList = data

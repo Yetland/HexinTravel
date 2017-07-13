@@ -18,7 +18,7 @@ class DestinationActivity : AppCompatActivity() {
         val rvList = findViewById<RecyclerView>(R.id.rv_destination)
         val list: ArrayList<ActivityInfo> = ArrayList()
 
-        val adapter = BaseMultiTypeAdapter()
+        val adapter = BaseMultiTypeAdapter(this)
 //        adapter.mList = list
         val layoutManager = LinearLayoutManager(this)
         layoutManager.orientation = LinearLayout.VERTICAL
