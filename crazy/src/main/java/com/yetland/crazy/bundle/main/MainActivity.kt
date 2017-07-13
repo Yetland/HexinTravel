@@ -15,10 +15,10 @@ import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.base.BaseRecyclerView
 import com.yetland.crazy.core.base.RecyclerViewListener
 import com.yetland.crazy.core.constant.IntentRequestCode
+import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity.ActivityInfo
 import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.entity.Data
-import com.yetland.crazy.core.entity._User
 import com.yetland.crazy.core.utils.FileUtil
 import com.yetland.crazy.core.utils.makeShortToast
 import com.ynchinamobile.hexinlvxing.R
@@ -29,13 +29,11 @@ class MainActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
     var mainPresent = MainPresent(mainModel, this)
     var list = ArrayList<BaseEntity>()
     lateinit var rvList: BaseRecyclerView
-    var user = _User()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        user = FileUtil().getUserInfo(activity)
         supportActionBar?.title = "Main"
         rvList = findViewById(R.id.rv_list)
         rvList.initView(this)
@@ -120,6 +118,7 @@ class MainActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_user -> {
+                val user = FileUtil().getUserInfo(activity)
                 if (user.username!!.isNotEmpty()) {
                     val intent = Intent(activity, UserDataActivity::class.java)
                     startActivityForResult(intent, IntentRequestCode.MAIN_TO_USER_DATA)
@@ -137,6 +136,21 @@ class MainActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Log.e("MainActivity", "resultCode = $resultCode")
+        when (resultCode) {
+            IntentResultCode.LOG_OUT -> {
+                rvList.adapter.notifyDataSetChanged()
+            }
+            IntentResultCode.LOG_IN -> {
+                rvList.adapter.notifyDataSetChanged()
+            }
+            IntentResultCode.MAIN_TO_DETAIL_RESULT -> {
+                val bundle = data?.extras
+                val activityInfo: ActivityInfo = bundle?.getSerializable("activityInfo") as ActivityInfo
+                val position = bundle.getInt("position")
+                rvList.adapter.mList[position] = activityInfo
+                rvList.adapter.notifyDataSetChanged()
+            }
+        }
         super.onActivityResult(requestCode, resultCode, data)
     }
 }

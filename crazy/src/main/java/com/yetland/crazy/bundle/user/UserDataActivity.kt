@@ -1,6 +1,5 @@
 package com.yetland.crazy.bundle.user
 
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -9,10 +8,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import com.yetland.crazy.core.base.BaseActivity
+import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity._User
 import com.yetland.crazy.core.utils.FileUtil
+import com.yetland.crazy.core.utils.makeShortToast
 import com.ynchinamobile.hexinlvxing.R
-import kotlinx.android.synthetic.main.activity_user_data.*
 
 class UserDataActivity : BaseActivity(), View.OnClickListener {
 
@@ -39,6 +39,10 @@ class UserDataActivity : BaseActivity(), View.OnClickListener {
         llMyComment = findViewById(R.id.ll_my_comment)
         llLogOut = findViewById(R.id.ll_log_out)
 
+        llLogOut.setOnClickListener(this)
+        llMyComment.setOnClickListener(this)
+        llMyActivity.setOnClickListener(this)
+
         if (!TextUtils.isEmpty(user.username)) {
             tvUsername.text = user.username
         }
@@ -58,13 +62,15 @@ class UserDataActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View) {
         when (view.id) {
             R.id.ll_my_comment -> {
-
+                makeShortToast(activity, "Comment")
             }
             R.id.ll_my_activity -> {
-
+                makeShortToast(activity, "Activity")
             }
             R.id.ll_log_out -> {
-
+                FileUtil().clearUserInfo(activity)
+                setResult(IntentResultCode.LOG_OUT)
+                finish()
             }
         }
     }

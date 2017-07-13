@@ -11,7 +11,7 @@ import rx.Observable
 interface AppApi {
 
     fun login(username: String, password: String): Observable<_User>
-    fun register(user: _User): Observable<BaseResult>
+    fun register(user: _User): Observable<_User>
 
     fun getActivities(include: String, skip: Int, limit: Int): Observable<Data<ActivityInfo>>
     fun likeActivity(activityId: String, like: String): Observable<BaseResult>

@@ -9,7 +9,7 @@ import java.io.Serializable
  * @Date:           2017/7/6
  */
 abstract class BaseEntity : Serializable {
-    var objectId: String? = null
+    var objectId: String? = ""
     var updatedAt: String? = null
     var createdAt: String? = null
     var url: String? = null

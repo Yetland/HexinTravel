@@ -17,8 +17,10 @@ import com.yetland.crazy.bundle.main.contract.ActivityHolderContract
 import com.yetland.crazy.bundle.main.contract.ActivityHolderModel
 import com.yetland.crazy.bundle.main.contract.ActivityHolderPresenter
 import com.yetland.crazy.bundle.main.detail.DetailActivity
+import com.yetland.crazy.bundle.user.login.LoginActivity
 import com.yetland.crazy.core.base.BaseAdapter
 import com.yetland.crazy.core.base.BaseViewHolder
+import com.yetland.crazy.core.constant.IntentRequestCode
 import com.yetland.crazy.core.entity.ActivityInfo
 import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.entity._User
@@ -112,13 +114,16 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                 if (currentUser.username!!.isNotEmpty()) {
                     val like = activityInfo.like
                     if (like.contains(currentUser.objectId.toString())) {
-                        ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.liked))
+                        ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_liked))
                     } else {
-                        ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.like))
+                        ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_like))
                     }
+                } else {
+                    ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_like))
                 }
                 tvLike.text = (activityInfo.like.split(";").size.minus(1)).toString()
             } else {
+                ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_like))
                 tvLike.text = "0"
             }
             if (!TextUtils.isEmpty(activityInfo.comment)) {
@@ -148,9 +153,9 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
 
             if (activityInfo.clickable) {
                 itemView.setOnClickListener(this)
-                llLike.setOnClickListener(this)
                 llComment.setOnClickListener(this)
             }
+            llLike.setOnClickListener(this)
         }
     }
 
@@ -160,8 +165,9 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
             val intent = Intent(mActivity, DetailActivity::class.java)
             val bundle = Bundle()
             bundle.putSerializable("activityInfo", updatedActivityInfo)
+            bundle.putInt("position", holderPosition)
             intent.putExtras(bundle)
-            mActivity.startActivityForResult(intent, 11)
+            mActivity.startActivityForResult(intent, IntentRequestCode.MAIN_TO_DETAIL)
         }
         when (view.id) {
             R.id.bt_follow -> {
@@ -169,10 +175,11 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
             }
             R.id.ll_like -> {
                 Log.e(TAG, "likeClick")
-                if (currentUser.objectId!!.isNotEmpty()) {
+                if (currentUser.username!!.isNotEmpty()) {
                     updatedActivityInfo.like = updatedActivityInfo.like + currentUser.objectId + ";"
                     like(activityInfo.objectId!!, updatedActivityInfo.like)
                 } else {
+                    mActivity.startActivityForResult(Intent(mActivity, LoginActivity::class.java), IntentRequestCode.MAIN_TO_LOGIN)
                     makeShortToast(context, "UserId is null")
                 }
             }

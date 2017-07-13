@@ -16,7 +16,6 @@ class _User : BaseEntity() {
     var authData: String? = null
     var username: String? = ""
     var password: String? = ""
-    var mobilePhoneNumber: String? = null
     var mobilePhoneVerified: Boolean = false
     var email: String? = ""
     var emailVerified: Boolean = false

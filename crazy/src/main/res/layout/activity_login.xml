@@ -5,17 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.ynchinamobile.hexinlvxing.com.ynchinamobile.crazy.bundle.user.login.LoginActivity">
+    tools:context="com.yetland.crazy.bundle.user.login.LoginActivity">
 
     <EditText
-        android:id="@+id/et_phone"
+        android:id="@+id/et_username"
+        android:hint="username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="phone"
+        android:inputType="text"
         android:maxLines="1" />
 
     <EditText
+        android:hint="password"
         android:id="@+id/et_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,5 +41,6 @@
         android:id="@+id/bt_forget_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:text="forgetPassword" />
 </LinearLayout>

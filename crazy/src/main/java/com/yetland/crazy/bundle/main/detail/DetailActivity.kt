@@ -10,6 +10,7 @@ import com.yetland.crazy.bundle.main.contract.ActivityDetailPresenter
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.base.BaseRecyclerView
 import com.yetland.crazy.core.base.RecyclerViewListener
+import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity.*
 import com.ynchinamobile.hexinlvxing.R
 
@@ -81,7 +82,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View {
     lateinit var point: Point
     lateinit var rvDetailList: BaseRecyclerView
     lateinit var activityInfo: ActivityInfo
-
+    var holderPosition = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
@@ -90,6 +91,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View {
 
         val bundle = activity.intent.extras
         activityInfo = bundle.getSerializable("activityInfo") as ActivityInfo
+        holderPosition = bundle.getInt("position")
         activityInfo.clickable = false
         rvDetailList = findViewById(R.id.rv_activity_detail)
         rvDetailList.initView(this)
@@ -101,7 +103,15 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View {
 
     override fun onBackPressed() {
         Log.e("DetailActivity", "onBackPressed")
-        setResult(1, Intent().putExtra("from", "Detail"))
+
+        val bundle = Bundle()
+        if (rvDetailList.adapter.mList.size > 0) {
+            val activityInfo = rvDetailList.adapter.mList[0]
+            activityInfo.clickable = true
+            bundle.putSerializable("activityInfo", activityInfo)
+            bundle.putInt("position", holderPosition)
+            setResult(IntentResultCode.MAIN_TO_DETAIL_RESULT, Intent().putExtras(bundle))
+        }
         super.onBackPressed()
     }
 }

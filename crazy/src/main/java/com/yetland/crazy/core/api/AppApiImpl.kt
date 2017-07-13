@@ -82,16 +82,16 @@ class AppApiImpl : AppApi {
         })
     }
 
-    override fun register(user: _User): Observable<BaseResult> {
+    override fun register(user: _User): Observable<_User> {
         Observable.empty<_User>().subscribe()
-        return Observable.create { subscriber: Subscriber<in BaseResult> ->
+        return Observable.create { subscriber: Subscriber<in _User> ->
             try {
                 val response = RestApi().appService.register(user).execute()
                 if (response.isSuccessful) {
                     subscriber.onNext(response.body())
                     subscriber.onCompleted()
                 } else {
-                    subscriber.onError(Throwable("用户名已存在"));
+                    subscriber.onError(Throwable(response.errorBody().string().toString()))
                     subscriber.onCompleted()
                 }
             } catch (e: IOException) {

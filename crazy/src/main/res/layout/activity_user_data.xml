@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#dbdbdb"
+    android:background="#e6e6e6"
     android:orientation="vertical">
 
     <LinearLayout
@@ -57,8 +57,8 @@
         </LinearLayout>
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:src="@mipmap/ic_edit" />
 
 
@@ -68,7 +68,7 @@
         android:id="@+id/ll_my_activity"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/white"
+        android:background="@drawable/item_click"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="4dp">
@@ -95,11 +95,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_log_out"
+        android:id="@+id/ll_my_comment"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="0.1dp"
-        android:background="@color/white"
+        android:background="@drawable/item_click"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="4dp">
@@ -108,7 +108,7 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginLeft="6dp"
-            app:srcCompat="@mipmap/comment" />
+            app:srcCompat="@mipmap/ic_comment" />
 
         <TextView
             android:layout_width="0dp"
@@ -126,11 +126,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_my_comment"
+        android:id="@+id/ll_log_out"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
+        android:background="@drawable/item_click"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="4dp">

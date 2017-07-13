@@ -26,7 +26,7 @@ interface AppService {
     fun login(@Query("username") username: String, @Query("password") password: String): Call<_User>
 
     @POST("users")
-    fun register(@Body user: _User): Call<BaseResult>
+    fun register(@Body user: _User): Call<_User>
 
     @GET("classes/Activity")
     fun getActivity(@Query("include") creator: String, @Query("skip") skip: Int, @Query("limit") limit: Int = DEFAULT_LIMIT): Call<Data<ActivityInfo>>

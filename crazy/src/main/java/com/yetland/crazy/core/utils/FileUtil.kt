@@ -3,10 +3,10 @@ package com.yetland.crazy.core.utils
 import android.content.Context
 import android.text.TextUtils
 import android.util.Log
-import java.io.*
 import com.google.gson.Gson
 import com.yetland.crazy.core.constant.FILE_KEY_USER
 import com.yetland.crazy.core.entity._User
+import java.io.*
 
 
 /**
@@ -20,6 +20,13 @@ class FileUtil {
         val editor = context.getSharedPreferences(fileName, 0).edit()
         editor.clear()
         editor.apply()
+    }
+
+    fun clearUserInfo(context: Context){
+        val clientPreferences = context.getSharedPreferences(FILE_KEY_USER, 0)
+        val prefEditor = clientPreferences.edit()
+        prefEditor.clear()
+        prefEditor.apply()
     }
 
     fun saveUserInfo(context: Context, user: _User) {
