@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_margin="8dp"
-              android:background="@color/white"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:id="@+id/iv_avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            app:srcCompat="@mipmap/huas"/>
+            app:srcCompat="@mipmap/huas" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:text="TextView"
                 android:textColor="@color/defaultTextColor"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -41,7 +41,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_gravity="center_vertical"
-            android:src="@mipmap/ic_add_color"/>
+            android:src="@mipmap/ic_add_color" />
     </LinearLayout>
 
     <LinearLayout
@@ -56,7 +56,7 @@
             android:layout_margin="4dp"
             android:text="TextView"
             android:textColor="@color/defaultTextColor"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tv_content"
@@ -64,16 +64,16 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:text="TextView"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/iv_photo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="left"
             android:maxHeight="250dp"
             android:minHeight="100dp"
-            android:src="@mipmap/img_custom"/>
+            android:src="@mipmap/img_custom" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -89,7 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="TextView"
-                android:textSize="10sp"/>
+                android:textSize="10sp" />
 
             <LinearLayout
                 android:id="@+id/ll_like"
@@ -101,7 +101,7 @@
                     android:id="@+id/iv_like"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@mipmap/ic_like"/>
+                    android:src="@mipmap/ic_like" />
 
                 <TextView
                     android:id="@+id/tv_like"
@@ -109,7 +109,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
                     android:drawablePadding="4dp"
-                    android:text="0"/>
+                    android:text="0" />
             </LinearLayout>
 
 
@@ -123,7 +123,7 @@
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@mipmap/ic_comment"/>
+                    android:src="@mipmap/ic_comment" />
 
                 <TextView
                     android:id="@+id/tv_comment"
@@ -131,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="4dp"
                     android:drawablePadding="4dp"
-                    android:text="0"/>
+                    android:text="0" />
             </LinearLayout>
 
         </LinearLayout>
@@ -143,5 +143,17 @@
         android:layout_height="0.1dp"
         android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
-        android:background="@android:color/darker_gray"/>
+        android:background="@android:color/darker_gray" />
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/ll_activity_my_comment"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <include layout="@layout/item_comment" />
+
+    </LinearLayout>
 </LinearLayout>

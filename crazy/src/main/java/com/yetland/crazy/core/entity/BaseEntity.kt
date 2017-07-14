@@ -25,5 +25,4 @@ class BaseResult {
 class Point(className: String, objectId: String) {
     var className: String? = className
     var objectId: String? = objectId
-
 }

@@ -39,4 +39,8 @@ interface AppService {
 
     @GET("classes/Comment")
     fun getComment(@Query("include") include: String, @Query("where") where: String, @Query("skip") skip: Int, @Query("limit") limit: Int = DEFAULT_LIMIT): Call<Data<Comment>>
+
+    @GET("classes/Comment")
+    fun getMyComment(@Query("include") include: String, @Query("where") where: String, @Query("skip") skip: Int, @Query("limit") limit: Int = DEFAULT_LIMIT): Call<Data<MyComment>>
+
 }

@@ -1,5 +1,6 @@
 package com.yetland.crazy.bundle.user
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -7,6 +8,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.squareup.picasso.Picasso
+import com.yetland.crazy.bundle.user.mine.MineCommentActivity
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity._User
@@ -15,7 +17,6 @@ import com.yetland.crazy.core.utils.makeShortToast
 import com.ynchinamobile.hexinlvxing.R
 
 class UserDataActivity : BaseActivity(), View.OnClickListener {
-
 
     lateinit var llUser: LinearLayout
     lateinit var ivAvatar: ImageView
@@ -62,7 +63,7 @@ class UserDataActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View) {
         when (view.id) {
             R.id.ll_my_comment -> {
-                makeShortToast(activity, "Comment")
+                startActivity(Intent(activity, MineCommentActivity::class.java))
             }
             R.id.ll_my_activity -> {
                 makeShortToast(activity, "Activity")

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.ynchinamobile.hexinlvxing">
+    package="com.ynchinamobile.hexinlvxing">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name="com.yetland.crazy.core.app.HexinApplication"
@@ -22,19 +22,20 @@
             android:name="com.yetland.crazy.bundle.welcome.WelcomeActivity"
             android:theme="@style/ThemeFullScreen">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.yetland.crazy.bundle.user.login.LoginActivity"/>
-        <activity android:name="com.yetland.crazy.bundle.user.register.RegisterActivity"/>
-        <activity android:name="com.yetland.crazy.bundle.main.MainActivity"/>
-        <activity android:name="com.yetland.crazy.bundle.travel.TravelActivity"/>
-        <activity android:name="com.yetland.crazy.bundle.destination.DestinationActivity"/>
-        <activity android:name="com.yetland.crazy.bundle.user.UserDataActivity"/>
-        <activity android:name="com.yetland.crazy.bundle.main.detail.DetailActivity">
-        </activity>
+        <activity android:name="com.yetland.crazy.bundle.user.login.LoginActivity" />
+        <activity android:name="com.yetland.crazy.bundle.user.register.RegisterActivity" />
+        <activity android:name="com.yetland.crazy.bundle.main.MainActivity" />
+        <activity android:name="com.yetland.crazy.bundle.travel.TravelActivity" />
+        <activity android:name="com.yetland.crazy.bundle.destination.DestinationActivity" />
+        <activity android:name="com.yetland.crazy.bundle.user.UserDataActivity" />
+        <activity android:name="com.yetland.crazy.bundle.main.detail.DetailActivity" />
+        <activity android:name="com.yetland.crazy.bundle.user.mine.MineActivity" />
+        <activity android:name="com.yetland.crazy.bundle.user.mine.MineCommentActivity"></activity>
     </application>
 
 </manifest>

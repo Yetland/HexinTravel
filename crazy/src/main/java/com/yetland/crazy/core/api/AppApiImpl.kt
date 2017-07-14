@@ -13,6 +13,29 @@ import java.io.IOException
  * @Date:           2017/7/6
  */
 class AppApiImpl : AppApi {
+    override fun getMyComment(map: HashMap<String, String>, skip: Int, limit: Int): Observable<Data<MyComment>> {
+        Observable.empty<MyComment>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in Data<MyComment>> ->
+            try {
+                val body = Gson().toJson(map)
+                val response = RestApi().appService.getMyComment("activity,creator,activity.creator", body, skip, limit).execute()
+                if (response.isSuccessful) {
+                    subscriber.onNext(response.body())
+                } else {
+                    subscriber.onError(Throwable("获取评论失败"))
+                }
+                subscriber.onCompleted()
+
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                subscriber.onError(Throwable("获取评论失败"))
+                subscriber.onCompleted()
+            }
+
+        })
+    }
+
     override fun getComment(activityPoint: Point, skip: Int, limit: Int): Observable<Data<Comment>> {
         Observable.empty<Comment>().subscribe()
         return Observable.create({

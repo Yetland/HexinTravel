@@ -14,7 +14,26 @@ import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity.*
 import com.ynchinamobile.hexinlvxing.R
 
-class DetailActivity : BaseActivity(), ActivityDetailContract.View {
+class DetailActivity : BaseActivity(), ActivityDetailContract.View,RecyclerViewListener {
+    override fun onRefresh() {
+        currentPage = 0
+        getComment(point, currentPage)
+    }
+
+    override fun onLoadMore() {
+        currentPage++
+        Log.e("MainActivity", "onLoadMore")
+        rvDetailList.adapter.mList.add(Footer())
+        rvDetailList.adapter.notifyDataSetChanged()
+        getComment(point, currentPage)
+    }
+
+    override fun onErrorClick() {
+        currentPage = 0
+        rvDetailList.onLoading()
+        getComment(point, currentPage)
+    }
+
     override fun getComment(activityPointer: Point, page: Int) {
         presenter.getComment(activityPointer, page)
     }
@@ -54,25 +73,6 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View {
             list.addAll(results)
             rvDetailList.onComplete(list)
         }
-
-        rvDetailList.recyclerViewListener = (object : RecyclerViewListener {
-            override fun onErrorClick() {
-
-            }
-
-            override fun onRefresh() {
-                currentPage = 0
-                presenter.getComment(point, currentPage)
-            }
-
-            override fun onLoadMore() {
-                currentPage++
-                Log.e("MainActivity", "onLoadMore")
-                rvDetailList.adapter.mList.add(Footer())
-                rvDetailList.adapter.notifyDataSetChanged()
-                presenter.getComment(point, currentPage)
-            }
-        })
     }
 
     val TAG = "DetailActivity"
@@ -95,6 +95,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View {
         activityInfo.clickable = false
         rvDetailList = findViewById(R.id.rv_activity_detail)
         rvDetailList.initView(this)
+        rvDetailList.recyclerViewListener = this
         rvDetailList.onLoading()
         point = Point("Activity", activityInfo.objectId.toString())
         Log.e("DetailActivity", "name : ${point.className}, id = ${point.objectId}")

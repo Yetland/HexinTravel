@@ -21,9 +21,7 @@ import com.yetland.crazy.bundle.user.login.LoginActivity
 import com.yetland.crazy.core.base.BaseAdapter
 import com.yetland.crazy.core.base.BaseViewHolder
 import com.yetland.crazy.core.constant.IntentRequestCode
-import com.yetland.crazy.core.entity.ActivityInfo
-import com.yetland.crazy.core.entity.BaseEntity
-import com.yetland.crazy.core.entity._User
+import com.yetland.crazy.core.entity.*
 import com.yetland.crazy.core.utils.FileUtil
 import com.yetland.crazy.core.utils.makeShortToast
 import com.ynchinamobile.hexinlvxing.R
@@ -40,45 +38,6 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     var model = ActivityHolderModel()
     var presenter = ActivityHolderPresenter(model, this)
 
-    override fun like(activityId: String, like: String) {
-
-        val map = HashMap<String, String>()
-        map.put("like", like)
-        val body = Gson().toJson(map)
-        Log.e(TAG, body)
-        presenter.like(activityId, body)
-    }
-
-    override fun cancelLike(activityId: String, like: String) {
-        val map = HashMap<String, String>()
-        map.put("like", like)
-        val body = Gson().toJson(map)
-        presenter.cancelLike(activityId, body)
-    }
-
-    override fun follow(followUserId: String, followerUserId: String) {
-        presenter.follow(followUserId, followerUserId)
-    }
-
-    override fun likeSuccess() {
-        activityInfo = updatedActivityInfo
-        adapter.mList[holderPosition] = updatedActivityInfo
-        adapter.notifyItemChanged(holderPosition)
-        Log.e(TAG, "likeSuccess")
-    }
-
-    override fun cancelLikeSuccess() {
-        Log.e(TAG, "cancelLikeSuccess")
-    }
-
-    override fun followSuccess() {
-        Log.e(TAG, "followSuccess")
-    }
-
-    override fun fail(errorMsg: String) {
-        makeShortToast(context, errorMsg)
-    }
-
     val TAG = "ActivityHolder"
     var tvTitle: TextView = itemView.findViewById(R.id.tv_title)
     var tvContent: TextView = itemView.findViewById(R.id.tv_content)
@@ -92,71 +51,106 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     var llComment: LinearLayout = itemView.findViewById(R.id.ll_comment)
     var tvComment: TextView = itemView.findViewById<TextView>(R.id.tv_comment)
 
+    val llActivityMyComment: LinearLayout = itemView.findViewById(R.id.ll_activity_my_comment)
+    val tvCommentUsername: TextView = itemView.findViewById(R.id.tv_name)
+    val ivCommentAvatar: ImageView = itemView.findViewById(R.id.iv_avatar)
+    var tvCommentContent: TextView = itemView.findViewById(R.id.tv_comment_content)
+    var tvCommentTime: TextView = itemView.findViewById(R.id.tv_comment_time)
+
+    var comment = MyComment()
     var activityInfo = ActivityInfo()
     var updatedActivityInfo = ActivityInfo()
-    lateinit var adapter: BaseAdapter<BaseEntity>
     var holderPosition = 0
     var currentUser = _User()
+    lateinit var adapter: BaseAdapter<BaseEntity>
 
     override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>, activity: Activity) {
         mActivity = activity
         this.adapter = adapter
         this.holderPosition = position
         currentUser = FileUtil().getUserInfo(context)
-        if (t is ActivityInfo) {
-            activityInfo = t
-            updatedActivityInfo = activityInfo
-            tvTitle.text = activityInfo.title
-            tvContent.text = activityInfo.content
-            tvTime.text = activityInfo.createdAt
+        if (t is MyComment) {
+            comment = t
+            llActivityMyComment.visibility = View.VISIBLE
 
-            if (activityInfo.like.isNotEmpty()) {
-                if (currentUser.username!!.isNotEmpty()) {
-                    val like = activityInfo.like
-                    if (like.contains(currentUser.objectId.toString())) {
-                        ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_liked))
-                    } else {
-                        ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_like))
-                    }
+            if (comment.activity != null) {
+                comment.activity!!.clickable = false
+                setData(comment.activity!!)
+            }
+            setCommentData(comment)
+        } else if (t is ActivityInfo) {
+            llActivityMyComment.visibility = View.GONE
+            setData(t)
+        }
+    }
+
+    fun setCommentData(comment: MyComment) {
+        tvCommentContent.text = comment.content
+        tvCommentTime.text = comment.createdAt
+        val creator = comment.creator
+        if (creator != null) {
+            tvCommentUsername.text = comment.creator?.username
+
+            Picasso.with(context)
+                    .load(comment.creator?.avatarUrl)
+                    .placeholder(R.mipmap.huas)
+                    .into(ivCommentAvatar)
+        }
+    }
+
+    fun setData(t: ActivityInfo) {
+        activityInfo = t
+        updatedActivityInfo = activityInfo
+        tvTitle.text = activityInfo.title
+        tvContent.text = activityInfo.content
+        tvTime.text = activityInfo.createdAt
+
+        if (activityInfo.like.isNotEmpty()) {
+            if (currentUser.username!!.isNotEmpty()) {
+                val like = activityInfo.like
+                if (like.contains(currentUser.objectId.toString())) {
+                    ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_liked))
                 } else {
                     ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_like))
                 }
-                tvLike.text = (activityInfo.like.split(";").size.minus(1)).toString()
             } else {
                 ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_like))
-                tvLike.text = "0"
             }
-            if (!TextUtils.isEmpty(activityInfo.comment)) {
-                tvComment.text = activityInfo.comment?.split(";")?.size?.minus(1).toString()
-            } else {
-                tvComment.text = "0"
-            }
-
-            if (!TextUtils.isEmpty(activityInfo.url)) {
-                ivPhoto.adjustViewBounds = true
-                Picasso.with(context)
-                        .load(activityInfo.url!!.split(";")[0])
-//                        .transform(transform)
-                        .placeholder(R.mipmap.img_custom)
-                        .into(ivPhoto)
-            }
-            val user = activityInfo.creator
-            tvUserName.text = user?.username
-            if (!TextUtils.isEmpty(user?.avatarUrl)) {
-                Picasso.with(context)
-                        .load(user?.avatarUrl)
-                        .placeholder(R.mipmap.huas)
-                        .into(ivAvatar)
-            } else {
-                ivAvatar.setImageDrawable(context.resources.getDrawable(R.mipmap.huas))
-            }
-
-            if (activityInfo.clickable) {
-                itemView.setOnClickListener(this)
-                llComment.setOnClickListener(this)
-            }
-            llLike.setOnClickListener(this)
+            tvLike.text = (activityInfo.like.split(";").size.minus(1)).toString()
+        } else {
+            ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_like))
+            tvLike.text = "0"
         }
+        if (!TextUtils.isEmpty(activityInfo.comment)) {
+            tvComment.text = activityInfo.comment?.split(";")?.size?.minus(1).toString()
+        } else {
+            tvComment.text = "0"
+        }
+
+        if (!TextUtils.isEmpty(activityInfo.url)) {
+            ivPhoto.adjustViewBounds = true
+            Picasso.with(context)
+                    .load(activityInfo.url!!.split(";")[0])
+//                        .transform(transform)
+                    .placeholder(R.mipmap.img_custom)
+                    .into(ivPhoto)
+        }
+        val user = activityInfo.creator
+        tvUserName.text = user?.username
+        if (!TextUtils.isEmpty(user?.avatarUrl)) {
+            Picasso.with(context)
+                    .load(user?.avatarUrl)
+                    .placeholder(R.mipmap.huas)
+                    .into(ivAvatar)
+        } else {
+            ivAvatar.setImageDrawable(context.resources.getDrawable(R.mipmap.huas))
+        }
+
+        if (activityInfo.clickable) {
+            itemView.setOnClickListener(this)
+            llComment.setOnClickListener(this)
+        }
+        llLike.setOnClickListener(this)
     }
 
     override fun onClick(view: View) {
@@ -187,6 +181,50 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                 Log.e(TAG, "commentClick")
             }
         }
+    }
+
+    override fun like(activityId: String, like: String) {
+
+        val map = HashMap<String, String>()
+        map.put("like", like)
+        val body = Gson().toJson(map)
+        Log.e(TAG, body)
+        presenter.like(activityId, body)
+    }
+
+    override fun cancelLike(activityId: String, like: String) {
+        val map = HashMap<String, String>()
+        map.put("like", like)
+        val body = Gson().toJson(map)
+        presenter.cancelLike(activityId, body)
+    }
+
+    override fun follow(followUserId: String, followerUserId: String) {
+        presenter.follow(followUserId, followerUserId)
+    }
+
+    override fun likeSuccess() {
+        activityInfo = updatedActivityInfo
+        if (comment.activity != null) {
+            comment.activity = updatedActivityInfo
+            adapter.mList[holderPosition] = comment
+        } else {
+            adapter.mList[holderPosition] = updatedActivityInfo
+        }
+        adapter.notifyItemChanged(holderPosition)
+        Log.e(TAG, "likeSuccess")
+    }
+
+    override fun cancelLikeSuccess() {
+        Log.e(TAG, "cancelLikeSuccess")
+    }
+
+    override fun followSuccess() {
+        Log.e(TAG, "followSuccess")
+    }
+
+    override fun fail(errorMsg: String) {
+        makeShortToast(context, errorMsg)
     }
 
     val transform = (object : Transformation {

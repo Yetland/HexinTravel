@@ -40,7 +40,6 @@ class CommentHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view) {
                         .placeholder(R.mipmap.huas)
                         .into(ivAvatar)
             }
-
         }
         /* if (itemView != null) {
              val tvUsername = itemView.findViewById<TextView>(R.id.tv_user_name)!!

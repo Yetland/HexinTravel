@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:background="@color/white"
+        android:background="@drawable/item_click"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="4dp">

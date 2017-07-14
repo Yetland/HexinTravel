@@ -17,4 +17,6 @@ interface AppApi {
     fun likeActivity(activityId: String, like: String): Observable<BaseResult>
     fun followUser(followUserId: String, followerUserId: String): Observable<BaseEntity>
     fun getComment(activityPoint: Point, skip: Int, limit: Int): Observable<Data<Comment>>
+    fun getMyComment(map : HashMap<String,String>, skip: Int, limit: Int): Observable<Data<MyComment>>
+
 }

@@ -8,6 +8,7 @@ import com.yetland.crazy.core.base.BaseViewHolder
 import com.yetland.crazy.core.entity.ActivityInfo
 import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.entity.Comment
+import com.yetland.crazy.core.entity.MyComment
 import com.ynchinamobile.hexinlvxing.R
 
 /**
@@ -25,7 +26,12 @@ interface TypeFactory {
 }
 
 class TypeFactoryForList : TypeFactory {
-    override fun type(comment: Comment): Int = R.layout.item_comment
+    override fun type(comment: Comment): Int {
+        if (comment is MyComment) {
+            return R.layout.item_main_activity
+        } else return R.layout.item_comment
+    }
+
     override fun type(user: User): Int = R.layout.item_main_activity
     override fun type(activityInfo: ActivityInfo): Int = R.layout.item_main_activity
     override fun type(footer: Footer) = R.layout.item_footer

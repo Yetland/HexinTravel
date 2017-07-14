@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,13 +17,14 @@ import android.widget.TextView
 import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.utils.makeShortToast
 import com.ynchinamobile.hexinlvxing.R
+import kotlinx.android.synthetic.main.layout_error.view.*
 
 /**
  * @Name:           BaseRecyclerView
  * @Author:         yeliang
  * @Date:           2017/7/10
  */
-class BaseRecyclerView constructor(context: Context, att: AttributeSet) : LinearLayout(context, att) {
+class BaseRecyclerView constructor(context: Context, att: AttributeSet) : LinearLayout(context, att), View.OnClickListener {
 
     var canRefresh = true
     var canLoadMore = true
@@ -100,7 +102,6 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
                 }
             }))
         }
-        errorImage.setOnClickListener { View.OnClickListener { recyclerViewListener?.onErrorClick() } }
 
         recyclerView.layoutManager = layoutManager
 
@@ -130,6 +131,7 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
     }
 
     fun onLoadError(errorMsg: String = "加载失败啦~") {
+
         swipeRefreshLayout.isRefreshing = false
         canRefresh = true
         isLoadingMore = false
@@ -142,6 +144,7 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
                 layoutContent.visibility = View.GONE
 
                 errorMessage.text = errorMsg
+                errorImage.setOnClickListener(this)
             }
             TYPE_REFRESH -> onRefreshError(errorMsg)
             TYPE_LOAD_MORE -> onLoadMoreError(errorMsg)
@@ -159,4 +162,13 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
         adapter.notifyDataSetChanged()
         makeShortToast(context, errorMsg)
     }
+
+    override fun onClick(view: View?) {
+        when (view?.id) {
+            R.id.iv_error_img -> {
+                recyclerViewListener?.onErrorClick()
+            }
+        }
+    }
+
 }
