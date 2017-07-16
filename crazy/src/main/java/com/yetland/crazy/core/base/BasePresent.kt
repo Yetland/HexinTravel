@@ -7,14 +7,9 @@ package com.yetland.crazy.core.base
  */
 abstract class BasePresenter<M, V> constructor(m: M, v: V) {
 
-    var mModel: M
-    var mView: V
+    var mModel: M = m
+    var mView: V = v
     var rxManager = RxManager()
-
-    init {
-        mModel = m
-        mView = v
-    }
 
     abstract fun onStart()
 

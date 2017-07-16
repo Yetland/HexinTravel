@@ -7,7 +7,6 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +14,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.yetland.crazy.core.entity.BaseEntity
+import com.yetland.crazy.core.entity.Footer
 import com.yetland.crazy.core.utils.makeShortToast
 import com.ynchinamobile.hexinlvxing.R
-import kotlinx.android.synthetic.main.layout_error.view.*
 
 /**
  * @Name:           BaseRecyclerView
@@ -25,6 +24,7 @@ import kotlinx.android.synthetic.main.layout_error.view.*
  * @Date:           2017/7/10
  */
 class BaseRecyclerView constructor(context: Context, att: AttributeSet) : LinearLayout(context, att), View.OnClickListener {
+
 
     var canRefresh = true
     var canLoadMore = true
@@ -48,6 +48,7 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
     val TYPE_LOADING = 0
     val TYPE_REFRESH = 1
     val TYPE_LOAD_MORE = 2
+
 
     init {
         @SuppressLint("InflateParams")
@@ -96,6 +97,8 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
                             loadType = TYPE_LOAD_MORE
                             canRefresh = false
                             isLoadingMore = true
+                            adapter.mList.add(Footer())
+                            adapter.notifyDataSetChanged()
                             recyclerViewListener?.onLoadMore()
                         }
                     }
@@ -171,4 +174,48 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
         }
     }
 
+    fun onDefaultComplete(list: ArrayList<BaseEntity>, currentPage: Int) {
+
+
+        layoutLoading.visibility = View.GONE
+        layoutError.visibility = View.GONE
+        layoutContent.visibility = View.VISIBLE
+
+        if (adapter.itemCount == 0) {
+            recyclerView.adapter = adapter
+        }
+
+        if (list.size == 0) {
+            if (currentPage == 0) {
+                adapter.mList = ArrayList()
+                val footer = Footer()
+                footer.noMore = true
+                adapter.mList.add(footer)
+                canLoadMore = false
+
+            } else {
+                adapter.mList.removeAt(adapter.mList.size - 1)
+                val footer = Footer()
+                footer.noMore = true
+                adapter.mList.add(footer)
+
+                canLoadMore = false
+
+            }
+        } else {
+            if (currentPage == 0) {
+                adapter.mList = ArrayList<BaseEntity>()
+            } else {
+                adapter.mList.removeAt(adapter.mList.size - 1)
+            }
+            canLoadMore = true
+            adapter.mList.addAll(list)
+        }
+
+        swipeRefreshLayout.isRefreshing = false
+        canRefresh = true
+        isLoadingMore = false
+        isRefreshing = false
+        adapter.notifyDataSetChanged()
+    }
 }

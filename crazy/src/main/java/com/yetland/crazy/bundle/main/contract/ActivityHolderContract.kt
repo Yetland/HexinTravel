@@ -17,8 +17,8 @@ import rx.Observable
 interface ActivityHolderContract {
 
     interface View : BaseView {
-        fun like(activityId: String, like: String)
-        fun cancelLike(activityId: String, like: String)
+        fun like(activityId: String, where: String)
+        fun cancelLike(activityId: String, where: String)
         fun follow(followUserId: String, followerUserId: String)
         fun likeSuccess()
         fun cancelLikeSuccess()
@@ -27,25 +27,25 @@ interface ActivityHolderContract {
     }
 
     interface Model : BaseModel {
-        fun like(activityId: String, like: String): Observable<BaseResult>
-        fun cancelLike(activityId: String, like: String): Observable<BaseResult>
+        fun like(activityId: String, where: String): Observable<BaseResult>
+        fun cancelLike(activityId: String, where: String): Observable<BaseResult>
         fun follow(followUserId: String, followerUserId: String): Observable<BaseEntity>
     }
 
     abstract class Presenter constructor(model: Model, view: View) : BasePresenter<Model, View>(model, view) {
-        abstract fun like(activityId: String, like: String)
-        abstract fun cancelLike(activityId: String, like: String)
+        abstract fun like(activityId: String, where: String)
+        abstract fun cancelLike(activityId: String, where: String)
         abstract fun follow(followUserId: String, followerUserId: String)
     }
 }
 
 class ActivityHolderModel : ActivityHolderContract.Model {
-    override fun like(activityId: String, like: String): Observable<BaseResult> {
-        return AppApiImpl().likeActivity(activityId, like).compose(RxSchedulers.new_thread())
+    override fun like(activityId: String, where: String): Observable<BaseResult> {
+        return AppApiImpl().updateActivity(activityId, where).compose(RxSchedulers.new_thread())
     }
 
-    override fun cancelLike(activityId: String, like: String): Observable<BaseResult> {
-        return AppApiImpl().likeActivity(activityId, like).compose(RxSchedulers.new_thread())
+    override fun cancelLike(activityId: String, where: String): Observable<BaseResult> {
+        return AppApiImpl().updateActivity(activityId, where).compose(RxSchedulers.new_thread())
     }
 
     override fun follow(followUserId: String, followerUserId: String): Observable<BaseEntity> {
@@ -59,8 +59,8 @@ class ActivityHolderPresenter constructor(model: ActivityHolderModel, view: Acti
     override fun onStart() {
     }
 
-    override fun like(activityId: String, like: String) {
-        rxManager.add(mModel.like(activityId, like).subscribe({
+    override fun like(activityId: String, where: String) {
+        rxManager.add(mModel.like(activityId, where).subscribe({
             mView.likeSuccess()
         }, {
             throwable: Throwable ->
@@ -68,8 +68,8 @@ class ActivityHolderPresenter constructor(model: ActivityHolderModel, view: Acti
         }))
     }
 
-    override fun cancelLike(activityId: String, like: String) {
-        rxManager.add(mModel.like(activityId, like).subscribe({
+    override fun cancelLike(activityId: String, where: String) {
+        rxManager.add(mModel.like(activityId, where).subscribe({
             mView.cancelLikeSuccess()
         }, {
             throwable: Throwable ->

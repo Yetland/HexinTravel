@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import com.yetland.crazy.bundle.destination.bean.Footer
 import com.yetland.crazy.bundle.main.contract.MainContract
 import com.yetland.crazy.bundle.main.contract.MainModel
 import com.yetland.crazy.bundle.main.contract.MainPresent
@@ -27,8 +26,9 @@ class MainActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
 
     var mainModel = MainModel()
     var mainPresent = MainPresent(mainModel, this)
-    var list = ArrayList<BaseEntity>()
     lateinit var rvList: BaseRecyclerView
+    val map = HashMap<String, String>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +39,7 @@ class MainActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
         rvList.initView(this)
         rvList.recyclerViewListener = this
         onLoading("Loading")
-        getActivities(currentPage)
+        getActivities(null, currentPage)
     }
 
     override fun onLoading(msg: String) {
@@ -54,55 +54,30 @@ class MainActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
     override fun onComplete(activityModel: Data<ActivityInfo>) {
 
         Log.e("MainActivity", "onComplete")
-
-        val results = activityModel.results!!
-
-        if (results.size == 0) {
-            if (currentPage == 0) {
-                list = ArrayList()
-                val footer = Footer()
-                footer.noMore = true
-                list.add(footer)
-                rvList.onComplete(list, true)
-            } else {
-                list.removeAt(list.size - 1)
-                val footer = Footer()
-                footer.noMore = true
-                list.add(footer)
-                rvList.onComplete(list, true)
-            }
-        } else {
-            if (currentPage == 0) {
-                list = ArrayList<BaseEntity>()
-            } else {
-                list.removeAt(list.size - 1)
-            }
-            list.addAll(results)
-            rvList.onComplete(list)
-        }
+        val list = ArrayList<BaseEntity>()
+        list.addAll(activityModel.results!!)
+        rvList.onDefaultComplete(list, currentPage)
     }
 
     override fun onRefresh() {
         currentPage = 0
-        getActivities(currentPage)
+        getActivities(null, currentPage)
     }
 
     override fun onLoadMore() {
         currentPage++
         Log.e("MainActivity", "onLoadMore")
-        rvList.adapter.mList.add(Footer())
-        rvList.adapter.notifyDataSetChanged()
-        getActivities(currentPage)
+        getActivities(null, currentPage)
     }
 
     override fun onErrorClick() {
         onLoading("Loading")
         currentPage = 0
-        getActivities(currentPage)
+        getActivities(null, currentPage)
     }
 
-    override fun getActivities(skip: Int) {
-        mainPresent.getActivities(currentPage)
+    override fun getActivities(where: String?, skip: Int) {
+        mainPresent.getActivities(where, currentPage)
     }
 
 
@@ -147,8 +122,18 @@ class MainActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
                 val bundle = data?.extras
                 val activityInfo: ActivityInfo = bundle?.getSerializable("activityInfo") as ActivityInfo
                 val position = bundle.getInt("position")
-                rvList.adapter.mList[position] = activityInfo
-                rvList.adapter.notifyDataSetChanged()
+
+                if (rvList.canLoadMore) {
+                    if (position + 1 <= rvList.adapter.mList.size) {
+                        rvList.adapter.mList[position] = activityInfo
+                        rvList.adapter.notifyDataSetChanged()
+                    }
+                } else {
+                    if (position + 2 <= rvList.adapter.mList.size) {
+                        rvList.adapter.mList[position] = activityInfo
+                        rvList.adapter.notifyDataSetChanged()
+                    }
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data)

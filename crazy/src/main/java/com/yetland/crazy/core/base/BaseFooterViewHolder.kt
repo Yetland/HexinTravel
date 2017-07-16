@@ -4,7 +4,7 @@ import android.app.Activity
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.yetland.crazy.bundle.destination.bean.Footer
+import com.yetland.crazy.core.entity.Footer
 import com.yetland.crazy.core.entity.BaseEntity
 import com.ynchinamobile.hexinlvxing.R
 

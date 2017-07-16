@@ -13,7 +13,6 @@ import com.yetland.crazy.core.utils.ActivityManager
 abstract class BaseActivity : AppCompatActivity() {
     var currentPage = 0
     lateinit var activity: Activity
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity = this

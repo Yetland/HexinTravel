@@ -1,6 +1,4 @@
-package com.yetland.crazy.bundle.destination.bean
-
-import com.yetland.crazy.core.entity.BaseEntity
+package com.yetland.crazy.core.entity
 
 /**
  * @Name:           Animal

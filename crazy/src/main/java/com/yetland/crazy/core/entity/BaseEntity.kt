@@ -1,6 +1,5 @@
 package com.yetland.crazy.core.entity
 
-import com.yetland.crazy.bundle.destination.bean.TypeFactory
 import java.io.Serializable
 
 /**
@@ -9,11 +8,22 @@ import java.io.Serializable
  * @Date:           2017/7/6
  */
 abstract class BaseEntity : Serializable {
-    var objectId: String? = ""
+    /**
+     * get() {
+    var time = createdAt
+    time.replace("T", " ")
+    time.replace("Z", "")
+    time = time.split(".")[0]
+
+    return time
+    }
+     */
+    var objectId: String = ""
     var updatedAt: String? = null
-    var createdAt: String? = null
+    var createdAt: String = ""
+
     var url: String? = null
-    var clickable = true
+    @Transient var clickable = true
     abstract fun type(typeFactory: TypeFactory): Int
 }
 
@@ -22,7 +32,4 @@ class BaseResult {
     var updateAt: String? = null
 }
 
-class Point(className: String, objectId: String) {
-    var className: String? = className
-    var objectId: String? = objectId
-}
+class Point(var __type: String, var className: String, var objectId: String)

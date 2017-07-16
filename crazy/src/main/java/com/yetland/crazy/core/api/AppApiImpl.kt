@@ -1,5 +1,6 @@
 package com.yetland.crazy.core.api
 
+import android.util.Log
 import com.google.gson.Gson
 import com.yetland.crazy.core.entity.*
 import okhttp3.RequestBody
@@ -13,13 +14,115 @@ import java.io.IOException
  * @Date:           2017/7/6
  */
 class AppApiImpl : AppApi {
+    override fun getUser(objectId: String): Observable<_User> {
+        Observable.empty<_User>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in _User> ->
+            try {
+
+                val response = RestApi().appService.getUser(objectId).execute()
+                if (response.isSuccessful) {
+                    subscriber.onNext(response.body())
+                } else {
+                    subscriber.onError(Throwable(response.errorBody().string()))
+                }
+                subscriber.onCompleted()
+
+            } catch (t: Throwable) {
+                subscriber.onError(t)
+                subscriber.onCompleted()
+            }
+        })
+    }
+
+    override fun getFollow(where: String, include: String, order: String, skip: Int, limit: Int): Observable<Data<Follow>> {
+        Observable.empty<Follow>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in Data<Follow>> ->
+            try {
+
+                val response = RestApi().appService.getFollow(where, include, order, skip, limit).execute()
+                if (response.isSuccessful) {
+                    subscriber.onNext(response.body())
+                } else {
+                    subscriber.onError(Throwable(response.errorBody().string()))
+                }
+                subscriber.onCompleted()
+
+            } catch (t: Throwable) {
+                subscriber.onError(t)
+                subscriber.onCompleted()
+            }
+        })
+    }
+
+    override fun follow(follow: Follow): Observable<Follow> {
+        Observable.empty<Follow>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in Follow> ->
+
+            try {
+                val response = RestApi().appService.follow(follow).execute()
+                if (response.isSuccessful) subscriber.onNext(response.body())
+                else subscriber.onError(Throwable(response.errorBody().string()))
+                subscriber.onCompleted()
+            } catch (t: Throwable) {
+                subscriber.onError(t)
+                subscriber.onCompleted()
+            }
+
+        })
+    }
+
+    override fun unFollow(objectId: String): Observable<BaseResult> {
+        Observable.empty<BaseResult>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in BaseResult> ->
+
+            try {
+                val response = RestApi().appService.deleteFollow(objectId).execute()
+                if (response.isSuccessful) subscriber.onNext(response.body())
+                else subscriber.onError(Throwable(response.errorBody().string()))
+                subscriber.onCompleted()
+            } catch (t: Throwable) {
+                subscriber.onError(t)
+                subscriber.onCompleted()
+            }
+
+        })
+    }
+
+    override fun writeComment(comment: CommitComment): Observable<BaseResult> {
+        Observable.empty<BaseResult>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in BaseResult> ->
+            try {
+                val body = Gson().toJson(comment)
+                Log.e("writeComment", body)
+                val response = RestApi().appService.writeComment(comment).execute()
+                if (response.isSuccessful) {
+                    subscriber.onNext(response.body())
+                } else {
+                    subscriber.onError(Throwable(response.errorBody().string()))
+                }
+                subscriber.onCompleted()
+
+            } catch (e: IOException) {
+                subscriber.onError(Throwable("请求失败"))
+                subscriber.onCompleted()
+            }
+        })
+    }
+
+
     override fun getMyComment(map: HashMap<String, String>, skip: Int, limit: Int): Observable<Data<MyComment>> {
         Observable.empty<MyComment>().subscribe()
         return Observable.create({
             subscriber: Subscriber<in Data<MyComment>> ->
             try {
-                val body = Gson().toJson(map)
-                val response = RestApi().appService.getMyComment("activity,creator,activity.creator", body, skip, limit).execute()
+                val where = Gson().toJson(map)
+                val response = RestApi().appService.getMyComment("activity,creator,activity.creator",
+                        where, "-createdAt", skip, limit).execute()
                 if (response.isSuccessful) {
                     subscriber.onNext(response.body())
                 } else {
@@ -36,16 +139,15 @@ class AppApiImpl : AppApi {
         })
     }
 
-    override fun getComment(activityPoint: Point, skip: Int, limit: Int): Observable<Data<Comment>> {
+    override fun getComment(map: HashMap<String, String>, skip: Int, limit: Int): Observable<Data<Comment>> {
         Observable.empty<Comment>().subscribe()
         return Observable.create({
             subscriber: Subscriber<in Data<Comment>> ->
             try {
-                val map = HashMap<String, String>()
-                map.put("activityId", activityPoint.objectId!!)
-                val body = Gson().toJson(map)
+                val where = Gson().toJson(map)
 
-                val response = RestApi().appService.getComment("activity,creator", body, skip, limit).execute()
+                val response = RestApi().appService.getComment("activity,creator,activity.creator", where,
+                        "-createdAt", skip, limit).execute()
                 if (response.isSuccessful) {
                     subscriber.onNext(response.body())
                 } else {
@@ -82,15 +184,14 @@ class AppApiImpl : AppApi {
         })
     }
 
-    override fun likeActivity(activityId: String, like: String): Observable<BaseResult> {
+    override fun updateActivity(activityId: String, where: String): Observable<BaseResult> {
         Observable.empty<BaseResult>().subscribe()
         return Observable.create({
             subscriber: Subscriber<in BaseResult> ->
             try {
-
-                val body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), like)
-
-                val response = RestApi().appService.like(activityId, body).execute()
+                Log.e("updateActivity", where)
+                val body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), where)
+                val response = RestApi().appService.updateActivity(activityId, body).execute()
                 if (response.isSuccessful) {
                     subscriber.onNext(response.body())
                 } else {
@@ -146,11 +247,11 @@ class AppApiImpl : AppApi {
         }
     }
 
-    override fun getActivities(include: String, skip: Int, limit: Int): Observable<Data<ActivityInfo>> {
+    override fun getActivities(include: String, where: String?,skip: Int, limit: Int): Observable<Data<ActivityInfo>> {
         Observable.empty<Any>().subscribe()
         return Observable.create { subscriber: Subscriber<in Data<ActivityInfo>> ->
             try {
-                val response = RestApi().appService.getActivity(include, skip, limit).execute()
+                val response = RestApi().appService.getActivity(include, where,"-likeCount,-createdAt", skip, limit).execute()
 
                 if (response.isSuccessful) {
                     subscriber.onNext(response.body())

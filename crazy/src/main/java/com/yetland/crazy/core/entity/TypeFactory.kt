@@ -1,14 +1,11 @@
-package com.yetland.crazy.bundle.destination.bean
+package com.yetland.crazy.core.entity
 
 import android.view.View
 import com.yetland.crazy.bundle.main.holder.ActivityHolder
 import com.yetland.crazy.bundle.main.holder.CommentHolder
+import com.yetland.crazy.bundle.user.holder.FollowHolder
 import com.yetland.crazy.core.base.BaseFooterViewHolder
 import com.yetland.crazy.core.base.BaseViewHolder
-import com.yetland.crazy.core.entity.ActivityInfo
-import com.yetland.crazy.core.entity.BaseEntity
-import com.yetland.crazy.core.entity.Comment
-import com.yetland.crazy.core.entity.MyComment
 import com.ynchinamobile.hexinlvxing.R
 
 /**
@@ -23,9 +20,14 @@ interface TypeFactory {
     fun type(activityInfo: ActivityInfo): Int
     fun type(user: User): Int
     fun type(comment: Comment): Int
+    fun type(follower: Follow): Int
 }
 
 class TypeFactoryForList : TypeFactory {
+    override fun type(follower: Follow): Int {
+        return R.layout.item_follower
+    }
+
     override fun type(comment: Comment): Int {
         if (comment is MyComment) {
             return R.layout.item_main_activity
@@ -39,15 +41,14 @@ class TypeFactoryForList : TypeFactory {
     override fun createViewHolder(type: Int, view: View): BaseViewHolder<BaseEntity> {
         when (type) {
 
-            R.layout.item_main_activity -> {
-                return ActivityHolder(view)
-            }
-            R.layout.item_footer -> {
-                return BaseFooterViewHolder(view)
-            }
-            R.layout.item_comment -> {
-                return CommentHolder(view)
-            }
+            R.layout.item_main_activity -> return ActivityHolder(view)
+
+            R.layout.item_footer -> return BaseFooterViewHolder(view)
+
+            R.layout.item_comment -> return CommentHolder(view)
+
+            R.layout.item_follower -> return FollowHolder(view)
+
             else -> return BaseFooterViewHolder(view)
         }
     }

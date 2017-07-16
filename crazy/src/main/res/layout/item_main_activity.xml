@@ -146,14 +146,13 @@
         android:background="@android:color/darker_gray" />
 
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/ll_activity_my_comment"
-        android:layout_marginLeft="4dp"
-        android:layout_marginRight="4dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginRight="4dp"
+        android:visibility="gone">
 
-        <include layout="@layout/item_comment" />
+        <include layout="@layout/item_comment"/>
 
     </LinearLayout>
 </LinearLayout>

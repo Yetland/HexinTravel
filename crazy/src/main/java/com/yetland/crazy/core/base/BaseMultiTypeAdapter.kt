@@ -4,9 +4,9 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.yetland.crazy.bundle.destination.bean.TypeFactory
-import com.yetland.crazy.bundle.destination.bean.TypeFactoryForList
 import com.yetland.crazy.core.entity.BaseEntity
+import com.yetland.crazy.core.entity.TypeFactory
+import com.yetland.crazy.core.entity.TypeFactoryForList
 
 /**
  * @Name:           BaseMultiTypeAdapter

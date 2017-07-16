@@ -25,22 +25,55 @@ interface AppService {
     @GET("login")
     fun login(@Query("username") username: String, @Query("password") password: String): Call<_User>
 
+    @GET("classes/_User/{objectId}")
+    fun getUser(@Path("objectId") objectId: String): Call<_User>
+
     @POST("users")
     fun register(@Body user: _User): Call<_User>
 
     @GET("classes/Activity")
-    fun getActivity(@Query("include") creator: String, @Query("skip") skip: Int, @Query("limit") limit: Int = DEFAULT_LIMIT): Call<Data<ActivityInfo>>
+    fun getActivity(@Query("include") creator: String,
+                    @Query("where") where: String? = "{}",
+                    @Query("order") order: String = "-createdAt",
+                    @Query("skip") skip: Int,
+                    @Query("limit") limit: Int = DEFAULT_LIMIT): Call<Data<ActivityInfo>>
 
     @PUT("classes/Activity/{name}")
-    fun like(@Path("name") objectId: String, @Body like: RequestBody): Call<BaseResult>
+    fun updateActivity(@Path("name") objectId: String,
+                       @Body body: RequestBody): Call<BaseResult>
 
     @POST("classes/Follow")
-    fun follow(@Query("followUserId") followUserId: String, @Query("followerUserId") followerUserId: String): Call<BaseEntity>
+    fun follow(@Query("followUserId") followUserId: String,
+               @Query("followerUserId") followerUserId: String): Call<BaseEntity>
 
     @GET("classes/Comment")
-    fun getComment(@Query("include") include: String, @Query("where") where: String, @Query("skip") skip: Int, @Query("limit") limit: Int = DEFAULT_LIMIT): Call<Data<Comment>>
+    fun getComment(@Query("include") include: String,
+                   @Query("where") where: String,
+                   @Query("order") order: String,
+                   @Query("skip") skip: Int,
+                   @Query("limit") limit: Int): Call<Data<Comment>>
 
     @GET("classes/Comment")
-    fun getMyComment(@Query("include") include: String, @Query("where") where: String, @Query("skip") skip: Int, @Query("limit") limit: Int = DEFAULT_LIMIT): Call<Data<MyComment>>
+    fun getMyComment(@Query("include") include: String,
+                     @Query("where") where: String,
+                     @Query("order") order: String,
+                     @Query("skip") skip: Int,
+                     @Query("limit") limit: Int): Call<Data<MyComment>>
 
+    @POST("classes/Comment")
+    fun writeComment(@Body comment: CommitComment): Call<BaseResult>
+
+
+    @POST("classes/follower?fetchWhenSave=true")
+    fun follow(@Body follow: Follow): Call<Follow>
+
+    @GET("classes/follower")
+    fun getFollow(@Query("where") where: String,
+                  @Query("include") include: String,
+                  @Query("order") order: String,
+                  @Query("skip") skip: Int,
+                  @Query("limit") limit: Int): Call<Data<Follow>>
+
+    @DELETE("classes/follower/{id}")
+    fun deleteFollow(@Path("id") id: String): Call<BaseResult>
 }

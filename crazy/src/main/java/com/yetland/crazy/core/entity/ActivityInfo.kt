@@ -1,7 +1,5 @@
 package com.yetland.crazy.core.entity
 
-import com.yetland.crazy.bundle.destination.bean.TypeFactory
-
 /**
  * @Name:           ActivityInfo
  * @Author:         yeliang
@@ -13,9 +11,12 @@ class ActivityInfo : BaseEntity() {
         return typeFactory.type(this)
     }
 
-    var title: String? = null// 活动的标题
+    var title: String = ""// 活动的标题
     var content: String? = null// 活动内容简介
-    var creator: _User? = null
-    var comment: String? = null
+    var creator: _User = _User()
+    var comment: String = ""
     var like: String = ""
+    var likeCount: Int = 0
+    var commentCount: Int = 0
+
 }

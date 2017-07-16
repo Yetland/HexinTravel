@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.yetland.crazy.bundle.user.mine.MineActivity">
+    tools:context="com.yetland.crazy.bundle.user.FollowActivity">
 
     <com.yetland.crazy.core.base.BaseRecyclerView
-        android:id="@+id/rv_my_activity"
+        android:id="@+id/rv_follow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </LinearLayout>

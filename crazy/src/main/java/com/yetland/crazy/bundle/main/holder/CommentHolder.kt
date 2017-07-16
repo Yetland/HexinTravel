@@ -21,7 +21,7 @@ class CommentHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view) {
 
     lateinit var comment: Comment
     val tvUsername: TextView = view.findViewById(R.id.tv_name)
-    val ivAvatar: ImageView = view.findViewById(R.id.iv_avatar)
+    val ivAvatar: ImageView = view.findViewById(R.id.iv_comment_avatar)
     var tvCommentContent: TextView = view.findViewById(R.id.tv_comment_content)
     var tvCommentTime: TextView = view.findViewById(R.id.tv_comment_time)
     override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>, activity: Activity) {
@@ -32,11 +32,12 @@ class CommentHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view) {
             tvCommentContent.text = comment.content
             tvCommentTime.text = comment.createdAt
             val creator = comment.creator
-            if (creator != null) {
-                tvUsername.text = comment.creator?.username
+            tvUsername.text = creator.username
+
+            if (creator.avatarUrl!!.isNotEmpty()){
 
                 Picasso.with(context)
-                        .load(comment.creator?.avatarUrl)
+                        .load(creator.avatarUrl)
                         .placeholder(R.mipmap.huas)
                         .into(ivAvatar)
             }

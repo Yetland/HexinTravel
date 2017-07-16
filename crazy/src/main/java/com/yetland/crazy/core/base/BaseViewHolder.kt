@@ -15,5 +15,8 @@ abstract class BaseViewHolder<T> constructor(itemView: View) : RecyclerView.View
 
     var context: Context = itemView.context
     lateinit var mActivity: Activity
+    var mPosition = 0
+    lateinit var mAdapter: BaseAdapter<T>
+
     abstract fun setData(t: T, position: Int, adapter: BaseAdapter<T>, activity: Activity)
 }

@@ -17,6 +17,9 @@ import com.yetland.crazy.bundle.main.contract.ActivityHolderContract
 import com.yetland.crazy.bundle.main.contract.ActivityHolderModel
 import com.yetland.crazy.bundle.main.contract.ActivityHolderPresenter
 import com.yetland.crazy.bundle.main.detail.DetailActivity
+import com.yetland.crazy.bundle.user.contract.FollowContract
+import com.yetland.crazy.bundle.user.contract.FollowModel
+import com.yetland.crazy.bundle.user.contract.FollowPresenter
 import com.yetland.crazy.bundle.user.login.LoginActivity
 import com.yetland.crazy.core.base.BaseAdapter
 import com.yetland.crazy.core.base.BaseViewHolder
@@ -33,10 +36,11 @@ import com.ynchinamobile.hexinlvxing.R
  * @Date:           2017/7/11
  */
 class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(itemView), View.OnClickListener,
-        ActivityHolderContract.View {
+        ActivityHolderContract.View ,FollowContract.View{
 
-    var model = ActivityHolderModel()
-    var presenter = ActivityHolderPresenter(model, this)
+
+    var presenter = ActivityHolderPresenter(ActivityHolderModel(), this)
+    var followPresenter = FollowPresenter(FollowModel(),this)
 
     val TAG = "ActivityHolder"
     var tvTitle: TextView = itemView.findViewById(R.id.tv_title)
@@ -53,7 +57,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
 
     val llActivityMyComment: LinearLayout = itemView.findViewById(R.id.ll_activity_my_comment)
     val tvCommentUsername: TextView = itemView.findViewById(R.id.tv_name)
-    val ivCommentAvatar: ImageView = itemView.findViewById(R.id.iv_avatar)
+    val ivCommentAvatar: ImageView = itemView.findViewById(R.id.iv_comment_avatar)
     var tvCommentContent: TextView = itemView.findViewById(R.id.tv_comment_content)
     var tvCommentTime: TextView = itemView.findViewById(R.id.tv_comment_time)
 
@@ -73,9 +77,9 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
             comment = t
             llActivityMyComment.visibility = View.VISIBLE
 
-            if (comment.activity != null) {
-                comment.activity!!.clickable = false
-                setData(comment.activity!!)
+            if (comment.activity.objectId.isNotEmpty()) {
+                comment.activity.clickable = false
+                setData(comment.activity)
             }
             setCommentData(comment)
         } else if (t is ActivityInfo) {
@@ -88,11 +92,11 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         tvCommentContent.text = comment.content
         tvCommentTime.text = comment.createdAt
         val creator = comment.creator
-        if (creator != null) {
-            tvCommentUsername.text = comment.creator?.username
+        tvCommentUsername.text = creator.username
 
+        if (creator.avatarUrl!!.isNotEmpty()) {
             Picasso.with(context)
-                    .load(comment.creator?.avatarUrl)
+                    .load(creator.avatarUrl)
                     .placeholder(R.mipmap.huas)
                     .into(ivCommentAvatar)
         }
@@ -105,27 +109,15 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         tvContent.text = activityInfo.content
         tvTime.text = activityInfo.createdAt
 
-        if (activityInfo.like.isNotEmpty()) {
-            if (currentUser.username!!.isNotEmpty()) {
-                val like = activityInfo.like
-                if (like.contains(currentUser.objectId.toString())) {
-                    ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_liked))
-                } else {
-                    ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_like))
-                }
-            } else {
-                ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_like))
-            }
-            tvLike.text = (activityInfo.like.split(";").size.minus(1)).toString()
-        } else {
-            ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_like))
-            tvLike.text = "0"
+        ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_like))
+        if (currentUser.objectId.isNotEmpty()
+                && activityInfo.like.isNotEmpty()
+                && activityInfo.like.contains(currentUser.objectId)) {
+            ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_liked))
         }
-        if (!TextUtils.isEmpty(activityInfo.comment)) {
-            tvComment.text = activityInfo.comment?.split(";")?.size?.minus(1).toString()
-        } else {
-            tvComment.text = "0"
-        }
+
+        tvLike.text = activityInfo.likeCount.toString()
+        tvComment.text = activityInfo.commentCount.toString()
 
         if (!TextUtils.isEmpty(activityInfo.url)) {
             ivPhoto.adjustViewBounds = true
@@ -136,10 +128,10 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                     .into(ivPhoto)
         }
         val user = activityInfo.creator
-        tvUserName.text = user?.username
-        if (!TextUtils.isEmpty(user?.avatarUrl)) {
+        tvUserName.text = user.username
+        if (user.avatarUrl!!.isNotEmpty()) {
             Picasso.with(context)
-                    .load(user?.avatarUrl)
+                    .load(user.avatarUrl)
                     .placeholder(R.mipmap.huas)
                     .into(ivAvatar)
         } else {
@@ -169,9 +161,17 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
             }
             R.id.ll_like -> {
                 Log.e(TAG, "likeClick")
-                if (currentUser.username!!.isNotEmpty()) {
-                    updatedActivityInfo.like = updatedActivityInfo.like + currentUser.objectId + ";"
-                    like(activityInfo.objectId!!, updatedActivityInfo.like)
+                if (currentUser.objectId.isNotEmpty()) {
+                    val map = HashMap<String, Any>()
+                    if (updatedActivityInfo.like.isEmpty()
+                            || !updatedActivityInfo.like.contains(currentUser.objectId)) {
+                        map.put("like", updatedActivityInfo.like + currentUser.objectId + ";")
+                        updatedActivityInfo.like += currentUser.objectId + ";"
+                    }
+
+                    map.put("likeCount", ++updatedActivityInfo.likeCount)
+                    val where = Gson().toJson(map)
+                    like(activityInfo.objectId, where)
                 } else {
                     mActivity.startActivityForResult(Intent(mActivity, LoginActivity::class.java), IntentRequestCode.MAIN_TO_LOGIN)
                     makeShortToast(context, "UserId is null")
@@ -183,20 +183,14 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         }
     }
 
-    override fun like(activityId: String, like: String) {
+    override fun like(activityId: String, where: String) {
 
-        val map = HashMap<String, String>()
-        map.put("like", like)
-        val body = Gson().toJson(map)
-        Log.e(TAG, body)
-        presenter.like(activityId, body)
+        Log.e(TAG, where)
+        presenter.like(activityId, where)
     }
 
-    override fun cancelLike(activityId: String, like: String) {
-        val map = HashMap<String, String>()
-        map.put("like", like)
-        val body = Gson().toJson(map)
-        presenter.cancelLike(activityId, body)
+    override fun cancelLike(activityId: String, where: String) {
+        presenter.cancelLike(activityId, where)
     }
 
     override fun follow(followUserId: String, followerUserId: String) {
@@ -205,7 +199,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
 
     override fun likeSuccess() {
         activityInfo = updatedActivityInfo
-        if (comment.activity != null) {
+        if (comment.activity.objectId.isNotEmpty()) {
             comment.activity = updatedActivityInfo
             adapter.mList[holderPosition] = comment
         } else {
@@ -226,6 +220,45 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     override fun fail(errorMsg: String) {
         makeShortToast(context, errorMsg)
     }
+
+
+    override fun getFollower(map: HashMap<String, Any>, page: Int) {
+    }
+
+    override fun getFollowee(map: HashMap<String, Any>, page: Int) {
+    }
+
+    override fun follow(follow: Follow) {
+    }
+
+    override fun unFollow(objectId: String) {
+    }
+
+    override fun getFollowerSuccess(data: Data<Follow>) {
+    }
+
+    override fun getFolloweeSuccess(data: Data<Follow>) {
+    }
+
+    override fun followSuccess(follow: Follow) {
+    }
+
+    override fun unFollowSuccess() {
+    }
+
+    override fun getFollowerFailed(msg: String) {
+    }
+
+    override fun getFolloweeFailed(msg: String) {
+    }
+
+    override fun followFailed(msg: String) {
+
+    }
+
+    override fun unFollowFailed(msg: String) {
+    }
+
 
     val transform = (object : Transformation {
         override fun transform(source: Bitmap): Bitmap {

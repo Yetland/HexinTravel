@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.yetland.crazy.bundle.main.detail.DetailActivity">
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_edit"
+        android:layout_gravity="right|bottom"
+        android:src="@mipmap/ic_menu_edit"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="wrap_content"
+        android:scaleType="fitXY"
+        android:layout_height="wrap_content"/>
     <com.yetland.crazy.core.base.BaseRecyclerView
         android:id="@+id/rv_activity_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-</LinearLayout>
+</FrameLayout>

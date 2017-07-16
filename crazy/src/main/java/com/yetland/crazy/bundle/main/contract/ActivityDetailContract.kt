@@ -6,9 +6,10 @@ import com.yetland.crazy.core.base.BasePresenter
 import com.yetland.crazy.core.base.BaseView
 import com.yetland.crazy.core.base.RxSchedulers
 import com.yetland.crazy.core.constant.DEFAULT_LIMIT
+import com.yetland.crazy.core.entity.BaseResult
 import com.yetland.crazy.core.entity.Comment
+import com.yetland.crazy.core.entity.CommitComment
 import com.yetland.crazy.core.entity.Data
-import com.yetland.crazy.core.entity.Point
 import rx.Observable
 
 /**
@@ -20,32 +21,73 @@ class ActivityDetailContract {
 
     interface View : BaseView {
 
-        fun getComment(activityPointer: Point, page: Int)
+        fun getComment(map: HashMap<String, String>, page: Int)
+        fun writeComment(comment: CommitComment)
         fun failed(msg: String)
         fun getCommentSuccess(data: Data<Comment>)
+        fun writeCommentSuccess(result: BaseResult)
+        fun writeCommentFailed(msg: String)
+        fun updateActivity(activityId: String, where: String)
+        fun updateActivitySuccess()
+        fun updateActivityFailed(msg: String)
+
     }
 
     interface Model : BaseModel {
-        fun getComment(activityPointer: Point, page: Int): Observable<Data<Comment>>
+        fun getComment(map: HashMap<String, String>, page: Int): Observable<Data<Comment>>
+        fun writeComment(comment: CommitComment): Observable<BaseResult>
+        fun updateActivity(activityId: String, where: String): Observable<BaseResult>
 
     }
 
     abstract class Presenter constructor(model: Model, view: View) : BasePresenter<Model, View>(model, view) {
-        abstract fun getComment(activityPointer: Point, page: Int)
+        abstract fun getComment(map: HashMap<String, String>, page: Int)
+        abstract fun writeComment(comment: CommitComment)
+        abstract fun updateActivity(activityId: String, where: String)
     }
 
 }
 
 class ActivityDetailModel : ActivityDetailContract.Model {
-    override fun getComment(activityPointer: Point, page: Int): Observable<Data<Comment>> {
-        return AppApiImpl().getComment(activityPointer, page * DEFAULT_LIMIT, DEFAULT_LIMIT).compose(RxSchedulers.new_thread())
+    override fun updateActivity(activityId: String, where: String): Observable<BaseResult> {
+        return AppApiImpl().updateActivity(activityId, where).compose(RxSchedulers.io_main())
+    }
+
+    override fun writeComment(comment: CommitComment): Observable<BaseResult> {
+        return AppApiImpl().writeComment(comment).compose(RxSchedulers.io_main())
+    }
+
+    override fun getComment(map: HashMap<String, String>, page: Int): Observable<Data<Comment>> {
+        return AppApiImpl().getComment(map, page * DEFAULT_LIMIT, DEFAULT_LIMIT).compose(RxSchedulers.new_thread())
     }
 }
 
 class ActivityDetailPresenter constructor(model: ActivityDetailModel, view: ActivityDetailContract.View) :
         ActivityDetailContract.Presenter(model, view) {
-    override fun getComment(activityPointer: Point, page: Int) {
-        rxManager.add(mModel.getComment(activityPointer, page).subscribe(
+    override fun updateActivity(activityId: String, where: String) {
+        rxManager.add(mModel.updateActivity(activityId, where).subscribe({
+            mView.updateActivitySuccess()
+        }, {
+            t: Throwable ->
+            mView.updateActivityFailed(t.message!!)
+        }))
+    }
+
+    override fun writeComment(comment: CommitComment) {
+        rxManager.add(mModel.writeComment(comment).subscribe(
+                {
+                    result: BaseResult ->
+                    mView.writeCommentSuccess(result)
+                },
+                {
+                    throwable: Throwable ->
+                    mView.writeCommentFailed(throwable.message!!)
+                }
+        ))
+    }
+
+    override fun getComment(map: HashMap<String, String>, page: Int) {
+        rxManager.add(mModel.getComment(map, page).subscribe(
                 {
                     result: Data<Comment> ->
                     mView.getCommentSuccess(result)

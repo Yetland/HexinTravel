@@ -2,12 +2,17 @@ package com.yetland.crazy.bundle.user
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.widget.SwipeRefreshLayout
 import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.squareup.picasso.Picasso
+import com.yetland.crazy.bundle.user.contract.UserDataContract
+import com.yetland.crazy.bundle.user.contract.UserDataModel
+import com.yetland.crazy.bundle.user.contract.UserDataPresenter
+import com.yetland.crazy.bundle.user.mine.MineActivity
 import com.yetland.crazy.bundle.user.mine.MineCommentActivity
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.constant.IntentResultCode
@@ -16,7 +21,8 @@ import com.yetland.crazy.core.utils.FileUtil
 import com.yetland.crazy.core.utils.makeShortToast
 import com.ynchinamobile.hexinlvxing.R
 
-class UserDataActivity : BaseActivity(), View.OnClickListener {
+class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.View {
+
 
     lateinit var llUser: LinearLayout
     lateinit var ivAvatar: ImageView
@@ -24,7 +30,15 @@ class UserDataActivity : BaseActivity(), View.OnClickListener {
     lateinit var tvEmail: TextView
     lateinit var llMyActivity: LinearLayout
     lateinit var llMyComment: LinearLayout
+    lateinit var llMyFollower: LinearLayout
+    lateinit var llMyFollowee: LinearLayout
     lateinit var llLogOut: LinearLayout
+
+    lateinit var refreshLayout: SwipeRefreshLayout
+
+    val model = UserDataModel()
+    val presenter = UserDataPresenter(model, this)
+
     lateinit var user: _User
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,11 +52,54 @@ class UserDataActivity : BaseActivity(), View.OnClickListener {
         tvEmail = findViewById(R.id.tv_email)
         llMyActivity = findViewById(R.id.ll_my_activity)
         llMyComment = findViewById(R.id.ll_my_comment)
+
+        llMyFollower = findViewById(R.id.ll_my_follower)
+        llMyFollowee = findViewById(R.id.ll_my_followee)
         llLogOut = findViewById(R.id.ll_log_out)
 
         llLogOut.setOnClickListener(this)
+        llMyFollowee.setOnClickListener(this)
+        llMyFollower.setOnClickListener(this)
         llMyComment.setOnClickListener(this)
         llMyActivity.setOnClickListener(this)
+
+        refreshLayout = findViewById(R.id.srl_user_data)
+        setUserData(user)
+
+        refreshLayout.isRefreshing = true
+        refreshLayout.setOnRefreshListener {
+            getUser(user.objectId)
+        }
+        getUser(user.objectId)
+    }
+
+    override fun onClick(view: View) {
+        when (view.id) {
+            R.id.ll_my_comment -> {
+                startActivity(Intent(activity, MineCommentActivity::class.java))
+            }
+            R.id.ll_my_activity -> {
+                startActivity(Intent(activity, MineActivity::class.java))
+            }
+            R.id.ll_my_follower -> {
+                val intent = Intent(activity, FollowActivity::class.java)
+                intent.putExtra("isFollower", true)
+                startActivity(intent)
+            }
+            R.id.ll_my_followee -> {
+                val intent = Intent(activity, FollowActivity::class.java)
+                intent.putExtra("isFollower", false)
+                startActivity(intent)
+            }
+            R.id.ll_log_out -> {
+                FileUtil().clearUserInfo(activity)
+                setResult(IntentResultCode.LOG_OUT)
+                finish()
+            }
+        }
+    }
+
+    fun setUserData(user: _User) {
 
         if (!TextUtils.isEmpty(user.username)) {
             tvUsername.text = user.username
@@ -60,19 +117,19 @@ class UserDataActivity : BaseActivity(), View.OnClickListener {
         }
     }
 
-    override fun onClick(view: View) {
-        when (view.id) {
-            R.id.ll_my_comment -> {
-                startActivity(Intent(activity, MineCommentActivity::class.java))
-            }
-            R.id.ll_my_activity -> {
-                makeShortToast(activity, "Activity")
-            }
-            R.id.ll_log_out -> {
-                FileUtil().clearUserInfo(activity)
-                setResult(IntentResultCode.LOG_OUT)
-                finish()
-            }
-        }
+    override fun getUser(objectId: String) {
+        presenter.getUser(objectId)
+    }
+
+    override fun getUserFailed(msg: String) {
+        refreshLayout.isRefreshing = false
+        makeShortToast(activity,msg)
+    }
+
+    override fun getUserSuccess(user: _User) {
+        refreshLayout.isRefreshing = false
+        FileUtil().saveUserInfo(activity,user)
+        this.user = user
+        setUserData(user)
     }
 }

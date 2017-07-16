@@ -1,7 +1,5 @@
 package com.yetland.crazy.core.entity
 
-import com.yetland.crazy.bundle.destination.bean.TypeFactory
-
 /**
  * Created by yeliang on 2017/7/10.
  */
