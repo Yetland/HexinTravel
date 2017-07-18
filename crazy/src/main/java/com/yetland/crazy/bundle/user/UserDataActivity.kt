@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.text.TextUtils
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -17,8 +19,8 @@ import com.yetland.crazy.bundle.user.mine.MineCommentActivity
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity._User
-import com.yetland.crazy.core.utils.FileUtil
-import com.yetland.crazy.core.utils.makeShortToast
+import com.yetland.crazy.core.utils.SharedPrefrenceUtils
+import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 
 class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.View {
@@ -43,7 +45,7 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_data)
-        user = FileUtil().getUserInfo(activity)
+        user = SharedPrefrenceUtils.getUserInfo(activity)
         supportActionBar?.title = "Me"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         llUser = findViewById(R.id.ll_user)
@@ -73,6 +75,11 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
         getUser(user.objectId)
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        MenuInflater(activity).inflate(R.menu.menu_user, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
     override fun onClick(view: View) {
         when (view.id) {
             R.id.ll_my_comment -> {
@@ -92,7 +99,7 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
                 startActivity(intent)
             }
             R.id.ll_log_out -> {
-                FileUtil().clearUserInfo(activity)
+                SharedPrefrenceUtils.clearUserInfo(activity)
                 setResult(IntentResultCode.LOG_OUT)
                 finish()
             }
@@ -123,12 +130,12 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
 
     override fun getUserFailed(msg: String) {
         refreshLayout.isRefreshing = false
-        makeShortToast(activity,msg)
+        ToastUtils.showShortSafe(msg)
     }
 
     override fun getUserSuccess(user: _User) {
         refreshLayout.isRefreshing = false
-        FileUtil().saveUserInfo(activity,user)
+        SharedPrefrenceUtils.saveUserInfo(activity, user)
         this.user = user
         setUserData(user)
     }

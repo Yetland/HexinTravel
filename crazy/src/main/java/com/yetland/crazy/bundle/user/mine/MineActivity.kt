@@ -12,7 +12,7 @@ import com.yetland.crazy.core.entity.ActivityInfo
 import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.entity.Data
 import com.yetland.crazy.core.entity.Point
-import com.yetland.crazy.core.utils.FileUtil
+import com.yetland.crazy.core.utils.SharedPrefrenceUtils
 import com.ynchinamobile.hexinlvxing.R
 
 class MineActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
@@ -36,7 +36,7 @@ class MineActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
         rvMyActivity.onLoading()
 
 
-        val user = FileUtil().getUserInfo(activity)
+        val user = SharedPrefrenceUtils.getUserInfo(activity)
         if (user.username!!.isEmpty()) {
             rvMyActivity.onLoadError("User is null , try to logout then login")
             finish()

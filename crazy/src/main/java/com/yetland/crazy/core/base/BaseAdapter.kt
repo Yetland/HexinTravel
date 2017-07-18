@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
+import com.yetland.crazy.core.utils.LogUtils
 import com.ynchinamobile.hexinlvxing.R
 
 /**
@@ -15,7 +16,6 @@ import com.ynchinamobile.hexinlvxing.R
  */
 open class BaseAdapter<T> constructor(activity: Activity) : RecyclerView.Adapter<BaseViewHolder<T>>() {
 
-    val TAG = "BaseAdapter"
     var mList = ArrayList<T>()
     val isHasFooter = 0
     val isHasHeader = 0
@@ -23,7 +23,7 @@ open class BaseAdapter<T> constructor(activity: Activity) : RecyclerView.Adapter
 
     override fun onBindViewHolder(holder: BaseViewHolder<T>?, position: Int) {
         if (holder is BaseItemViewHolder) {
-            Log.e(TAG, "setData : ${mList[position]}")
+            LogUtils.e("setData : ${mList[position]}")
             holder.setData(mList[position], position, this, mActivity)
         }
         if (onItemClickListener != null && holder != null) {
@@ -36,13 +36,13 @@ open class BaseAdapter<T> constructor(activity: Activity) : RecyclerView.Adapter
     }
 
     override fun getItemCount(): Int {
-        Log.e(TAG, "getItemCount : ${mList.size}")
+        LogUtils.e("getItemCount : ${mList.size}")
 
         return mList.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): BaseViewHolder<T> {
-        Log.e(TAG, "onCreateViewHolder")
+        LogUtils.e("onCreateViewHolder")
 
         val view = LayoutInflater.from(parent?.context).inflate(R.layout.item_base, parent, false)
         return BaseItemViewHolder(view)

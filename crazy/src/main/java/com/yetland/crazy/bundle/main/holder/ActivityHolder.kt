@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -25,8 +24,9 @@ import com.yetland.crazy.core.base.BaseAdapter
 import com.yetland.crazy.core.base.BaseViewHolder
 import com.yetland.crazy.core.constant.IntentRequestCode
 import com.yetland.crazy.core.entity.*
-import com.yetland.crazy.core.utils.FileUtil
-import com.yetland.crazy.core.utils.makeShortToast
+import com.yetland.crazy.core.utils.LogUtils
+import com.yetland.crazy.core.utils.SharedPrefrenceUtils
+import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 
 
@@ -36,11 +36,11 @@ import com.ynchinamobile.hexinlvxing.R
  * @Date:           2017/7/11
  */
 class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(itemView), View.OnClickListener,
-        ActivityHolderContract.View ,FollowContract.View{
+        ActivityHolderContract.View, FollowContract.View {
 
 
     var presenter = ActivityHolderPresenter(ActivityHolderModel(), this)
-    var followPresenter = FollowPresenter(FollowModel(),this)
+    var followPresenter = FollowPresenter(FollowModel(), this)
 
     val TAG = "ActivityHolder"
     var tvTitle: TextView = itemView.findViewById(R.id.tv_title)
@@ -72,7 +72,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         mActivity = activity
         this.adapter = adapter
         this.holderPosition = position
-        currentUser = FileUtil().getUserInfo(context)
+        currentUser = SharedPrefrenceUtils.getUserInfo(context)
         if (t is MyComment) {
             comment = t
             llActivityMyComment.visibility = View.VISIBLE
@@ -129,7 +129,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         }
         val user = activityInfo.creator
         tvUserName.text = user.username
-        if (user.avatarUrl!!.isNotEmpty()) {
+        if (user.avatarUrl != null) {
             Picasso.with(context)
                     .load(user.avatarUrl)
                     .placeholder(R.mipmap.huas)
@@ -147,7 +147,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
 
     override fun onClick(view: View) {
         if (view == itemView) {
-            Log.e(TAG, "itemViewClick")
+            LogUtils.e("itemViewClick")
             val intent = Intent(mActivity, DetailActivity::class.java)
             val bundle = Bundle()
             bundle.putSerializable("activityInfo", updatedActivityInfo)
@@ -157,10 +157,10 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         }
         when (view.id) {
             R.id.bt_follow -> {
-                Log.e(TAG, "followClick")
+                LogUtils.e("followClick")
             }
             R.id.ll_like -> {
-                Log.e(TAG, "likeClick")
+                LogUtils.e("likeClick")
                 if (currentUser.objectId.isNotEmpty()) {
                     val map = HashMap<String, Any>()
                     if (updatedActivityInfo.like.isEmpty()
@@ -174,18 +174,18 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                     like(activityInfo.objectId, where)
                 } else {
                     mActivity.startActivityForResult(Intent(mActivity, LoginActivity::class.java), IntentRequestCode.MAIN_TO_LOGIN)
-                    makeShortToast(context, "UserId is null")
+                    ToastUtils.showShortSafe("UserId is null")
                 }
             }
             R.id.ll_comment -> {
-                Log.e(TAG, "commentClick")
+                LogUtils.e("commentClick")
             }
         }
     }
 
     override fun like(activityId: String, where: String) {
 
-        Log.e(TAG, where)
+        LogUtils.e(where)
         presenter.like(activityId, where)
     }
 
@@ -206,19 +206,19 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
             adapter.mList[holderPosition] = updatedActivityInfo
         }
         adapter.notifyItemChanged(holderPosition)
-        Log.e(TAG, "likeSuccess")
+        LogUtils.e("likeSuccess")
     }
 
     override fun cancelLikeSuccess() {
-        Log.e(TAG, "cancelLikeSuccess")
+        LogUtils.e("cancelLikeSuccess")
     }
 
     override fun followSuccess() {
-        Log.e(TAG, "followSuccess")
+        LogUtils.e("followSuccess")
     }
 
     override fun fail(errorMsg: String) {
-        makeShortToast(context, errorMsg)
+        ToastUtils.showShortSafe(errorMsg)
     }
 
 
@@ -265,7 +265,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
             val size = minOf(source.width, source.height)
             val x = (source.width.minus(size)).div(2)
             val y = (source.height.minus(size)).div(2)
-            Log.e("transformBefore", "width = ${source.width}, " +
+            LogUtils.e("transformBefore", "width = ${source.width}, " +
                     "height = ${source.height} , " +
                     "size = $size , " +
                     "x = $x , " +
@@ -274,7 +274,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
             if (result != source) {
                 source.recycle()
             }
-            Log.e("transformAfter", "width = ${result.width}, " +
+            LogUtils.e("transformAfter", "width = ${result.width}, " +
                     "height = ${result.height} , " +
                     "size = $size")
             return result

@@ -9,7 +9,7 @@ class _User : BaseEntity() {
         return 1
     }
 
-    var avatarUrl: String? = ""
+    var avatarUrl: String? = null
     var sessionToken: String? = null
     var authData: String? = null
     var username: String? = ""

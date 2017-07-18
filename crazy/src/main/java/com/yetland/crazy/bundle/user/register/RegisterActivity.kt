@@ -9,8 +9,9 @@ import android.widget.EditText
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity._User
-import com.yetland.crazy.core.utils.FileUtil
-import com.yetland.crazy.core.utils.makeShortToast
+import com.yetland.crazy.core.utils.SharedPrefrenceUtils
+import com.yetland.crazy.core.utils.RegexUtil
+import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 
 class RegisterActivity : BaseActivity(), RegisterContract.View, View.OnClickListener {
@@ -22,18 +23,22 @@ class RegisterActivity : BaseActivity(), RegisterContract.View, View.OnClickList
                 val email = etEmail.text.toString().trim()
                 val password = etPassword.text.toString().trim()
                 if (username.isEmpty()) {
-                    makeShortToast(activity, "Username cannot be empty")
+                    ToastUtils.showShortSafe("Username cannot be empty")
                 } else if (password.isEmpty()) {
-                    makeShortToast(activity, "Password cannot be empty")
+                    ToastUtils.showShortSafe("Password cannot be empty")
+                } else if (email.isNotEmpty()) {
+                    ToastUtils.showShortSafe("Email cannot be empty")
+                } else if (!RegexUtil.isEmail(email)) {
+                    ToastUtils.showShortSafe("Email is not correct")
                 } else if (password.isNotEmpty()) {
                     if (password.contains(" ")) {
-                        makeShortToast(activity, "Password cannot contains space")
+                        ToastUtils.showShortSafe("Password cannot contains space")
                     } else if (password.length < 6) {
-                        makeShortToast(activity, "Password is too short to register")
+                        ToastUtils.showShortSafe("Password is too short to register")
                     } else {
                         user.username = username
                         user.password = password
-                        if (email.isNotEmpty()) user.email = email
+                        user.email = email
                         register(user)
                     }
                 }
@@ -48,14 +53,14 @@ class RegisterActivity : BaseActivity(), RegisterContract.View, View.OnClickList
 
     override fun success(resultUser: _User) {
         dialog.dismiss()
-        FileUtil().saveUserInfo(activity, resultUser)
+        SharedPrefrenceUtils.saveUserInfo(activity, resultUser)
         setResult(IntentResultCode.REGISTER_SUCCESS)
         finish()
     }
 
     override fun failed(msg: String) {
         dialog.dismiss()
-        makeShortToast(activity, msg)
+        ToastUtils.showShortSafe(msg)
     }
 
     lateinit var etUserName: EditText

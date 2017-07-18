@@ -15,7 +15,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.entity.Footer
-import com.yetland.crazy.core.utils.makeShortToast
+import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 
 /**
@@ -156,14 +156,14 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
     }
 
     private fun onRefreshError(errorMsg: String) {
-        makeShortToast(context, errorMsg)
+        ToastUtils.showShortSafe(errorMsg)
     }
 
     private fun onLoadMoreError(errorMsg: String) {
 
         adapter.mList.removeAt(adapter.mList.size - 1)
         adapter.notifyDataSetChanged()
-        makeShortToast(context, errorMsg)
+        ToastUtils.showShortSafe(errorMsg)
     }
 
     override fun onClick(view: View?) {

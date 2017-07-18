@@ -2,6 +2,8 @@ package com.yetland.crazy.core.app
 
 import android.app.Application
 import android.content.Context
+import com.yetland.crazy.core.utils.LogUtils
+import com.yetland.crazy.core.utils.Utils
 
 /**
  * @Name:           HexinApplication
@@ -14,5 +16,7 @@ class HexinApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+        Utils.init(applicationContext)
+        LogUtils.Builder().setLog2FileSwitch(true)
     }
 }

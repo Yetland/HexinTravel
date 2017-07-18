@@ -15,7 +15,7 @@ import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.entity.Data
 import com.yetland.crazy.core.entity.Follow
 import com.yetland.crazy.core.entity._User
-import com.yetland.crazy.core.utils.makeShortToast
+import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 
 /**
@@ -52,7 +52,7 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
             }
 
             tvUsername.text = user.username
-            if (user.avatarUrl!!.isNotEmpty()) {
+            if (user.avatarUrl != null) {
                 Picasso.with(activity)
                         .load(user.avatarUrl)
                         .placeholder(R.mipmap.huas)
@@ -109,6 +109,6 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
 
     override fun unFollowFailed(msg: String) {
         dialog.dismiss()
-        makeShortToast(mActivity, msg)
+        ToastUtils.showShortSafe(msg)
     }
 }

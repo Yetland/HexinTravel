@@ -2,7 +2,6 @@ package com.yetland.crazy.bundle.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.yetland.crazy.bundle.main.contract.MainContract
@@ -18,8 +17,9 @@ import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity.ActivityInfo
 import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.entity.Data
-import com.yetland.crazy.core.utils.FileUtil
-import com.yetland.crazy.core.utils.makeShortToast
+import com.yetland.crazy.core.utils.LogUtils
+import com.yetland.crazy.core.utils.SharedPrefrenceUtils
+import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 
 class MainActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
@@ -53,7 +53,7 @@ class MainActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
 
     override fun onComplete(activityModel: Data<ActivityInfo>) {
 
-        Log.e("MainActivity", "onComplete")
+        LogUtils.e("onComplete")
         val list = ArrayList<BaseEntity>()
         list.addAll(activityModel.results!!)
         rvList.onDefaultComplete(list, currentPage)
@@ -66,7 +66,7 @@ class MainActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
 
     override fun onLoadMore() {
         currentPage++
-        Log.e("MainActivity", "onLoadMore")
+        LogUtils.e("onLoadMore")
         getActivities(null, currentPage)
     }
 
@@ -93,7 +93,7 @@ class MainActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_user -> {
-                val user = FileUtil().getUserInfo(activity)
+                val user = SharedPrefrenceUtils.getUserInfo(activity)
                 if (user.username!!.isNotEmpty()) {
                     val intent = Intent(activity, UserDataActivity::class.java)
                     startActivityForResult(intent, IntentRequestCode.MAIN_TO_USER_DATA)
@@ -103,14 +103,14 @@ class MainActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
                 }
             }
             R.id.menu_search -> {
-                makeShortToast(activity, "Search")
+                ToastUtils.showShortSafe("Search")
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.e("MainActivity", "resultCode = $resultCode")
+        LogUtils.e("resultCode = $resultCode")
         when (resultCode) {
             IntentResultCode.LOG_OUT -> {
                 rvList.adapter.notifyDataSetChanged()

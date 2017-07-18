@@ -13,7 +13,7 @@ import java.io.*
  * Created by yeliang on 2017/7/10.
  */
 
-class FileUtil {
+object SharedPrefrenceUtils {
 
 
     fun cleanData(context: Context, fileName: String) {

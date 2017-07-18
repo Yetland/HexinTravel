@@ -12,9 +12,7 @@ import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.constant.IntentRequestCode
 import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity._User
-import com.yetland.crazy.core.utils.FileUtil
-import com.yetland.crazy.core.utils.isNetworkAvailable
-import com.yetland.crazy.core.utils.makeShortToast
+import com.yetland.crazy.core.utils.*
 import com.ynchinamobile.hexinlvxing.R
 
 
@@ -62,16 +60,16 @@ class LoginActivity : BaseActivity(), LoginContract.View {
 
             R.id.bt_login -> {
                 if (TextUtils.isEmpty(etUsername?.text)) {
-                    makeShortToast(activity, "Username can't be empty")
+                    ToastUtils.showShortSafe("Username can't be empty")
                 } else if (TextUtils.isEmpty(etPassword?.text)) {
-                    makeShortToast(activity, "Password can't be empty")
+                    ToastUtils.showShortSafe("Password can't be empty")
                 } else {
                     if (isNetworkAvailable(activity)) {
                         val phone = etUsername!!.text.toString()
                         val password = etPassword!!.text.toString()
                         login(phone, password)
                     } else {
-                        makeShortToast(activity, getString(R.string.network_unavailable))
+                        ToastUtils.showShortSafe(R.string.network_unavailable)
                     }
                 }
             }
@@ -86,14 +84,14 @@ class LoginActivity : BaseActivity(), LoginContract.View {
 
     override fun loginSuccess(user: _User) {
         dialog.dismiss()
-        FileUtil().saveUserInfo(activity, user)
+        SharedPrefrenceUtils.saveUserInfo(activity, user)
         setResult(IntentResultCode.LOG_IN)
         finish()
     }
 
     override fun loginFailed(msg: String) {
         dialog.dismiss()
-        makeShortToast(activity, msg)
+        ToastUtils.showShortSafe(msg)
     }
 
     override fun goToRegister() {

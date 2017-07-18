@@ -6,9 +6,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AlertDialog
+import android.text.InputType
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import com.afollestad.materialdialogs.MaterialDialog
 import com.google.gson.Gson
 import com.yetland.crazy.bundle.main.contract.ActivityDetailContract
 import com.yetland.crazy.bundle.main.contract.ActivityDetailModel
@@ -18,14 +20,13 @@ import com.yetland.crazy.core.base.BaseRecyclerView
 import com.yetland.crazy.core.base.RecyclerViewListener
 import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity.*
-import com.yetland.crazy.core.utils.FileUtil
-import com.yetland.crazy.core.utils.makeShortToast
+import com.yetland.crazy.core.utils.LogUtils
+import com.yetland.crazy.core.utils.SharedPrefrenceUtils
+import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 
 class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerViewListener {
 
-
-    val TAG = "DetailActivity"
     var list = ArrayList<BaseEntity>()
     var model = ActivityDetailModel()
     var presenter = ActivityDetailPresenter(model, this)
@@ -46,7 +47,6 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
         val bundle = activity.intent.extras
         activityInfo = bundle.getSerializable("activityInfo") as ActivityInfo
         holderPosition = bundle.getInt("position")
-        activityInfo.clickable = false
 
         fabEdit = findViewById<FloatingActionButton>(R.id.fab_edit)
         rvDetailList = findViewById(R.id.rv_activity_detail)
@@ -57,38 +57,36 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
         map.put("activityId", activityInfo.objectId)
         getComment(map, 0)
 
-        user = FileUtil().getUserInfo(activity)
-        fabEdit.setOnClickListener(View.OnClickListener {
+        user = SharedPrefrenceUtils.getUserInfo(activity)
+        fabEdit.setOnClickListener({
             if (user.objectId.isEmpty() || user.objectId.isEmpty()) {
-                makeShortToast(activity, "Please login")
+                ToastUtils.showShortSafe("Please login")
             } else {
-                val editText = EditText(activity)
-                editText.maxLines = 1
-                val dialog = AlertDialog.Builder(activity)
-                dialog.setTitle("评论")
-                        .setView(editText)
-                        .setPositiveButton("评论", (DialogInterface.OnClickListener { d, id ->
-                            val content = editText.text.toString().trim()
-                            if (content.isEmpty()) {
-                                makeShortToast(activity, "Null content")
+                val dialog = MaterialDialog.Builder(activity)
+                dialog.title("评论")
+                        .inputRange(1,150)
+                        .input("Write something", null,false, {
+                            d, input ->
+                            if (input.isEmpty()) {
+                                ToastUtils.showShortSafe("Empty content")
                             } else {
                                 d.dismiss()
                                 val activityPoint = Point("Pointer", "Activity", activityInfo.objectId)
                                 val userPoint = Point("Pointer", "_User", user.objectId)
-                                val comment = CommitComment(activityPoint, userPoint, content)
+                                val comment = CommitComment(activityPoint, userPoint, input.toString())
 
                                 val c = Comment()
                                 c.creator = user
                                 c.activity = activityInfo
-                                c.content = content
+                                c.content = input.toString()
                                 c.activityId = activityInfo.objectId
                                 c.creatorId = user.objectId
-                                Log.e("comment", Gson().toJson(c))
+                                LogUtils.e(Gson().toJson(c))
                                 writeComment(comment)
                             }
-                        }))
-                        .setNegativeButton("取消", null)
-                        .create()
+                        })
+                        .positiveText("评论")
+                        .negativeText("取消")
                         .show()
             }
         })
@@ -101,7 +99,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
 
     override fun onLoadMore() {
         currentPage++
-        Log.e("MainActivity", "onLoadMore")
+        LogUtils.e("onLoadMore")
         getComment(map, currentPage)
     }
 
@@ -122,7 +120,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
 
     override fun getCommentSuccess(data: Data<Comment>) {
 
-        Log.e("DetailActivity", "getCommentSuccess")
+        LogUtils.e("getCommentSuccess")
 
         val results = data.results
 
@@ -143,7 +141,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
             }
         } else {
             activityInfo = results[0].activity
-
+            activityInfo.clickable = false
             if (currentPage == 0) {
                 list = ArrayList<BaseEntity>()
                 list.add(activityInfo)
@@ -170,11 +168,11 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
 
     override fun writeCommentFailed(msg: String) {
         dialog.dismiss()
-        makeShortToast(activity, msg)
+        ToastUtils.showShortSafe(msg)
     }
 
     override fun updateActivity(activityId: String, where: String) {
-        Log.e("updateActivity", where)
+        LogUtils.e(where)
         presenter.updateActivity(activityId, where)
     }
 
@@ -187,17 +185,16 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
 
     override fun updateActivityFailed(msg: String) {
         dialog.dismiss()
-        makeShortToast(activity, msg)
+        ToastUtils.showShortSafe(msg)
     }
 
 
     override fun onBackPressed() {
-        Log.e("DetailActivity", "onBackPressed")
+        LogUtils.e("onBackPressed")
 
         val bundle = Bundle()
-        if (rvDetailList.adapter.mList.size > 0) {
+        if (rvDetailList.adapter.mList.size > 0 && rvDetailList.adapter.mList[0] is ActivityInfo) {
             val activityInfo = rvDetailList.adapter.mList[0]
-            activityInfo.clickable = true
             bundle.putSerializable("activityInfo", activityInfo)
             bundle.putInt("position", holderPosition)
             setResult(IntentResultCode.MAIN_TO_DETAIL_RESULT, Intent().putExtras(bundle))

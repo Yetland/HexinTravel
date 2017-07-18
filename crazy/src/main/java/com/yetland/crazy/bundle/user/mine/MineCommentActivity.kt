@@ -7,7 +7,7 @@ import com.yetland.crazy.core.base.RecyclerViewListener
 import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.entity.Data
 import com.yetland.crazy.core.entity.MyComment
-import com.yetland.crazy.core.utils.FileUtil
+import com.yetland.crazy.core.utils.SharedPrefrenceUtils
 import com.ynchinamobile.hexinlvxing.R
 
 class MineCommentActivity : BaseActivity(), MyCommentContract.View, RecyclerViewListener {
@@ -30,7 +30,7 @@ class MineCommentActivity : BaseActivity(), MyCommentContract.View, RecyclerView
         rvMyComment.onLoading()
         rvMyComment.recyclerViewListener = this
 
-        val user = FileUtil().getUserInfo(activity)
+        val user = SharedPrefrenceUtils.getUserInfo(activity)
         if (user.username!!.isEmpty()) {
             rvMyComment.onLoadError("User is null , try to logout then login")
             finish()

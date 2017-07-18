@@ -9,7 +9,7 @@ import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.base.BaseRecyclerView
 import com.yetland.crazy.core.base.RecyclerViewListener
 import com.yetland.crazy.core.entity.*
-import com.yetland.crazy.core.utils.FileUtil
+import com.yetland.crazy.core.utils.SharedPrefrenceUtils
 import com.ynchinamobile.hexinlvxing.R
 
 class FollowActivity : BaseActivity(), FollowContract.View, RecyclerViewListener {
@@ -34,7 +34,7 @@ class FollowActivity : BaseActivity(), FollowContract.View, RecyclerViewListener
             supportActionBar?.title = "我关注的"
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        currentUser = FileUtil().getUserInfo(activity)
+        currentUser = SharedPrefrenceUtils.getUserInfo(activity)
 
         rvFollow = findViewById(R.id.rv_follow)
         rvFollow.initView(activity)
