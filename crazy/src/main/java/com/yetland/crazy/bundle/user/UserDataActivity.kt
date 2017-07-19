@@ -19,7 +19,7 @@ import com.yetland.crazy.bundle.user.mine.MineCommentActivity
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity._User
-import com.yetland.crazy.core.utils.SharedPrefrenceUtils
+import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 
@@ -45,7 +45,7 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_data)
-        user = SharedPrefrenceUtils.getUserInfo(activity)
+        user = SharedPreferencesUtils.getUserInfo(activity)
         supportActionBar?.title = "Me"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         llUser = findViewById(R.id.ll_user)
@@ -59,6 +59,7 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
         llMyFollowee = findViewById(R.id.ll_my_followee)
         llLogOut = findViewById(R.id.ll_log_out)
 
+        llUser.setOnClickListener(this)
         llLogOut.setOnClickListener(this)
         llMyFollowee.setOnClickListener(this)
         llMyFollower.setOnClickListener(this)
@@ -82,6 +83,9 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
 
     override fun onClick(view: View) {
         when (view.id) {
+            R.id.ll_user -> {
+                startActivity(Intent(activity, UserDetailActivity::class.java))
+            }
             R.id.ll_my_comment -> {
                 startActivity(Intent(activity, MineCommentActivity::class.java))
             }
@@ -99,7 +103,7 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
                 startActivity(intent)
             }
             R.id.ll_log_out -> {
-                SharedPrefrenceUtils.clearUserInfo(activity)
+                SharedPreferencesUtils.clearUserInfo(activity)
                 setResult(IntentResultCode.LOG_OUT)
                 finish()
             }
@@ -135,7 +139,7 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
 
     override fun getUserSuccess(user: _User) {
         refreshLayout.isRefreshing = false
-        SharedPrefrenceUtils.saveUserInfo(activity, user)
+        SharedPreferencesUtils.saveUserInfo(activity, user)
         this.user = user
         setUserData(user)
     }

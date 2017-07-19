@@ -56,8 +56,8 @@ class AppApiImpl : AppApi {
         })
     }
 
-    override fun follow(follow: Follow): Observable<Follow> {
-        Observable.empty<Follow>().subscribe()
+    override fun follow(follow: CommitFollow): Observable<Follow> {
+        Observable.empty<CommitFollow>().subscribe()
         return Observable.create({
             subscriber: Subscriber<in Follow> ->
 

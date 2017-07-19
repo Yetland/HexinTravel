@@ -19,23 +19,19 @@ interface ActivityHolderContract {
     interface View : BaseView {
         fun like(activityId: String, where: String)
         fun cancelLike(activityId: String, where: String)
-        fun follow(followUserId: String, followerUserId: String)
         fun likeSuccess()
         fun cancelLikeSuccess()
-        fun followSuccess()
         fun fail(errorMsg: String)
     }
 
     interface Model : BaseModel {
         fun like(activityId: String, where: String): Observable<BaseResult>
         fun cancelLike(activityId: String, where: String): Observable<BaseResult>
-        fun follow(followUserId: String, followerUserId: String): Observable<BaseEntity>
     }
 
     abstract class Presenter constructor(model: Model, view: View) : BasePresenter<Model, View>(model, view) {
         abstract fun like(activityId: String, where: String)
         abstract fun cancelLike(activityId: String, where: String)
-        abstract fun follow(followUserId: String, followerUserId: String)
     }
 }
 
@@ -47,11 +43,6 @@ class ActivityHolderModel : ActivityHolderContract.Model {
     override fun cancelLike(activityId: String, where: String): Observable<BaseResult> {
         return AppApiImpl().updateActivity(activityId, where).compose(RxSchedulers.new_thread())
     }
-
-    override fun follow(followUserId: String, followerUserId: String): Observable<BaseEntity> {
-        return AppApiImpl().followUser(followUserId, followerUserId).compose(RxSchedulers.new_thread())
-    }
-
 }
 
 class ActivityHolderPresenter constructor(model: ActivityHolderModel, view: ActivityHolderContract.View)
@@ -71,15 +62,6 @@ class ActivityHolderPresenter constructor(model: ActivityHolderModel, view: Acti
     override fun cancelLike(activityId: String, where: String) {
         rxManager.add(mModel.like(activityId, where).subscribe({
             mView.cancelLikeSuccess()
-        }, {
-            throwable: Throwable ->
-            mView.fail(throwable.message!!)
-        }))
-    }
-
-    override fun follow(followUserId: String, followerUserId: String) {
-        rxManager.add(mModel.follow(followUserId, followerUserId).subscribe({
-            mView.followSuccess()
         }, {
             throwable: Throwable ->
             mView.fail(throwable.message!!)

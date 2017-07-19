@@ -37,7 +37,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/bt_follow"
+            android:id="@+id/iv_follow"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_gravity="center_vertical"

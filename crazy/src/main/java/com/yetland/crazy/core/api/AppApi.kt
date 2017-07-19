@@ -22,6 +22,6 @@ interface AppApi {
     fun writeComment(comment: CommitComment): Observable<BaseResult>
 
     fun getFollow(where: String, include: String, order: String, skip: Int, limit: Int): Observable<Data<Follow>>
-    fun follow(follow: Follow): Observable<Follow>
+    fun follow(follow: CommitFollow): Observable<Follow>
     fun unFollow(objectId: String): Observable<BaseResult>
 }

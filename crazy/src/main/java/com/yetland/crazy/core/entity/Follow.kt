@@ -1,5 +1,7 @@
 package com.yetland.crazy.core.entity
 
+import java.io.Serializable
+
 /**
  * @Name: Follow
  * @Author: yeliang
@@ -15,3 +17,9 @@ class Follow : BaseEntity() {
         return typeFactory.type(this)
     }
 }
+
+class CommitFollow : Serializable{
+    var follower: Point? = null
+    var user: Point? = null
+}
+

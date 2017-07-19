@@ -3,6 +3,7 @@ package com.yetland.crazy.core.base
 import android.app.Activity
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.afollestad.materialdialogs.MaterialDialog
 import com.yetland.crazy.core.utils.ActivityManager
 
 /**
@@ -13,9 +14,14 @@ import com.yetland.crazy.core.utils.ActivityManager
 abstract class BaseActivity : AppCompatActivity() {
     var currentPage = 0
     lateinit var activity: Activity
+    lateinit var progressDialog: MaterialDialog
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity = this
+        progressDialog = MaterialDialog.Builder(activity)
+                .content("LOADING...")
+                .cancelable(false)
+                .build()
         ActivityManager().addActivity(this)
     }
 

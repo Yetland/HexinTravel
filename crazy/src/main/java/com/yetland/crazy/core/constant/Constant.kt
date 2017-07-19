@@ -6,9 +6,14 @@ package com.yetland.crazy.core.constant
  * @Date:           2017/7/5
  */
 
-val FILE_NAME_USER = "userPref"
-val FILE_KEY_USER = "user"
-val LOGON_SUCCESS: Int = 102000
+object SharedPrefrencesConstant {
+    val FILE_NAME_USER = "userPref"
+    val FILE_KEY_USER = "user"
+    val PREF_NAME = "appPref"
+    val KEY_FOLLOWER_LIST = "followList"
+    val LOGON_SUCCESS: Int = 102000
+}
+
 val DEFAULT_LIMIT = 10
 
 object IntentRequestCode {

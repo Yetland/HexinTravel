@@ -9,7 +9,7 @@ import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.base.BaseRecyclerView
 import com.yetland.crazy.core.base.RecyclerViewListener
 import com.yetland.crazy.core.entity.*
-import com.yetland.crazy.core.utils.SharedPrefrenceUtils
+import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.ynchinamobile.hexinlvxing.R
 
 class FollowActivity : BaseActivity(), FollowContract.View, RecyclerViewListener {
@@ -34,7 +34,7 @@ class FollowActivity : BaseActivity(), FollowContract.View, RecyclerViewListener
             supportActionBar?.title = "我关注的"
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        currentUser = SharedPrefrenceUtils.getUserInfo(activity)
+        currentUser = SharedPreferencesUtils.getUserInfo(activity)
 
         rvFollow = findViewById(R.id.rv_follow)
         rvFollow.initView(activity)
@@ -50,11 +50,7 @@ class FollowActivity : BaseActivity(), FollowContract.View, RecyclerViewListener
     }
 
 
-    override fun getFollowee(map: HashMap<String, Any>, page: Int) {
-        presenter.getFollowee(Gson().toJson(map), page)
-    }
-
-    override fun follow(follow: Follow) {
+    override fun follow(follow: CommitFollow) {
         presenter.follow(follow)
     }
 
@@ -73,9 +69,6 @@ class FollowActivity : BaseActivity(), FollowContract.View, RecyclerViewListener
         rvFollow.onDefaultComplete(list, currentPage)
     }
 
-    override fun getFolloweeSuccess(data: Data<Follow>) {
-    }
-
     override fun followSuccess(follow: Follow) {
     }
 
@@ -83,10 +76,6 @@ class FollowActivity : BaseActivity(), FollowContract.View, RecyclerViewListener
     }
 
     override fun getFollowerFailed(msg: String) {
-        rvFollow.onLoadError(msg)
-    }
-
-    override fun getFolloweeFailed(msg: String) {
         rvFollow.onLoadError(msg)
     }
 

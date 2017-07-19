@@ -9,7 +9,7 @@ import android.widget.EditText
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity._User
-import com.yetland.crazy.core.utils.SharedPrefrenceUtils
+import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.RegexUtil
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
@@ -47,26 +47,25 @@ class RegisterActivity : BaseActivity(), RegisterContract.View, View.OnClickList
     }
 
     override fun register(user: _User) {
-        dialog.show()
+        progressDialog.show()
         presenter.register(user)
     }
 
     override fun success(resultUser: _User) {
-        dialog.dismiss()
-        SharedPrefrenceUtils.saveUserInfo(activity, resultUser)
+        progressDialog.dismiss()
+        SharedPreferencesUtils.saveUserInfo(activity, resultUser)
         setResult(IntentResultCode.REGISTER_SUCCESS)
         finish()
     }
 
     override fun failed(msg: String) {
-        dialog.dismiss()
+        progressDialog.dismiss()
         ToastUtils.showShortSafe(msg)
     }
 
     lateinit var etUserName: EditText
     lateinit var etPassword: EditText
     lateinit var etEmail: EditText
-    lateinit var dialog: ProgressDialog
     val user = _User()
 
     val model = RegisterModel()
@@ -81,10 +80,7 @@ class RegisterActivity : BaseActivity(), RegisterContract.View, View.OnClickList
         actionBar?.setDisplayHomeAsUpEnabled(true)
         findViewById<Button>(R.id.bt_register).setOnClickListener(this)
 
-        dialog = ProgressDialog(activity)
-        dialog.setMessage("Registering...")
-        dialog.setCancelable(false)
-
+        progressDialog.setContent("Registering...")
         etUserName = findViewById(R.id.et_username)
         etEmail = findViewById(R.id.et_mail)
         etPassword = findViewById(R.id.et_password)

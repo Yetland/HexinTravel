@@ -49,7 +49,6 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
     val TYPE_REFRESH = 1
     val TYPE_LOAD_MORE = 2
 
-
     init {
         @SuppressLint("InflateParams")
         val layout = LayoutInflater.from(context).inflate(R.layout.layout_base_recyclerview, null)
@@ -175,8 +174,6 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
     }
 
     fun onDefaultComplete(list: ArrayList<BaseEntity>, currentPage: Int) {
-
-
         layoutLoading.visibility = View.GONE
         layoutError.visibility = View.GONE
         layoutContent.visibility = View.VISIBLE
@@ -192,19 +189,58 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
                 footer.noMore = true
                 adapter.mList.add(footer)
                 canLoadMore = false
-
             } else {
                 adapter.mList.removeAt(adapter.mList.size - 1)
                 val footer = Footer()
                 footer.noMore = true
                 adapter.mList.add(footer)
-
                 canLoadMore = false
-
             }
         } else {
             if (currentPage == 0) {
                 adapter.mList = ArrayList<BaseEntity>()
+            } else {
+                adapter.mList.removeAt(adapter.mList.size - 1)
+            }
+            canLoadMore = true
+            adapter.mList.addAll(list)
+        }
+
+        swipeRefreshLayout.isRefreshing = false
+        canRefresh = true
+        isLoadingMore = false
+        isRefreshing = false
+        adapter.notifyDataSetChanged()
+    }
+
+
+    fun onCompleteWithHeader(list: ArrayList<BaseEntity>, currentPage: Int, header: BaseEntity) {
+        layoutLoading.visibility = View.GONE
+        layoutError.visibility = View.GONE
+        layoutContent.visibility = View.VISIBLE
+
+        if (adapter.itemCount == 0) {
+            recyclerView.adapter = adapter
+        }
+
+        if (list.size == 0) {
+            if (currentPage == 0) {
+                adapter.mList = ArrayList()
+                val footer = Footer()
+                footer.noMore = true
+                adapter.mList.add(footer)
+                canLoadMore = false
+            } else {
+                adapter.mList.removeAt(adapter.mList.size - 1)
+                val footer = Footer()
+                footer.noMore = true
+                adapter.mList.add(footer)
+                canLoadMore = false
+            }
+        } else {
+            if (currentPage == 0) {
+                adapter.mList = ArrayList<BaseEntity>()
+                adapter.mList.add(0, header)
             } else {
                 adapter.mList.removeAt(adapter.mList.size - 1)
             }

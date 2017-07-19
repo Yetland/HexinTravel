@@ -23,11 +23,13 @@ import com.yetland.crazy.bundle.user.login.LoginActivity
 import com.yetland.crazy.core.base.BaseAdapter
 import com.yetland.crazy.core.base.BaseViewHolder
 import com.yetland.crazy.core.constant.IntentRequestCode
+import com.yetland.crazy.core.constant.SharedPrefrencesConstant
 import com.yetland.crazy.core.entity.*
 import com.yetland.crazy.core.utils.LogUtils
-import com.yetland.crazy.core.utils.SharedPrefrenceUtils
+import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
+import com.afollestad.materialdialogs.MaterialDialog
 
 
 /**
@@ -42,7 +44,6 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     var presenter = ActivityHolderPresenter(ActivityHolderModel(), this)
     var followPresenter = FollowPresenter(FollowModel(), this)
 
-    val TAG = "ActivityHolder"
     var tvTitle: TextView = itemView.findViewById(R.id.tv_title)
     var tvContent: TextView = itemView.findViewById(R.id.tv_content)
     var ivPhoto = itemView.findViewById<ImageView>(R.id.iv_photo)
@@ -54,6 +55,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     var llLike: LinearLayout = itemView.findViewById(R.id.ll_like)
     var llComment: LinearLayout = itemView.findViewById(R.id.ll_comment)
     var tvComment: TextView = itemView.findViewById<TextView>(R.id.tv_comment)
+    var ivFollow = itemView.findViewById<ImageView>(R.id.iv_follow)
 
     val llActivityMyComment: LinearLayout = itemView.findViewById(R.id.ll_activity_my_comment)
     val tvCommentUsername: TextView = itemView.findViewById(R.id.tv_name)
@@ -66,13 +68,20 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     var updatedActivityInfo = ActivityInfo()
     var holderPosition = 0
     var currentUser = _User()
+    var activityCreator = _User()
     lateinit var adapter: BaseAdapter<BaseEntity>
+
+    var followList = ArrayList<Follow>()
+    var followId = ArrayList<String>()
 
     override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>, activity: Activity) {
         mActivity = activity
         this.adapter = adapter
         this.holderPosition = position
-        currentUser = SharedPrefrenceUtils.getUserInfo(context)
+        currentUser = SharedPreferencesUtils.getUserInfo(context)
+
+        followId = SharedPreferencesUtils.getFollowList()
+
         if (t is MyComment) {
             comment = t
             llActivityMyComment.visibility = View.VISIBLE
@@ -127,11 +136,11 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                     .placeholder(R.mipmap.img_custom)
                     .into(ivPhoto)
         }
-        val user = activityInfo.creator
-        tvUserName.text = user.username
-        if (user.avatarUrl != null) {
+        activityCreator = activityInfo.creator
+        tvUserName.text = activityCreator.username
+        if (activityCreator.avatarUrl != null) {
             Picasso.with(context)
-                    .load(user.avatarUrl)
+                    .load(activityCreator.avatarUrl)
                     .placeholder(R.mipmap.huas)
                     .into(ivAvatar)
         } else {
@@ -142,6 +151,14 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
             itemView.setOnClickListener(this)
             llComment.setOnClickListener(this)
         }
+
+        if (followId.contains(activityCreator.objectId)) {
+            ivFollow.visibility = View.GONE
+        } else {
+            ivFollow.visibility = View.VISIBLE
+        }
+
+        ivFollow.setOnClickListener(this)
         llLike.setOnClickListener(this)
     }
 
@@ -156,8 +173,23 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
             mActivity.startActivityForResult(intent, IntentRequestCode.MAIN_TO_DETAIL)
         }
         when (view.id) {
-            R.id.bt_follow -> {
-                LogUtils.e("followClick")
+            R.id.iv_follow -> {
+                if (currentUser.objectId.isNotEmpty()) {
+
+                    progressDialog = MaterialDialog.Builder(mActivity)
+                            .content("Committing")
+                            .progress(true, 0)
+                            .cancelable(false)
+                            .show()
+                    val commitFollow = CommitFollow()
+                    commitFollow.follower = Point("Pointer", "_User", currentUser.objectId)
+                    commitFollow.user = Point("Pointer", "_User", activityCreator.objectId)
+                    follow(commitFollow)
+                    LogUtils.e("followClick" + commitFollow.toString())
+                } else {
+                    mActivity.startActivityForResult(Intent(mActivity, LoginActivity::class.java), IntentRequestCode.MAIN_TO_LOGIN)
+                    ToastUtils.showShortSafe("Please login")
+                }
             }
             R.id.ll_like -> {
                 LogUtils.e("likeClick")
@@ -174,7 +206,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                     like(activityInfo.objectId, where)
                 } else {
                     mActivity.startActivityForResult(Intent(mActivity, LoginActivity::class.java), IntentRequestCode.MAIN_TO_LOGIN)
-                    ToastUtils.showShortSafe("UserId is null")
+                    ToastUtils.showShortSafe("Please login")
                 }
             }
             R.id.ll_comment -> {
@@ -184,17 +216,12 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     }
 
     override fun like(activityId: String, where: String) {
-
         LogUtils.e(where)
         presenter.like(activityId, where)
     }
 
     override fun cancelLike(activityId: String, where: String) {
         presenter.cancelLike(activityId, where)
-    }
-
-    override fun follow(followUserId: String, followerUserId: String) {
-        presenter.follow(followUserId, followerUserId)
     }
 
     override fun likeSuccess() {
@@ -213,10 +240,6 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         LogUtils.e("cancelLikeSuccess")
     }
 
-    override fun followSuccess() {
-        LogUtils.e("followSuccess")
-    }
-
     override fun fail(errorMsg: String) {
         ToastUtils.showShortSafe(errorMsg)
     }
@@ -225,10 +248,8 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     override fun getFollower(map: HashMap<String, Any>, page: Int) {
     }
 
-    override fun getFollowee(map: HashMap<String, Any>, page: Int) {
-    }
-
-    override fun follow(follow: Follow) {
+    override fun follow(follow: CommitFollow) {
+        followPresenter.follow(follow)
     }
 
     override fun unFollow(objectId: String) {
@@ -237,10 +258,14 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     override fun getFollowerSuccess(data: Data<Follow>) {
     }
 
-    override fun getFolloweeSuccess(data: Data<Follow>) {
-    }
-
     override fun followSuccess(follow: Follow) {
+        progressDialog.dismiss()
+        followList = SharedPreferencesUtils.getFollowLists()
+        if (!followId.contains(follow.user.objectId)) {
+            followList.add(follow)
+            SharedPreferencesUtils.saveString(SharedPrefrencesConstant.KEY_FOLLOWER_LIST, Gson().toJson(followList))
+        }
+        adapter.notifyDataSetChanged()
     }
 
     override fun unFollowSuccess() {
@@ -249,11 +274,9 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     override fun getFollowerFailed(msg: String) {
     }
 
-    override fun getFolloweeFailed(msg: String) {
-    }
-
     override fun followFailed(msg: String) {
-
+        progressDialog.dismiss()
+        ToastUtils.showShortSafe(msg)
     }
 
     override fun unFollowFailed(msg: String) {

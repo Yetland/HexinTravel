@@ -1,15 +1,9 @@
 package com.yetland.crazy.bundle.main.detail
 
 import android.app.ProgressDialog
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.support.v7.app.AlertDialog
-import android.text.InputType
-import android.util.Log
-import android.view.View
-import android.widget.EditText
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.gson.Gson
 import com.yetland.crazy.bundle.main.contract.ActivityDetailContract
@@ -21,7 +15,7 @@ import com.yetland.crazy.core.base.RecyclerViewListener
 import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity.*
 import com.yetland.crazy.core.utils.LogUtils
-import com.yetland.crazy.core.utils.SharedPrefrenceUtils
+import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 
@@ -36,7 +30,6 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
     var holderPosition = 0
     lateinit var user: _User
     lateinit var fabEdit: FloatingActionButton
-    lateinit var dialog: ProgressDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,15 +50,15 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
         map.put("activityId", activityInfo.objectId)
         getComment(map, 0)
 
-        user = SharedPrefrenceUtils.getUserInfo(activity)
+        user = SharedPreferencesUtils.getUserInfo(activity)
         fabEdit.setOnClickListener({
             if (user.objectId.isEmpty() || user.objectId.isEmpty()) {
                 ToastUtils.showShortSafe("Please login")
             } else {
                 val dialog = MaterialDialog.Builder(activity)
                 dialog.title("评论")
-                        .inputRange(1,150)
-                        .input("Write something", null,false, {
+                        .inputRange(1, 150)
+                        .input("Write something", null, false, {
                             d, input ->
                             if (input.isEmpty()) {
                                 ToastUtils.showShortSafe("Empty content")
@@ -114,49 +107,20 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
     }
 
     override fun failed(msg: String) {
-        dialog.dismiss()
+        progressDialog.dismiss()
         rvDetailList.onLoadError(msg)
     }
 
     override fun getCommentSuccess(data: Data<Comment>) {
 
         LogUtils.e("getCommentSuccess")
-
-        val results = data.results
-
-        if (results == null || results.size == 0) {
-            if (currentPage == 0) {
-                list = ArrayList()
-                val footer = Footer()
-                footer.noMore = true
-                list.add(activityInfo)
-                list.add(footer)
-                rvDetailList.onComplete(list, true)
-            } else {
-                list.removeAt(list.size - 1)
-                val footer = Footer()
-                footer.noMore = true
-                list.add(footer)
-                rvDetailList.onComplete(list, true)
-            }
-        } else {
-            activityInfo = results[0].activity
-            activityInfo.clickable = false
-            if (currentPage == 0) {
-                list = ArrayList<BaseEntity>()
-                list.add(activityInfo)
-            } else {
-                list.removeAt(list.size - 1)
-            }
-            list.addAll(results)
-            rvDetailList.onComplete(list)
-        }
+        val list = ArrayList<BaseEntity>()
+        list.addAll(data.results!!)
+        rvDetailList.onCompleteWithHeader(list, currentPage, activityInfo)
     }
 
     override fun writeComment(comment: CommitComment) {
-        dialog = ProgressDialog(activity)
-        dialog.setMessage("LOADING...")
-        dialog.show()
+        progressDialog.show()
         presenter.writeComment(comment)
     }
 
@@ -167,7 +131,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
     }
 
     override fun writeCommentFailed(msg: String) {
-        dialog.dismiss()
+        progressDialog.dismiss()
         ToastUtils.showShortSafe(msg)
     }
 
@@ -177,14 +141,14 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
     }
 
     override fun updateActivitySuccess() {
-        dialog.dismiss()
+        progressDialog.dismiss()
         rvDetailList.swipeRefreshLayout.isRefreshing = true
         currentPage = 0
         getComment(map, currentPage)
     }
 
     override fun updateActivityFailed(msg: String) {
-        dialog.dismiss()
+        progressDialog.dismiss()
         ToastUtils.showShortSafe(msg)
     }
 

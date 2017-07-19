@@ -65,7 +65,7 @@ interface AppService {
 
 
     @POST("classes/follower?fetchWhenSave=true")
-    fun follow(@Body follow: Follow): Call<Follow>
+    fun follow(@Body follow: CommitFollow): Call<Follow>
 
     @GET("classes/follower")
     fun getFollow(@Query("where") where: String,

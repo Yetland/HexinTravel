@@ -25,7 +25,6 @@ class LoginActivity : BaseActivity(), LoginContract.View {
     var etPassword: EditText? = null
     var etUsername: EditText? = null
 
-    lateinit var dialog: ProgressDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -36,9 +35,6 @@ class LoginActivity : BaseActivity(), LoginContract.View {
         supportActionBar?.title = "Login"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        dialog = ProgressDialog(activity)
-        dialog.setCancelable(false)
-        dialog.setMessage("Login...")
         findViewById<Button>(R.id.bt_login).setOnClickListener(click)
         findViewById<Button>(R.id.bt_register).setOnClickListener(click)
         btForgetPassword!!.setOnClickListener(click)
@@ -78,19 +74,20 @@ class LoginActivity : BaseActivity(), LoginContract.View {
 
 
     override fun login(username: String, password: String) {
-        dialog.show()
+        progressDialog.setContent("Login...")
+        progressDialog.show()
         loginPresenter.login(username, password)
     }
 
     override fun loginSuccess(user: _User) {
-        dialog.dismiss()
-        SharedPrefrenceUtils.saveUserInfo(activity, user)
+        progressDialog.dismiss()
+        SharedPreferencesUtils.saveUserInfo(activity, user)
         setResult(IntentResultCode.LOG_IN)
         finish()
     }
 
     override fun loginFailed(msg: String) {
-        dialog.dismiss()
+        progressDialog.dismiss()
         ToastUtils.showShortSafe(msg)
     }
 
