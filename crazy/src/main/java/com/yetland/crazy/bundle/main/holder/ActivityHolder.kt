@@ -30,6 +30,7 @@ import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 import com.afollestad.materialdialogs.MaterialDialog
+import com.yetland.crazy.bundle.user.UserDetailActivity
 
 
 /**
@@ -54,6 +55,8 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     var ivLike: ImageView = itemView.findViewById(R.id.iv_like)
     var llLike: LinearLayout = itemView.findViewById(R.id.ll_like)
     var llComment: LinearLayout = itemView.findViewById(R.id.ll_comment)
+    var llActivityCreator: LinearLayout = itemView.findViewById(R.id.ll_activity_creator)
+
     var tvComment: TextView = itemView.findViewById<TextView>(R.id.tv_comment)
     var ivFollow = itemView.findViewById<ImageView>(R.id.iv_follow)
 
@@ -160,6 +163,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
 
         ivFollow.setOnClickListener(this)
         llLike.setOnClickListener(this)
+        llActivityCreator.setOnClickListener(this)
     }
 
     override fun onClick(view: View) {
@@ -173,6 +177,15 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
             mActivity.startActivityForResult(intent, IntentRequestCode.MAIN_TO_DETAIL)
         }
         when (view.id) {
+            R.id.ll_activity_creator -> {
+                val intent = Intent(mActivity,UserDetailActivity::class.java)
+                val bundle = Bundle()
+                bundle.putSerializable("showUser",activityCreator)
+                intent.putExtras(bundle)
+
+                mActivity.startActivityForResult(intent,IntentRequestCode.MAIN_TO_USER_DATA)
+            }
+
             R.id.iv_follow -> {
                 if (currentUser.objectId.isNotEmpty()) {
 

@@ -8,7 +8,7 @@ package com.yetland.crazy.core.constant
 
 object SharedPrefrencesConstant {
     val FILE_NAME_USER = "userPref"
-    val FILE_KEY_USER = "user"
+    val FILE_KEY_USER = "showUser"
     val PREF_NAME = "appPref"
     val KEY_FOLLOWER_LIST = "followList"
     val LOGON_SUCCESS: Int = 102000

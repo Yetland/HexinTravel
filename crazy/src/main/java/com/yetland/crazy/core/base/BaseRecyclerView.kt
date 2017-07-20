@@ -228,6 +228,7 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
                 adapter.mList = ArrayList()
                 val footer = Footer()
                 footer.noMore = true
+                adapter.mList.add(0, header)
                 adapter.mList.add(footer)
                 canLoadMore = false
             } else {

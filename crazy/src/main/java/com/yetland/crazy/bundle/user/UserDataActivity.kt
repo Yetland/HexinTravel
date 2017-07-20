@@ -84,7 +84,11 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
     override fun onClick(view: View) {
         when (view.id) {
             R.id.ll_user -> {
-                startActivity(Intent(activity, UserDetailActivity::class.java))
+                val intent = Intent(activity, UserDetailActivity::class.java)
+                val bundle = Bundle()
+                bundle.putSerializable("showUser", user)
+                intent.putExtras(bundle)
+                startActivity(intent)
             }
             R.id.ll_my_comment -> {
                 startActivity(Intent(activity, MineCommentActivity::class.java))

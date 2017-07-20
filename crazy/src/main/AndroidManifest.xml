@@ -37,7 +37,6 @@
         <activity android:name="com.yetland.crazy.bundle.user.mine.MineActivity" />
         <activity android:name="com.yetland.crazy.bundle.user.mine.MineCommentActivity" />
         <activity android:name="com.yetland.crazy.bundle.user.FollowActivity" />
-
         <activity
             android:name="com.yetland.crazy.bundle.user.UserDetailActivity"
             android:theme="@style/ThemeFullScreen" />
