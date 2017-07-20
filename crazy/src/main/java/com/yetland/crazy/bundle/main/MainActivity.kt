@@ -54,7 +54,7 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
         pref.registerOnSharedPreferenceChangeListener(prefListener)
         if (currentUser.objectId.isNotEmpty()) {
             val map = HashMap<String, Any>()
-            map.put("follow", Point("Pointer", "_User", currentUser.objectId))
+            map.put("follower", Point("Pointer", "_User", currentUser.objectId))
             getUser(currentUser.objectId)
             getFollower(map, -1)
         } else {
@@ -105,7 +105,7 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
 
         if (currentUser.objectId.isNotEmpty()) {
             val map = HashMap<String, Any>()
-            map.put("follow", Point("Pointer", "_User", currentUser.objectId))
+            map.put("follower", Point("Pointer", "_User", currentUser.objectId))
             getUser(currentUser.objectId)
             getFollower(map, -1)
         } else {

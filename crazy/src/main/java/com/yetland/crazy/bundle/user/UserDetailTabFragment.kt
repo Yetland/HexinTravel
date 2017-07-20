@@ -39,7 +39,7 @@ class UserDetailTabFragment : Fragment(), MainContract.View, FollowContract.View
     var activityPresenter = MainPresent(MainModel(), this)
     var followPresenter = FollowPresenter(FollowModel(), this)
 
-    var followKey = "follow"
+    var followKey = "follower"
     val map = HashMap<String, Any>()
 
     var mView: View? = null
