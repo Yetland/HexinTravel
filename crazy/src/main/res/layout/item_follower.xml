@@ -8,6 +8,7 @@
     android:padding="4dp">
 
     <LinearLayout
+        android:id="@+id/ll_follow_user"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
@@ -18,7 +19,7 @@
             android:id="@+id/iv_follow_avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@mipmap/huas" />
+            android:src="@mipmap/huas"/>
 
         <TextView
             android:id="@+id/tv_name"
@@ -31,7 +32,7 @@
             android:maxLines="2"
             android:text="Username"
             android:textColor="@color/defaultTextColor"
-            android:textSize="14sp" />
+            android:textSize="14sp"/>
 
         <ImageView
             android:id="@+id/iv_un_follow"
@@ -39,7 +40,7 @@
             android:layout_height="25dp"
             android:layout_gravity="center_vertical|end"
             android:src="@mipmap/ic_unfollow"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <ImageView
             android:id="@+id/iv_follow"
@@ -47,7 +48,7 @@
             android:layout_height="25dp"
             android:layout_gravity="center_vertical|end"
             android:src="@mipmap/ic_add_color"
-            android:visibility="gone" />
+            android:visibility="gone"/>
     </LinearLayout>
 
     <View

@@ -1,23 +1,16 @@
 package com.yetland.crazy.bundle.user
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
-import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.support.v7.widget.Toolbar
-import android.util.DisplayMetrics
-import android.view.WindowManager
 import com.squareup.picasso.Picasso
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.entity._User
 import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.widget.CircleImageView
 import com.ynchinamobile.hexinlvxing.R
-import kotlinx.android.synthetic.main.activity_user_detail.*
-import kotlinx.android.synthetic.main.item_follower.*
 
 class UserDetailActivity : BaseActivity() {
 

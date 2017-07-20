@@ -2,12 +2,15 @@ package com.yetland.crazy.bundle.user.holder
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
+import com.yetland.crazy.bundle.user.UserDetailActivity
 import com.yetland.crazy.bundle.user.contract.FollowContract
 import com.yetland.crazy.bundle.user.contract.FollowModel
 import com.yetland.crazy.bundle.user.contract.FollowPresenter
@@ -33,6 +36,7 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
     var ivUnFollow = view.findViewById<ImageView>(R.id.iv_un_follow)
     var ivFollow = view.findViewById<ImageView>(R.id.iv_follow)
     var tvUsername = view.findViewById<TextView>(R.id.tv_name)
+    var llFollowUser = view.findViewById<LinearLayout>(R.id.ll_follow_user)
 
     var follow = Follow()
 
@@ -46,7 +50,6 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
 
     val model = FollowModel()
     var presenter = FollowPresenter(model, this)
-    lateinit var dialog: MaterialDialog
 
     var followId = ArrayList<String>()
     override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>, activity: Activity) {
@@ -69,17 +72,19 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
                 isLogin = true
                 followId = SharedPreferencesUtils.getFollowList()
 
-                // 显示的是粉丝，
                 if (follow.isFollower) {
+                    // 关注我的
                     isFollower = true
                     showUser = follow.follower
                     user = follow.user
                 } else {
+                    // 我的关注
                     isFollower = false
                     showUser = follow.user
                     user = follow.follower
                 }
                 if (currentUser.objectId == user.objectId) {
+                    // 当前主页为我本人
                     isMe = true
                     if (isFollower) {
                         ivFollow.visibility = View.GONE
@@ -89,6 +94,7 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
                         ivUnFollow.visibility = View.VISIBLE
                     }
                 } else {
+                    // 他人主页,只可关注，不可取关
                     isMe = false
                     if (followId.contains(showUser.objectId)) {
                         ivFollow.visibility = View.GONE
@@ -128,19 +134,25 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
                     mActivity.startActivityForResult(Intent(mActivity, LoginActivity::class.java), IntentRequestCode.MAIN_TO_LOGIN)
                     ToastUtils.showShortSafe("Please login")
                 } else {
-                    if (isMe) {
-                        progressDialog = MaterialDialog.Builder(mActivity)
-                                .content("Committing")
-                                .progress(true, 0)
-                                .cancelable(false)
-                                .show()
-                        val commitFollow = CommitFollow()
-                        commitFollow.follower = Point("Pointer", "_User", currentUser.objectId)
-                        commitFollow.user = Point("Pointer", "_User", showUser.objectId)
-                        follow(commitFollow)
-                        LogUtils.e("followClick" + commitFollow.toString())
-                    }
+                    progressDialog = MaterialDialog.Builder(mActivity)
+                            .content("Committing")
+                            .progress(true, 0)
+                            .cancelable(false)
+                            .show()
+                    val commitFollow = CommitFollow()
+                    commitFollow.follower = Point("Pointer", "_User", currentUser.objectId)
+                    commitFollow.user = Point("Pointer", "_User", showUser.objectId)
+                    follow(commitFollow)
+                    LogUtils.e("followClick" + commitFollow.toString())
                 }
+            })
+
+            llFollowUser.setOnClickListener({
+                val intent = Intent(mActivity, UserDetailActivity::class.java)
+                val bundle = Bundle()
+                bundle.putSerializable("showUser", showUser)
+                intent.putExtras(bundle)
+                mActivity.startActivity(intent)
             })
         }
     }
@@ -153,8 +165,9 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
     }
 
     override fun unFollow(objectId: String) {
-        dialog = MaterialDialog.Builder(mActivity)
+        progressDialog = MaterialDialog.Builder(mActivity)
                 .content("LOADING...")
+                .progress(true, 0)
                 .cancelable(false)
                 .show()
         presenter.unFollow(objectId)
@@ -164,6 +177,7 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
     }
 
     override fun followSuccess(follow: Follow) {
+        progressDialog.dismiss()
         val followList = SharedPreferencesUtils.getFollowLists()
         if (!followId.contains(follow.user.objectId)) {
             followList.add(follow)
@@ -186,7 +200,7 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
 
         SharedPreferencesUtils.saveString(SharedPrefrencesConstant.KEY_FOLLOWER_LIST, Gson().toJson(followList))
 
-        dialog.dismiss()
+        progressDialog.dismiss()
         mAdapter.mList.removeAt(mPosition)
         mAdapter.notifyDataSetChanged()
     }
@@ -196,12 +210,12 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
     }
 
     override fun followFailed(msg: String) {
-        dialog.dismiss()
+        progressDialog.dismiss()
         ToastUtils.showShortSafe(msg)
     }
 
     override fun unFollowFailed(msg: String) {
-        dialog.dismiss()
+        progressDialog.dismiss()
         ToastUtils.showShortSafe(msg)
     }
 }

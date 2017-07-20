@@ -15,7 +15,6 @@ import com.yetland.crazy.bundle.user.contract.FollowPresenter
 import com.yetland.crazy.core.base.BaseRecyclerView
 import com.yetland.crazy.core.base.RecyclerViewListener
 import com.yetland.crazy.core.entity.*
-import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 
@@ -128,7 +127,7 @@ class UserDetailTabFragment : Fragment(), MainContract.View, FollowContract.View
     override fun getFollowerSuccess(data: Data<Follow>) {
         val result = data.results!!
         result.map {
-            it.isFollower = (followKey == "showUser")
+            it.isFollower = (followKey == "user")
         }
         val list = ArrayList<BaseEntity>()
         list.addAll(result)
