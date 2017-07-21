@@ -32,4 +32,6 @@ class BaseResult {
     var updateAt: String? = null
 }
 
-class Point(var __type: String, var className: String, var objectId: String)
+class Point(var className: String, var objectId: String) {
+    val __type = "Pointer"
+}

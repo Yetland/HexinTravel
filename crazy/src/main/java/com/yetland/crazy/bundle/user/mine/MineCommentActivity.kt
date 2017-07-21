@@ -30,12 +30,12 @@ class MineCommentActivity : BaseActivity(), MyCommentContract.View, RecyclerView
         rvMyComment.onLoading()
         rvMyComment.recyclerViewListener = this
 
-        val user = SharedPreferencesUtils.getUserInfo(activity)
-        if (user.username!!.isEmpty()) {
+        val user = SharedPreferencesUtils.getUserInfo()
+        if (user.username.isEmpty()) {
             rvMyComment.onLoadError("User is null , try to logout then login")
             finish()
         } else {
-            map.put("creatorId", user.objectId!!)
+            map.put("creatorId", user.objectId)
             getMyComment(map, currentPage)
         }
     }

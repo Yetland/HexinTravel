@@ -2,7 +2,6 @@ package com.yetland.crazy.bundle.main
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -12,13 +11,12 @@ import com.yetland.crazy.bundle.main.contract.MainModel
 import com.yetland.crazy.bundle.main.contract.MainPresent
 import com.yetland.crazy.bundle.user.UserDataActivity
 import com.yetland.crazy.bundle.user.contract.*
-import com.yetland.crazy.bundle.user.login.LoginActivity
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.base.BaseRecyclerView
 import com.yetland.crazy.core.base.RecyclerViewListener
 import com.yetland.crazy.core.constant.IntentRequestCode
 import com.yetland.crazy.core.constant.IntentResultCode
-import com.yetland.crazy.core.constant.SharedPrefrencesConstant
+import com.yetland.crazy.core.constant.SharedPreferencesConstant
 import com.yetland.crazy.core.entity.*
 import com.yetland.crazy.core.utils.LogUtils
 import com.yetland.crazy.core.utils.SharedPreferencesUtils
@@ -36,8 +34,6 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
     val map = HashMap<String, String>()
     lateinit var currentUser: _User
 
-    lateinit var pref: SharedPreferences
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -48,40 +44,17 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
         rvList.recyclerViewListener = this
         onLoading("Loading")
 
-        currentUser = SharedPreferencesUtils.getUserInfo(activity)
+        currentUser = SharedPreferencesUtils.getUserInfo()
 
-        pref = activity.getSharedPreferences(SharedPrefrencesConstant.PREF_NAME, Context.MODE_PRIVATE)
-        pref.registerOnSharedPreferenceChangeListener(prefListener)
         if (currentUser.objectId.isNotEmpty()) {
             val map = HashMap<String, Any>()
-            map.put("follower", Point("Pointer", "_User", currentUser.objectId))
+            map.put("follower", Point("_User", currentUser.objectId))
             getUser(currentUser.objectId)
             getFollower(map, -1)
         } else {
             getActivities(null, currentPage)
         }
     }
-
-    var changed = false
-    override fun onPause() {
-        super.onPause()
-        changed = false
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (changed) {
-            rvList.adapter.notifyDataSetChanged()
-        }
-    }
-
-    val prefListener = SharedPreferences.OnSharedPreferenceChangeListener({
-        sharedPreferences, s ->
-        LogUtils.e("onChanged,key = $s")
-        if (s != null && s == SharedPrefrencesConstant.KEY_FOLLOWER_LIST) {
-            changed = true
-        }
-    })
 
     override fun onLoading(msg: String) {
         rvList.onLoading()
@@ -100,12 +73,12 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
     }
 
     override fun onRefresh() {
-        currentUser = SharedPreferencesUtils.getUserInfo(activity)
+        currentUser = SharedPreferencesUtils.getUserInfo()
         currentPage = 0
 
         if (currentUser.objectId.isNotEmpty()) {
             val map = HashMap<String, Any>()
-            map.put("follower", Point("Pointer", "_User", currentUser.objectId))
+            map.put("follower", Point("_User", currentUser.objectId))
             getUser(currentUser.objectId)
             getFollower(map, -1)
         } else {
@@ -142,13 +115,11 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_user -> {
-                val user = SharedPreferencesUtils.getUserInfo(activity)
-                if (user.username!!.isNotEmpty()) {
+                if (isLogin) {
                     val intent = Intent(activity, UserDataActivity::class.java)
                     startActivityForResult(intent, IntentRequestCode.MAIN_TO_USER_DATA)
                 } else {
-                    val intent = Intent(activity, LoginActivity::class.java)
-                    startActivityForResult(intent, IntentRequestCode.MAIN_TO_LOGIN)
+                    showLogin()
                 }
             }
             R.id.menu_search -> {
@@ -158,6 +129,11 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDataChanged() {
+        if (isFollowListChanged) {
+            rvList.adapter.notifyDataSetChanged()
+        }
+    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         LogUtils.e("resultCode = $resultCode")
         when (resultCode) {
@@ -172,16 +148,9 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
                 val activityInfo: ActivityInfo = bundle?.getSerializable("activityInfo") as ActivityInfo
                 val position = bundle.getInt("position")
 
-                if (rvList.canLoadMore) {
-                    if (position + 1 <= rvList.adapter.mList.size) {
-                        rvList.adapter.mList[position] = activityInfo
-                        rvList.adapter.notifyDataSetChanged()
-                    }
-                } else {
-                    if (position + 2 <= rvList.adapter.mList.size) {
-                        rvList.adapter.mList[position] = activityInfo
-                        rvList.adapter.notifyDataSetChanged()
-                    }
+                if (rvList.adapter.mList[position].objectId == activityInfo.objectId) {
+                    rvList.adapter.mList[position] = activityInfo
+                    rvList.adapter.notifyDataSetChanged()
                 }
             }
         }
@@ -196,7 +165,7 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
     }
 
     override fun getUserSuccess(user: _User) {
-        SharedPreferencesUtils.saveUserInfo(activity, user)
+        SharedPreferencesUtils.saveUserInfo(user)
     }
 
     override fun getFollower(map: HashMap<String, Any>, page: Int) {
@@ -210,7 +179,7 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
     }
 
     override fun getFollowerSuccess(data: Data<Follow>) {
-        SharedPreferencesUtils.saveString(SharedPrefrencesConstant.KEY_FOLLOWER_LIST, Gson().toJson(data.results))
+        SharedPreferencesUtils.saveString(SharedPreferencesConstant.KEY_FOLLOWER_LIST, Gson().toJson(data.results))
         getActivities(null, currentPage)
     }
 

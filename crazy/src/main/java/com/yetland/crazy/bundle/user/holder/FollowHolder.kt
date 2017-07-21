@@ -7,18 +7,15 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import com.afollestad.materialdialogs.MaterialDialog
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import com.yetland.crazy.bundle.user.UserDetailActivity
 import com.yetland.crazy.bundle.user.contract.FollowContract
 import com.yetland.crazy.bundle.user.contract.FollowModel
 import com.yetland.crazy.bundle.user.contract.FollowPresenter
-import com.yetland.crazy.bundle.user.login.LoginActivity
 import com.yetland.crazy.core.base.BaseAdapter
 import com.yetland.crazy.core.base.BaseViewHolder
-import com.yetland.crazy.core.constant.IntentRequestCode
-import com.yetland.crazy.core.constant.SharedPrefrencesConstant
+import com.yetland.crazy.core.constant.SharedPreferencesConstant
 import com.yetland.crazy.core.entity.*
 import com.yetland.crazy.core.utils.LogUtils
 import com.yetland.crazy.core.utils.SharedPreferencesUtils
@@ -48,8 +45,7 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
     var isLogin = false
     var isFollower = false
 
-    val model = FollowModel()
-    var presenter = FollowPresenter(model, this)
+    var presenter = FollowPresenter(FollowModel(), this)
 
     var followId = ArrayList<String>()
     override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>, activity: Activity) {
@@ -120,7 +116,7 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
 
             ivUnFollow.setOnClickListener({
                 if (!isLogin) {
-                    mActivity.startActivityForResult(Intent(mActivity, LoginActivity::class.java), IntentRequestCode.MAIN_TO_LOGIN)
+                    showLogin()
                     ToastUtils.showShortSafe("Please login")
                 } else {
                     if (isMe) {
@@ -131,17 +127,12 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
 
             ivFollow.setOnClickListener({
                 if (!isLogin) {
-                    mActivity.startActivityForResult(Intent(mActivity, LoginActivity::class.java), IntentRequestCode.MAIN_TO_LOGIN)
+                    showLogin()
                     ToastUtils.showShortSafe("Please login")
                 } else {
-                    progressDialog = MaterialDialog.Builder(mActivity)
-                            .content("Committing")
-                            .progress(true, 0)
-                            .cancelable(false)
-                            .show()
                     val commitFollow = CommitFollow()
-                    commitFollow.follower = Point("Pointer", "_User", currentUser.objectId)
-                    commitFollow.user = Point("Pointer", "_User", showUser.objectId)
+                    commitFollow.follower = Point("_User", currentUser.objectId)
+                    commitFollow.user = Point("_User", showUser.objectId)
                     follow(commitFollow)
                     LogUtils.e("followClick" + commitFollow.toString())
                 }
@@ -161,15 +152,14 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
     }
 
     override fun follow(follow: CommitFollow) {
+        progressDialog.setContent("Following...")
+        progressDialog.show()
         presenter.follow(follow)
     }
 
     override fun unFollow(objectId: String) {
-        progressDialog = MaterialDialog.Builder(mActivity)
-                .content("LOADING...")
-                .progress(true, 0)
-                .cancelable(false)
-                .show()
+        progressDialog.setContent("UnFollowing...")
+        progressDialog.show()
         presenter.unFollow(objectId)
     }
 
@@ -181,7 +171,7 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
         val followList = SharedPreferencesUtils.getFollowLists()
         if (!followId.contains(follow.user.objectId)) {
             followList.add(follow)
-            SharedPreferencesUtils.saveString(SharedPrefrencesConstant.KEY_FOLLOWER_LIST, Gson().toJson(followList))
+            SharedPreferencesUtils.saveString(SharedPreferencesConstant.KEY_FOLLOWER_LIST, Gson().toJson(followList))
         }
         mAdapter.notifyDataSetChanged()
     }
@@ -198,7 +188,7 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
         }
         LogUtils.e("followList size after = ${followList.size}")
 
-        SharedPreferencesUtils.saveString(SharedPrefrencesConstant.KEY_FOLLOWER_LIST, Gson().toJson(followList))
+        SharedPreferencesUtils.saveString(SharedPreferencesConstant.KEY_FOLLOWER_LIST, Gson().toJson(followList))
 
         progressDialog.dismiss()
         mAdapter.mList.removeAt(mPosition)

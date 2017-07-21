@@ -1,5 +1,6 @@
 package com.yetland.crazy.bundle.user
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -14,7 +15,9 @@ import com.yetland.crazy.bundle.user.contract.FollowModel
 import com.yetland.crazy.bundle.user.contract.FollowPresenter
 import com.yetland.crazy.core.base.BaseRecyclerView
 import com.yetland.crazy.core.base.RecyclerViewListener
+import com.yetland.crazy.core.constant.SharedPreferencesConstant
 import com.yetland.crazy.core.entity.*
+import com.yetland.crazy.core.utils.LogUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 
@@ -42,40 +45,57 @@ class UserDetailTabFragment : Fragment(), MainContract.View, FollowContract.View
     val map = HashMap<String, Any>()
 
     var mView: View? = null
+
+    lateinit var pref: SharedPreferences
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         if (mView == null) {
             mView = inflater?.inflate(R.layout.fragment_user_detail_tab, container, false)
             rvUserDetail = mView!!.findViewById(R.id.rv_user_detail)
 
+            pref = activity.getSharedPreferences(SharedPreferencesConstant.PREF_NAME, 0)
+            pref.registerOnSharedPreferenceChangeListener(prefListener)
+
             if (currentUser.objectId.isEmpty()) {
-                ToastUtils.showShortSafe("Please logout then login again")
-                activity.finish()
+                rvUserDetail.onLoadError("User not exist")
+                rvUserDetail.isErrorClickable = false
+            } else {
+                rvUserDetail.initView(activity)
+                rvUserDetail.recyclerViewListener = this
+                rvUserDetail.onLoading()
+
+                getData()
             }
-
-            rvUserDetail.initView(activity)
-            rvUserDetail.recyclerViewListener = this
-            rvUserDetail.onLoading()
-
-            getData()
         }
         return mView
     }
+
+    val prefListener = SharedPreferences.OnSharedPreferenceChangeListener({
+        sharedPreferences, s ->
+        LogUtils.e("OnSharedPreferenceChangeListener , key = $s")
+        if (openType == TAB_FOLLOWER) {
+            onRefresh()
+        } else {
+            rvUserDetail.adapter.notifyDataSetChanged()
+        }
+    })
+
 
     fun getData() {
         when (openType) {
             TAB_FOLLOWER -> {
                 followKey = "user"
-                map.put(followKey, Point("Pointer", "_User", currentUser.objectId))
+                map.put(followKey, Point("_User", currentUser.objectId))
                 getFollower(map, currentPage)
             }
             TAB_FOLLOWEE -> {
                 followKey = "follower"
-                map.put(followKey, Point("Pointer", "_User", currentUser.objectId))
+                map.put(followKey, Point("_User", currentUser.objectId))
                 getFollower(map, currentPage)
             }
             TAB_ACTIVITY -> {
-                map.put("creator", Point("Pointer", "_User", currentUser.objectId))
+                map.put("creator", Point("_User", currentUser.objectId))
                 getActivities(Gson().toJson(map), currentPage)
             }
         }

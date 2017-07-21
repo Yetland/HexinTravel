@@ -34,14 +34,14 @@ class FollowActivity : BaseActivity(), FollowContract.View, RecyclerViewListener
             supportActionBar?.title = "我关注的"
         }
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        currentUser = SharedPreferencesUtils.getUserInfo(activity)
+        currentUser = SharedPreferencesUtils.getUserInfo()
 
         rvFollow = findViewById(R.id.rv_follow)
         rvFollow.initView(activity)
         rvFollow.recyclerViewListener = this
         rvFollow.onLoading()
 
-        map.put(key, Point("Pointer", "_User", currentUser.objectId))
+        map.put(key, Point("_User", currentUser.objectId))
         getFollower(map, currentPage)
     }
 
@@ -100,5 +100,4 @@ class FollowActivity : BaseActivity(), FollowContract.View, RecyclerViewListener
         currentPage = 0
         getFollower(map, currentPage)
     }
-
 }

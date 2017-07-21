@@ -38,16 +38,13 @@ class MineActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
         rvMyActivity.recyclerViewListener = this
         rvMyActivity.onLoading()
 
-
-        val user = SharedPreferencesUtils.getUserInfo(activity)
-        if (user.username!!.isEmpty()) {
+        if (isUserExist(currentLoginUser)) {
             rvMyActivity.onLoadError("User is null , try to logout then login")
-            finish()
+            rvMyActivity.isErrorClickable = false
         } else {
-            map.put("creator", Point("Pointer", "_User", user.objectId))
+            map.put("creator", Point("_User", currentLoginUser.objectId))
             getActivities(Gson().toJson(map), currentPage)
         }
-
     }
 
     override fun onRefresh() {

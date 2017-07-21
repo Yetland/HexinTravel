@@ -18,6 +18,7 @@ import com.yetland.crazy.bundle.user.mine.MineActivity
 import com.yetland.crazy.bundle.user.mine.MineCommentActivity
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.constant.IntentResultCode
+import com.yetland.crazy.core.constant.SharedPreferencesConstant
 import com.yetland.crazy.core.entity._User
 import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
@@ -45,7 +46,7 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_data)
-        user = SharedPreferencesUtils.getUserInfo(activity)
+        user = SharedPreferencesUtils.getUserInfo()
         supportActionBar?.title = "Me"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         llUser = findViewById(R.id.ll_user)
@@ -107,7 +108,7 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
                 startActivity(intent)
             }
             R.id.ll_log_out -> {
-                SharedPreferencesUtils.clearUserInfo(activity)
+                SharedPreferencesUtils.cleanData(SharedPreferencesConstant.PREF_NAME)
                 setResult(IntentResultCode.LOG_OUT)
                 finish()
             }
@@ -143,7 +144,7 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
 
     override fun getUserSuccess(user: _User) {
         refreshLayout.isRefreshing = false
-        SharedPreferencesUtils.saveUserInfo(activity, user)
+        SharedPreferencesUtils.saveUserInfo(user)
         this.user = user
         setUserData(user)
     }

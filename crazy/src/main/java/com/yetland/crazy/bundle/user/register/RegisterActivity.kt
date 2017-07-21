@@ -1,7 +1,6 @@
 package com.yetland.crazy.bundle.user.register
 
 import android.annotation.SuppressLint
-import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -9,8 +8,8 @@ import android.widget.EditText
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity._User
-import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.RegexUtil
+import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 
@@ -26,7 +25,7 @@ class RegisterActivity : BaseActivity(), RegisterContract.View, View.OnClickList
                     ToastUtils.showShortSafe("Username cannot be empty")
                 } else if (password.isEmpty()) {
                     ToastUtils.showShortSafe("Password cannot be empty")
-                } else if (email.isNotEmpty()) {
+                } else if (email.isEmpty()) {
                     ToastUtils.showShortSafe("Email cannot be empty")
                 } else if (!RegexUtil.isEmail(email)) {
                     ToastUtils.showShortSafe("Email is not correct")
@@ -53,7 +52,7 @@ class RegisterActivity : BaseActivity(), RegisterContract.View, View.OnClickList
 
     override fun success(resultUser: _User) {
         progressDialog.dismiss()
-        SharedPreferencesUtils.saveUserInfo(activity, resultUser)
+        SharedPreferencesUtils.saveUserInfo(resultUser)
         setResult(IntentResultCode.REGISTER_SUCCESS)
         finish()
     }

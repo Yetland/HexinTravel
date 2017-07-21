@@ -1,6 +1,5 @@
 package com.yetland.crazy.bundle.main.detail
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -50,7 +49,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
         map.put("activityId", activityInfo.objectId)
         getComment(map, 0)
 
-        user = SharedPreferencesUtils.getUserInfo(activity)
+        user = SharedPreferencesUtils.getUserInfo()
         fabEdit.setOnClickListener({
             if (user.objectId.isEmpty() || user.objectId.isEmpty()) {
                 ToastUtils.showShortSafe("Please login")
@@ -64,8 +63,8 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
                                 ToastUtils.showShortSafe("Empty content")
                             } else {
                                 d.dismiss()
-                                val activityPoint = Point("Pointer", "Activity", activityInfo.objectId)
-                                val userPoint = Point("Pointer", "_User", user.objectId)
+                                val activityPoint = Point("Activity", activityInfo.objectId)
+                                val userPoint = Point("_User", user.objectId)
                                 val comment = CommitComment(activityPoint, userPoint, input.toString())
 
                                 val c = Comment()
@@ -83,6 +82,10 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
                         .show()
             }
         })
+    }
+
+    override fun onDataChanged() {
+        rvDetailList.adapter.notifyDataSetChanged()
     }
 
     override fun onRefresh() {

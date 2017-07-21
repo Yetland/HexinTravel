@@ -19,11 +19,10 @@ import com.yetland.crazy.bundle.main.detail.DetailActivity
 import com.yetland.crazy.bundle.user.contract.FollowContract
 import com.yetland.crazy.bundle.user.contract.FollowModel
 import com.yetland.crazy.bundle.user.contract.FollowPresenter
-import com.yetland.crazy.bundle.user.login.LoginActivity
 import com.yetland.crazy.core.base.BaseAdapter
 import com.yetland.crazy.core.base.BaseViewHolder
 import com.yetland.crazy.core.constant.IntentRequestCode
-import com.yetland.crazy.core.constant.SharedPrefrencesConstant
+import com.yetland.crazy.core.constant.SharedPreferencesConstant
 import com.yetland.crazy.core.entity.*
 import com.yetland.crazy.core.utils.LogUtils
 import com.yetland.crazy.core.utils.SharedPreferencesUtils
@@ -81,7 +80,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         mActivity = activity
         this.adapter = adapter
         this.holderPosition = position
-        currentUser = SharedPreferencesUtils.getUserInfo(context)
+        currentUser = SharedPreferencesUtils.getUserInfo()
 
         followId = SharedPreferencesUtils.getFollowList()
 
@@ -178,12 +177,12 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         }
         when (view.id) {
             R.id.ll_activity_creator -> {
-                val intent = Intent(mActivity,UserDetailActivity::class.java)
+                val intent = Intent(mActivity, UserDetailActivity::class.java)
                 val bundle = Bundle()
-                bundle.putSerializable("showUser",activityCreator)
+                bundle.putSerializable("showUser", activityCreator)
                 intent.putExtras(bundle)
 
-                mActivity.startActivityForResult(intent,IntentRequestCode.MAIN_TO_USER_DATA)
+                mActivity.startActivityForResult(intent, IntentRequestCode.MAIN_TO_USER_DATA)
             }
 
             R.id.iv_follow -> {
@@ -195,12 +194,12 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                             .cancelable(false)
                             .show()
                     val commitFollow = CommitFollow()
-                    commitFollow.follower = Point("Pointer", "_User", currentUser.objectId)
-                    commitFollow.user = Point("Pointer", "_User", activityCreator.objectId)
+                    commitFollow.follower = Point("_User", currentUser.objectId)
+                    commitFollow.user = Point("_User", activityCreator.objectId)
                     follow(commitFollow)
                     LogUtils.e("followClick" + commitFollow.toString())
                 } else {
-                    mActivity.startActivityForResult(Intent(mActivity, LoginActivity::class.java), IntentRequestCode.MAIN_TO_LOGIN)
+                    showLogin()
                     ToastUtils.showShortSafe("Please login")
                 }
             }
@@ -218,7 +217,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                     val where = Gson().toJson(map)
                     like(activityInfo.objectId, where)
                 } else {
-                    mActivity.startActivityForResult(Intent(mActivity, LoginActivity::class.java), IntentRequestCode.MAIN_TO_LOGIN)
+                    showLogin()
                     ToastUtils.showShortSafe("Please login")
                 }
             }
@@ -276,7 +275,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         followList = SharedPreferencesUtils.getFollowLists()
         if (!followId.contains(follow.user.objectId)) {
             followList.add(follow)
-            SharedPreferencesUtils.saveString(SharedPrefrencesConstant.KEY_FOLLOWER_LIST, Gson().toJson(followList))
+            SharedPreferencesUtils.saveString(SharedPreferencesConstant.KEY_FOLLOWER_LIST, Gson().toJson(followList))
         }
         adapter.notifyDataSetChanged()
     }

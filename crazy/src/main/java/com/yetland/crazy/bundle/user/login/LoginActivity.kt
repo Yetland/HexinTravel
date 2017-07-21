@@ -1,26 +1,30 @@
 package com.yetland.crazy.bundle.user.login
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import com.google.gson.Gson
+import com.yetland.crazy.bundle.user.contract.FollowContract
+import com.yetland.crazy.bundle.user.contract.FollowModel
+import com.yetland.crazy.bundle.user.contract.FollowPresenter
 import com.yetland.crazy.bundle.user.register.RegisterActivity
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.constant.IntentRequestCode
 import com.yetland.crazy.core.constant.IntentResultCode
-import com.yetland.crazy.core.entity._User
+import com.yetland.crazy.core.constant.SharedPreferencesConstant
+import com.yetland.crazy.core.entity.*
 import com.yetland.crazy.core.utils.*
 import com.ynchinamobile.hexinlvxing.R
 
 
-class LoginActivity : BaseActivity(), LoginContract.View {
+class LoginActivity : BaseActivity(), LoginContract.View, FollowContract.View {
 
 
-    val loginModel = LoginModel()
-    val loginPresenter = LoginPresenter(loginModel, this)
+    val loginPresenter = LoginPresenter(LoginModel(), this)
+    val followPresenter = FollowPresenter(FollowModel(), this)
 
     var etPassword: EditText? = null
     var etUsername: EditText? = null
@@ -60,13 +64,9 @@ class LoginActivity : BaseActivity(), LoginContract.View {
                 } else if (TextUtils.isEmpty(etPassword?.text)) {
                     ToastUtils.showShortSafe("Password can't be empty")
                 } else {
-                    if (isNetworkAvailable(activity)) {
-                        val phone = etUsername!!.text.toString()
-                        val password = etPassword!!.text.toString()
-                        login(phone, password)
-                    } else {
-                        ToastUtils.showShortSafe(R.string.network_unavailable)
-                    }
+                    val phone = etUsername!!.text.toString()
+                    val password = etPassword!!.text.toString()
+                    login(phone, password)
                 }
             }
         }
@@ -80,10 +80,12 @@ class LoginActivity : BaseActivity(), LoginContract.View {
     }
 
     override fun loginSuccess(user: _User) {
-        progressDialog.dismiss()
-        SharedPreferencesUtils.saveUserInfo(activity, user)
-        setResult(IntentResultCode.LOG_IN)
-        finish()
+
+        SharedPreferencesUtils.saveUserInfo(user)
+        val map = HashMap<String, Any>()
+        map.put("follower", Point("_User", user.objectId))
+        getFollower(map, -1)
+
     }
 
     override fun loginFailed(msg: String) {
@@ -106,5 +108,41 @@ class LoginActivity : BaseActivity(), LoginContract.View {
 
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun getFollower(map: HashMap<String, Any>, page: Int) {
+        followPresenter.getFollower(Gson().toJson(map), page)
+    }
+
+    override fun follow(follow: CommitFollow) {
+    }
+
+    override fun unFollow(objectId: String) {
+    }
+
+    override fun getFollowerSuccess(data: Data<Follow>) {
+
+        progressDialog.dismiss()
+        SharedPreferencesUtils.saveString(SharedPreferencesConstant.KEY_FOLLOWER_LIST,
+                Gson().toJson(data.results))
+        setResult(IntentResultCode.LOG_IN)
+        finish()
+    }
+
+    override fun followSuccess(follow: Follow) {
+    }
+
+    override fun unFollowSuccess() {
+    }
+
+    override fun getFollowerFailed(msg: String) {
+        progressDialog.dismiss()
+        ToastUtils.showShortSafe(msg)
+    }
+
+    override fun followFailed(msg: String) {
+    }
+
+    override fun unFollowFailed(msg: String) {
     }
 }

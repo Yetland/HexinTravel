@@ -12,8 +12,8 @@ class _User : BaseEntity() {
     var avatarUrl: String? = null
     var sessionToken: String? = null
     var authData: String? = null
-    var username: String? = ""
-    var password: String? = ""
+    var username: String = ""
+    var password: String = ""
     var mobilePhoneVerified: Boolean = false
     var email: String? = ""
     var emailVerified: Boolean = false

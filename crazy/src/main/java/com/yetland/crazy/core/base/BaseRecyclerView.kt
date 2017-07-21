@@ -30,6 +30,7 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
     var canLoadMore = true
     var isLoadingMore = false
     var isRefreshing = false
+    var isErrorClickable = true
 
     var layoutError: LinearLayout
     var layoutLoading: LinearLayout
@@ -75,11 +76,13 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
                 loadType = TYPE_REFRESH
                 canRefresh = false
                 isRefreshing = true
-                recyclerViewListener?.onRefresh()
+                if (recyclerViewListener != null)
+                    recyclerViewListener?.onRefresh()
             } else {
                 swipeRefreshLayout.isRefreshing = false
             }
         }
+
         if (canLoadMore) {
             recyclerView.addOnScrollListener((object : RecyclerView.OnScrollListener() {
                 var lastVisibleItem: Int = 0
@@ -98,7 +101,8 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
                             isLoadingMore = true
                             adapter.mList.add(Footer())
                             adapter.notifyDataSetChanged()
-                            recyclerViewListener?.onLoadMore()
+                            if (recyclerViewListener != null)
+                                recyclerViewListener?.onLoadMore()
                         }
                     }
                 }
@@ -168,7 +172,9 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.iv_error_img -> {
-                recyclerViewListener?.onErrorClick()
+                if (isErrorClickable && recyclerViewListener != null) {
+                    recyclerViewListener?.onErrorClick()
+                }
             }
         }
     }

@@ -3,6 +3,7 @@ package com.yetland.crazy.core.entity
 import android.view.View
 import com.yetland.crazy.bundle.main.holder.ActivityHolder
 import com.yetland.crazy.bundle.main.holder.CommentHolder
+import com.yetland.crazy.bundle.user.holder.AvatarHolder
 import com.yetland.crazy.bundle.user.holder.FollowHolder
 import com.yetland.crazy.core.base.BaseFooterViewHolder
 import com.yetland.crazy.core.base.BaseViewHolder
@@ -21,9 +22,14 @@ interface TypeFactory {
     fun type(user: User): Int
     fun type(comment: Comment): Int
     fun type(follower: Follow): Int
+    fun type(avatar: Avatar): Int
 }
 
 class TypeFactoryForList : TypeFactory {
+    override fun type(avatar: Avatar): Int {
+        return R.layout.item_image
+    }
+
     override fun type(follower: Follow): Int {
         return R.layout.item_follower
     }
@@ -48,6 +54,8 @@ class TypeFactoryForList : TypeFactory {
             R.layout.item_comment -> return CommentHolder(view)
 
             R.layout.item_follower -> return FollowHolder(view)
+
+            R.layout.item_image -> return AvatarHolder(view)
 
             else -> return BaseFooterViewHolder(view)
         }
