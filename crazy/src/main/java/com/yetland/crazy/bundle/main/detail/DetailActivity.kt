@@ -2,14 +2,12 @@ package com.yetland.crazy.bundle.main.detail
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.gson.Gson
 import com.yetland.crazy.bundle.main.contract.ActivityDetailContract
 import com.yetland.crazy.bundle.main.contract.ActivityDetailModel
 import com.yetland.crazy.bundle.main.contract.ActivityDetailPresenter
 import com.yetland.crazy.core.base.BaseActivity
-import com.yetland.crazy.core.base.BaseRecyclerView
 import com.yetland.crazy.core.base.RecyclerViewListener
 import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity.*
@@ -17,18 +15,17 @@ import com.yetland.crazy.core.utils.LogUtils
 import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
+import kotlinx.android.synthetic.main.activity_detail.*
 
 class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerViewListener {
 
+    var presenter = ActivityDetailPresenter(ActivityDetailModel(), this)
+
     var list = ArrayList<BaseEntity>()
-    var model = ActivityDetailModel()
-    var presenter = ActivityDetailPresenter(model, this)
     var map = HashMap<String, String>()
-    lateinit var rvDetailList: BaseRecyclerView
     lateinit var activityInfo: ActivityInfo
     var holderPosition = 0
     lateinit var user: _User
-    lateinit var fabEdit: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,11 +37,9 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
         activityInfo = bundle.getSerializable("activityInfo") as ActivityInfo
         holderPosition = bundle.getInt("position")
 
-        fabEdit = findViewById<FloatingActionButton>(R.id.fab_edit)
-        rvDetailList = findViewById(R.id.rv_activity_detail)
-        rvDetailList.initView(this)
-        rvDetailList.recyclerViewListener = this
-        rvDetailList.onLoading()
+        rvActivityDetail.initView(this)
+        rvActivityDetail.recyclerViewListener = this
+        rvActivityDetail.onLoading()
 
         map.put("activityId", activityInfo.objectId)
         getComment(map, 0)
@@ -85,7 +80,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
     }
 
     override fun onDataChanged() {
-        rvDetailList.adapter.notifyDataSetChanged()
+        rvActivityDetail.adapter.notifyDataSetChanged()
     }
 
     override fun onRefresh() {
@@ -101,7 +96,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
 
     override fun onErrorClick() {
         currentPage = 0
-        rvDetailList.onLoading()
+        rvActivityDetail.onLoading()
         getComment(map, currentPage)
     }
 
@@ -111,7 +106,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
 
     override fun failed(msg: String) {
         progressDialog.dismiss()
-        rvDetailList.onLoadError(msg)
+        rvActivityDetail.onLoadError(msg)
     }
 
     override fun getCommentSuccess(data: Data<Comment>) {
@@ -119,7 +114,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
         LogUtils.e("getCommentSuccess")
         val list = ArrayList<BaseEntity>()
         list.addAll(data.results!!)
-        rvDetailList.onCompleteWithHeader(list, currentPage, activityInfo)
+        rvActivityDetail.onCompleteWithHeader(list, currentPage, activityInfo)
     }
 
     override fun writeComment(comment: CommitComment) {
@@ -145,7 +140,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
 
     override fun updateActivitySuccess() {
         progressDialog.dismiss()
-        rvDetailList.swipeRefreshLayout.isRefreshing = true
+        rvActivityDetail.swipeRefreshLayout.isRefreshing = true
         currentPage = 0
         getComment(map, currentPage)
     }
@@ -160,8 +155,8 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
         LogUtils.e("onBackPressed")
 
         val bundle = Bundle()
-        if (rvDetailList.adapter.mList.size > 0 && rvDetailList.adapter.mList[0] is ActivityInfo) {
-            val activityInfo = rvDetailList.adapter.mList[0]
+        if (rvActivityDetail.adapter.mList.size > 0 && rvActivityDetail.adapter.mList[0] is ActivityInfo) {
+            val activityInfo = rvActivityDetail.adapter.mList[0]
             bundle.putSerializable("activityInfo", activityInfo)
             bundle.putInt("position", holderPosition)
             setResult(IntentResultCode.MAIN_TO_DETAIL_RESULT, Intent().putExtras(bundle))

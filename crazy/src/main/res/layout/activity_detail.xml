@@ -8,7 +8,7 @@
     tools:context="com.yetland.crazy.bundle.main.detail.DetailActivity">
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_edit"
+        android:id="@+id/fabEdit"
         android:layout_gravity="right|bottom"
         android:src="@mipmap/ic_menu_edit"
         android:layout_marginRight="10dp"
@@ -17,7 +17,7 @@
         android:scaleType="fitXY"
         android:layout_height="wrap_content"/>
     <com.yetland.crazy.core.base.BaseRecyclerView
-        android:id="@+id/rv_activity_detail"
+        android:id="@+id/rvActivityDetail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </FrameLayout>

@@ -11,7 +11,7 @@
         android:id="@+id/iv_comment_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@mipmap/huas"/>
+        android:src="@mipmap/image_default"/>
 
     <LinearLayout
         android:layout_width="match_parent"

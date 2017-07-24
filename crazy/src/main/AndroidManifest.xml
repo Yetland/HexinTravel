@@ -40,7 +40,9 @@
         <activity
             android:name="com.yetland.crazy.bundle.user.UserDetailActivity"
             android:theme="@style/ThemeFullScreen" />
-        <activity android:name="com.yetland.crazy.bundle.user.UserAvatarActivity"></activity>
+        <activity
+            android:name="com.yetland.crazy.bundle.user.UserAvatarActivity"
+            android:theme="@style/ThemeFullScreen" />
     </application>
 
 </manifest>

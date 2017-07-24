@@ -30,7 +30,8 @@ import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 import com.afollestad.materialdialogs.MaterialDialog
 import com.yetland.crazy.bundle.user.UserDetailActivity
-
+import kotlinx.android.synthetic.main.item_comment.view.*
+import kotlinx.android.synthetic.main.item_main_activity.view.*
 
 /**
  * @Name:           ActivityHolder
@@ -44,26 +45,26 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     var presenter = ActivityHolderPresenter(ActivityHolderModel(), this)
     var followPresenter = FollowPresenter(FollowModel(), this)
 
-    var tvTitle: TextView = itemView.findViewById(R.id.tv_title)
-    var tvContent: TextView = itemView.findViewById(R.id.tv_content)
-    var ivPhoto = itemView.findViewById<ImageView>(R.id.iv_photo)
-    var ivAvatar = itemView.findViewById<ImageView>(R.id.iv_avatar)
-    var tvUserName = itemView.findViewById<TextView>(R.id.tv_user_name)
-    var tvTime: TextView = itemView.findViewById<TextView>(R.id.tv_time)
-    var tvLike: TextView = itemView.findViewById<TextView>(R.id.tv_like)
-    var ivLike: ImageView = itemView.findViewById(R.id.iv_like)
-    var llLike: LinearLayout = itemView.findViewById(R.id.ll_like)
-    var llComment: LinearLayout = itemView.findViewById(R.id.ll_comment)
-    var llActivityCreator: LinearLayout = itemView.findViewById(R.id.ll_activity_creator)
+    var tvTitle = itemView.tv_title
+    var tvContent = itemView.tv_content
+    var ivPhoto = itemView.iv_photo
+    var ivAvatar = itemView.iv_avatar
+    var tvUserName = itemView.tv_user_name
+    var tvTime = itemView.tv_time
+    var tvLike = itemView.tv_like
+    var ivLike = itemView.iv_like
+    var llLike = itemView.ll_like
+    var llComment = itemView.ll_comment
+    var llActivityCreator = itemView.ll_activity_creator
 
-    var tvComment: TextView = itemView.findViewById<TextView>(R.id.tv_comment)
-    var ivFollow = itemView.findViewById<ImageView>(R.id.iv_follow)
+    var tvComment = itemView.tv_comment
+    var ivFollow = itemView.iv_follow
 
-    val llActivityMyComment: LinearLayout = itemView.findViewById(R.id.ll_activity_my_comment)
-    val tvCommentUsername: TextView = itemView.findViewById(R.id.tv_name)
-    val ivCommentAvatar: ImageView = itemView.findViewById(R.id.iv_comment_avatar)
-    var tvCommentContent: TextView = itemView.findViewById(R.id.tv_comment_content)
-    var tvCommentTime: TextView = itemView.findViewById(R.id.tv_comment_time)
+    val llActivityMyComment = itemView.ll_activity_my_comment
+    val tvCommentUsername = itemView.tv_name
+    val ivCommentAvatar = itemView.iv_comment_avatar
+    var tvCommentContent = itemView.tv_comment_content
+    var tvCommentTime = itemView.tv_comment_time
 
     var comment = MyComment()
     var activityInfo = ActivityInfo()
@@ -108,7 +109,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         if (creator.avatarUrl!!.isNotEmpty()) {
             Picasso.with(context)
                     .load(creator.avatarUrl)
-                    .placeholder(R.mipmap.huas)
+                    .placeholder(R.mipmap.image_default)
                     .into(ivCommentAvatar)
         }
     }
@@ -143,10 +144,10 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         if (activityCreator.avatarUrl != null) {
             Picasso.with(context)
                     .load(activityCreator.avatarUrl)
-                    .placeholder(R.mipmap.huas)
+                    .placeholder(R.mipmap.image_default)
                     .into(ivAvatar)
         } else {
-            ivAvatar.setImageDrawable(context.resources.getDrawable(R.mipmap.huas))
+            ivAvatar.setImageDrawable(context.resources.getDrawable(R.mipmap.image_default))
         }
 
         if (activityInfo.clickable) {

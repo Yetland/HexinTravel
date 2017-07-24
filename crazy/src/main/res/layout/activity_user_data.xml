@@ -8,7 +8,7 @@
               android:orientation="vertical">
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/srl_user_data"
+        android:id="@+id/srlUserData"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -18,7 +18,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/ll_user"
+                android:id="@+id/llUser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -29,10 +29,10 @@
                 android:padding="4dp">
 
                 <ImageView
-                    android:id="@+id/iv_avatar"
+                    android:id="@+id/ivAvatar"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@mipmap/huas"/>
+                    android:src="@mipmap/image_default"/>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -43,7 +43,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tv_username"
+                        android:id="@+id/tvUsername"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
@@ -53,7 +53,7 @@
                         android:textSize="16sp"/>
 
                     <TextView
-                        android:id="@+id/tv_email"
+                        android:id="@+id/tvEmail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -75,7 +75,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_my_activity"
+                android:id="@+id/llMyActivity"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_height"
                 android:background="@drawable/item_click"
@@ -104,7 +104,7 @@
                     app:srcCompat="@mipmap/ic_arrow_right"/>
             </LinearLayout>
             <LinearLayout
-                android:id="@+id/ll_my_comment"
+                android:id="@+id/llMyComment"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_height"
                 android:layout_marginTop="0.1dp"
@@ -135,7 +135,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_my_follower"
+                android:id="@+id/llMyFollower"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_height"
                 android:layout_marginTop="10dp"
@@ -165,7 +165,7 @@
                     app:srcCompat="@mipmap/ic_arrow_right"/>
             </LinearLayout>
             <LinearLayout
-                android:id="@+id/ll_my_followee"
+                android:id="@+id/llMyFollowee"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_height"
                 android:layout_marginTop="0.1dp"
@@ -196,7 +196,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/ll_log_out"
+                android:id="@+id/llLogOut"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_height"
                 android:layout_marginTop="10dp"

@@ -8,39 +8,39 @@
     tools:context="com.yetland.crazy.bundle.user.login.LoginActivity">
 
     <EditText
-        android:id="@+id/et_username"
-        android:hint="username"
+        android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:hint="username"
         android:inputType="text"
         android:maxLines="1" />
 
     <EditText
-        android:hint="password"
-        android:id="@+id/et_password"
+        android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:hint="password"
         android:inputType="textPassword"
         android:maxLines="1" />
 
     <Button
-        android:id="@+id/bt_login"
+        android:id="@+id/btLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="login" />
 
     <Button
-        android:id="@+id/bt_register"
+        android:id="@+id/btRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="register" />
 
     <Button
-        android:id="@+id/bt_forget_password"
+        android:id="@+id/btForgetPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="forgetPassword" />
+        android:text="forgetPassword"
+        android:visibility="gone" />
 </LinearLayout>

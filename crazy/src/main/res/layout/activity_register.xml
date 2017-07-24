@@ -8,7 +8,7 @@
     tools:context="com.yetland.crazy.bundle.user.register.RegisterActivity">
 
     <EditText
-        android:id="@+id/et_username"
+        android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -16,7 +16,7 @@
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/et_mail"
+        android:id="@+id/etMail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -24,7 +24,7 @@
         android:inputType="textPersonName" />
 
     <EditText
-        android:id="@+id/et_password"
+        android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -32,7 +32,7 @@
         android:inputType="textPassword" />
 
     <Button
-        android:id="@+id/bt_register"
+        android:id="@+id/btRegister"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="register" />

@@ -11,6 +11,7 @@ import com.yetland.crazy.core.base.RecyclerViewListener
 import com.yetland.crazy.core.entity.*
 import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.ynchinamobile.hexinlvxing.R
+import kotlinx.android.synthetic.main.activity_follow.*
 
 class FollowActivity : BaseActivity(), FollowContract.View, RecyclerViewListener {
 
@@ -19,7 +20,6 @@ class FollowActivity : BaseActivity(), FollowContract.View, RecyclerViewListener
     var presenter = FollowPresenter(model, this)
     var isFollower = false
     lateinit var currentUser: _User
-    lateinit var rvFollow: BaseRecyclerView
     var map = HashMap<String, Any>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +36,6 @@ class FollowActivity : BaseActivity(), FollowContract.View, RecyclerViewListener
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         currentUser = SharedPreferencesUtils.getUserInfo()
 
-        rvFollow = findViewById(R.id.rv_follow)
         rvFollow.initView(activity)
         rvFollow.recyclerViewListener = this
         rvFollow.onLoading()

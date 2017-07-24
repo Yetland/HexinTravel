@@ -7,8 +7,30 @@
     android:orientation="vertical"
     tools:context="com.yetland.crazy.bundle.user.UserAvatarActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="4dp"
+            app:srcCompat="@mipmap/ic_done" />
+    </RelativeLayout>
+
     <com.yetland.crazy.core.base.BaseRecyclerView
-        android:id="@+id/rv_user_avatar"
+        android:id="@+id/rvUserAvatar"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

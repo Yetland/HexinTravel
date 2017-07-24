@@ -22,6 +22,7 @@ import com.yetland.crazy.core.utils.LogUtils
 import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
         FollowContract.View, RecyclerViewListener {
@@ -30,21 +31,17 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
     var userDataPresent = UserDataPresenter(UserDataModel(), this)
     var followPresent = FollowPresenter(FollowModel(), this)
 
-    lateinit var rvList: BaseRecyclerView
     val map = HashMap<String, String>()
-    lateinit var currentUser: _User
+    var currentUser: _User = SharedPreferencesUtils.getUserInfo()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         supportActionBar?.title = "Main"
-        rvList = findViewById(R.id.rv_list)
-        rvList.initView(this)
-        rvList.recyclerViewListener = this
+        rvMainList.initView(this)
+        rvMainList.recyclerViewListener = this
         onLoading("Loading")
-
-        currentUser = SharedPreferencesUtils.getUserInfo()
 
         if (currentUser.objectId.isNotEmpty()) {
             val map = HashMap<String, Any>()
@@ -57,11 +54,11 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
     }
 
     override fun onLoading(msg: String) {
-        rvList.onLoading()
+        rvMainList.onLoading()
     }
 
     override fun onError(msg: String) {
-        rvList.onLoadError(msg)
+        rvMainList.onLoadError(msg)
     }
 
     override fun onComplete(activityModel: Data<ActivityInfo>) {
@@ -69,7 +66,7 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
         LogUtils.e("onComplete")
         val list = ArrayList<BaseEntity>()
         list.addAll(activityModel.results!!)
-        rvList.onDefaultComplete(list, currentPage)
+        rvMainList.onDefaultComplete(list, currentPage)
     }
 
     override fun onRefresh() {
@@ -131,26 +128,27 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
 
     override fun onDataChanged() {
         if (isFollowListChanged) {
-            rvList.adapter.notifyDataSetChanged()
+            rvMainList.adapter.notifyDataSetChanged()
         }
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         LogUtils.e("resultCode = $resultCode")
         when (resultCode) {
             IntentResultCode.LOG_OUT -> {
-                rvList.adapter.notifyDataSetChanged()
+                rvMainList.adapter.notifyDataSetChanged()
             }
             IntentResultCode.LOG_IN -> {
-                rvList.adapter.notifyDataSetChanged()
+                rvMainList.adapter.notifyDataSetChanged()
             }
             IntentResultCode.MAIN_TO_DETAIL_RESULT -> {
                 val bundle = data?.extras
                 val activityInfo: ActivityInfo = bundle?.getSerializable("activityInfo") as ActivityInfo
                 val position = bundle.getInt("position")
 
-                if (rvList.adapter.mList[position].objectId == activityInfo.objectId) {
-                    rvList.adapter.mList[position] = activityInfo
-                    rvList.adapter.notifyDataSetChanged()
+                if (rvMainList.adapter.mList[position].objectId == activityInfo.objectId) {
+                    rvMainList.adapter.mList[position] = activityInfo
+                    rvMainList.adapter.notifyDataSetChanged()
                 }
             }
         }
@@ -190,7 +188,7 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
     }
 
     override fun getFollowerFailed(msg: String) {
-        rvList.onLoadError(msg)
+        rvMainList.onLoadError(msg)
     }
 
     override fun followFailed(msg: String) {

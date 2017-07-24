@@ -10,6 +10,7 @@ import com.yetland.crazy.core.base.BaseViewHolder
 import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.entity.Comment
 import com.ynchinamobile.hexinlvxing.R
+import kotlinx.android.synthetic.main.item_comment.view.*
 
 /**
  * @Name: CommentHolder
@@ -20,10 +21,10 @@ class CommentHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view) {
 
 
     lateinit var comment: Comment
-    val tvUsername: TextView = view.findViewById(R.id.tv_name)
-    val ivAvatar: ImageView = view.findViewById(R.id.iv_comment_avatar)
-    var tvCommentContent: TextView = view.findViewById(R.id.tv_comment_content)
-    var tvCommentTime: TextView = view.findViewById(R.id.tv_comment_time)
+    val tvUsername = view.tv_name
+    val ivAvatar = view.iv_comment_avatar
+    var tvCommentContent = view.tv_comment_content
+    var tvCommentTime = view.tv_comment_time
     override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>, activity: Activity) {
 
         if (t is Comment) {
@@ -34,26 +35,13 @@ class CommentHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view) {
             val creator = comment.creator
             tvUsername.text = creator.username
 
-            if (creator.avatarUrl!!.isNotEmpty()){
+            if (creator.avatarUrl!!.isNotEmpty()) {
 
                 Picasso.with(context)
                         .load(creator.avatarUrl)
-                        .placeholder(R.mipmap.huas)
+                        .placeholder(R.mipmap.image_default)
                         .into(ivAvatar)
             }
         }
-        /* if (itemView != null) {
-             val tvUsername = itemView.findViewById<TextView>(R.id.tv_user_name)!!
-             val ivAvatar = itemView.findViewById<ImageView>(R.id.iv_avatar)!!
-             var tvCommentContent: TextView = itemView.findViewById(R.id.tv_comment_content)
-             var tvCommentTime: TextView = itemView.findViewById(R.id.tv_comment_time)
-             if (t is Comment) {
-                 comment = t
-
-             }
-         }else{
-             makeShortToast(context,"View is null")
-         }*/
     }
-
 }

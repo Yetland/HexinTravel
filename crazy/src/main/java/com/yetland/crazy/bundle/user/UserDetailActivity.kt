@@ -1,7 +1,6 @@
 package com.yetland.crazy.bundle.user
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.app.Fragment
@@ -17,7 +16,6 @@ import com.yetland.crazy.bundle.user.contract.FollowPresenter
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.constant.SharedPreferencesConstant
 import com.yetland.crazy.core.entity.*
-import com.yetland.crazy.core.utils.LogUtils
 import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.yetland.crazy.core.widget.CircleImageView
@@ -45,7 +43,7 @@ class UserDetailActivity : BaseActivity(), FollowContract.View {
         setContentView(R.layout.activity_user_detail)
 
         toolBar = findViewById(R.id.toolbar)
-        tabLayout = findViewById(R.id.tabLayout)
+        tabLayout = findViewById<TabLayout>(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)
         ivAvatar = findViewById(R.id.iv_user_detail_avatar)
         ivFollow = findViewById(R.id.iv_user_detail_follow)
@@ -83,7 +81,7 @@ class UserDetailActivity : BaseActivity(), FollowContract.View {
         if (currentShowUser.avatarUrl != null) {
             Picasso.with(activity)
                     .load(currentShowUser.avatarUrl)
-                    .placeholder(R.mipmap.huas)
+                    .placeholder(R.mipmap.image_default)
                     .into(ivAvatar)
         }
 

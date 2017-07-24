@@ -71,15 +71,20 @@ class BaseRecyclerView constructor(context: Context, att: AttributeSet) : Linear
     fun initView(activity: Activity) {
         adapter = BaseMultiTypeAdapter(activity)
         recyclerView.layoutManager = layoutManager
-        swipeRefreshLayout.setOnRefreshListener {
-            if (canRefresh && !isRefreshing && !isLoadingMore) {
-                loadType = TYPE_REFRESH
-                canRefresh = false
-                isRefreshing = true
-                if (recyclerViewListener != null)
-                    recyclerViewListener?.onRefresh()
-            } else {
-                swipeRefreshLayout.isRefreshing = false
+
+        if (!canRefresh) {
+            swipeRefreshLayout.isEnabled = canRefresh
+        } else {
+            swipeRefreshLayout.setOnRefreshListener {
+                if (canRefresh && !isRefreshing && !isLoadingMore) {
+                    loadType = TYPE_REFRESH
+                    canRefresh = false
+                    isRefreshing = true
+                    if (recyclerViewListener != null)
+                        recyclerViewListener?.onRefresh()
+                } else {
+                    swipeRefreshLayout.isRefreshing = false
+                }
             }
         }
 

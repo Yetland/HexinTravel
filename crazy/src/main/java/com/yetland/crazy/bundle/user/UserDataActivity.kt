@@ -2,14 +2,10 @@ package com.yetland.crazy.bundle.user
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.widget.SwipeRefreshLayout
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.squareup.picasso.Picasso
 import com.yetland.crazy.bundle.user.contract.UserDataContract
 import com.yetland.crazy.bundle.user.contract.UserDataModel
@@ -23,21 +19,10 @@ import com.yetland.crazy.core.entity._User
 import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
+import kotlinx.android.synthetic.main.activity_user_data.*
 
 class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.View {
 
-
-    lateinit var llUser: LinearLayout
-    lateinit var ivAvatar: ImageView
-    lateinit var tvUsername: TextView
-    lateinit var tvEmail: TextView
-    lateinit var llMyActivity: LinearLayout
-    lateinit var llMyComment: LinearLayout
-    lateinit var llMyFollower: LinearLayout
-    lateinit var llMyFollowee: LinearLayout
-    lateinit var llLogOut: LinearLayout
-
-    lateinit var refreshLayout: SwipeRefreshLayout
 
     val model = UserDataModel()
     val presenter = UserDataPresenter(model, this)
@@ -49,16 +34,6 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
         user = SharedPreferencesUtils.getUserInfo()
         supportActionBar?.title = "Me"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        llUser = findViewById(R.id.ll_user)
-        ivAvatar = findViewById(R.id.iv_avatar)
-        tvUsername = findViewById(R.id.tv_username)
-        tvEmail = findViewById(R.id.tv_email)
-        llMyActivity = findViewById(R.id.ll_my_activity)
-        llMyComment = findViewById(R.id.ll_my_comment)
-
-        llMyFollower = findViewById(R.id.ll_my_follower)
-        llMyFollowee = findViewById(R.id.ll_my_followee)
-        llLogOut = findViewById(R.id.ll_log_out)
 
         llUser.setOnClickListener(this)
         llLogOut.setOnClickListener(this)
@@ -67,11 +42,10 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
         llMyComment.setOnClickListener(this)
         llMyActivity.setOnClickListener(this)
 
-        refreshLayout = findViewById(R.id.srl_user_data)
         setUserData(user)
 
-        refreshLayout.isRefreshing = true
-        refreshLayout.setOnRefreshListener {
+        srlUserData.isRefreshing = true
+        srlUserData.setOnRefreshListener {
             getUser(user.objectId)
         }
         getUser(user.objectId)
@@ -84,30 +58,30 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
 
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.ll_user -> {
+            R.id.llUser -> {
                 val intent = Intent(activity, UserDetailActivity::class.java)
                 val bundle = Bundle()
                 bundle.putSerializable("showUser", user)
                 intent.putExtras(bundle)
                 startActivity(intent)
             }
-            R.id.ll_my_comment -> {
+            R.id.llMyComment -> {
                 startActivity(Intent(activity, MineCommentActivity::class.java))
             }
-            R.id.ll_my_activity -> {
+            R.id.llMyActivity -> {
                 startActivity(Intent(activity, MineActivity::class.java))
             }
-            R.id.ll_my_follower -> {
+            R.id.llMyFollower -> {
                 val intent = Intent(activity, FollowActivity::class.java)
                 intent.putExtra("isFollower", true)
                 startActivity(intent)
             }
-            R.id.ll_my_followee -> {
+            R.id.llMyFollowee -> {
                 val intent = Intent(activity, FollowActivity::class.java)
                 intent.putExtra("isFollower", false)
                 startActivity(intent)
             }
-            R.id.ll_log_out -> {
+            R.id.llLogOut -> {
                 SharedPreferencesUtils.cleanData(SharedPreferencesConstant.PREF_NAME)
                 setResult(IntentResultCode.LOG_OUT)
                 finish()
@@ -138,12 +112,12 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
     }
 
     override fun getUserFailed(msg: String) {
-        refreshLayout.isRefreshing = false
+        srlUserData.isRefreshing = false
         ToastUtils.showShortSafe(msg)
     }
 
     override fun getUserSuccess(user: _User) {
-        refreshLayout.isRefreshing = false
+        srlUserData.isRefreshing = false
         SharedPreferencesUtils.saveUserInfo(user)
         this.user = user
         setUserData(user)

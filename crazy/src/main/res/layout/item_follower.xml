@@ -19,7 +19,7 @@
             android:id="@+id/iv_follow_avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@mipmap/huas"/>
+            android:src="@mipmap/image_default"/>
 
         <TextView
             android:id="@+id/tv_name"

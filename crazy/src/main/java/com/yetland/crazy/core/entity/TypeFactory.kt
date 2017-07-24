@@ -27,7 +27,7 @@ interface TypeFactory {
 
 class TypeFactoryForList : TypeFactory {
     override fun type(avatar: Avatar): Int {
-        return R.layout.item_image
+        return R.layout.item_user_avatar
     }
 
     override fun type(follower: Follow): Int {
@@ -55,7 +55,7 @@ class TypeFactoryForList : TypeFactory {
 
             R.layout.item_follower -> return FollowHolder(view)
 
-            R.layout.item_image -> return AvatarHolder(view)
+            R.layout.item_user_avatar -> return AvatarHolder(view)
 
             else -> return BaseFooterViewHolder(view)
         }

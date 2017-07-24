@@ -1,10 +1,7 @@
 package com.yetland.crazy.bundle.user.register
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity._User
@@ -12,14 +9,15 @@ import com.yetland.crazy.core.utils.RegexUtil
 import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
+import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : BaseActivity(), RegisterContract.View, View.OnClickListener {
     override fun onClick(view: View) {
         when (view.id) {
             android.R.id.home -> onBackPressed()
-            R.id.bt_register -> {
-                val username = etUserName.text.toString().trim()
-                val email = etEmail.text.toString().trim()
+            R.id.btRegister -> {
+                val username = etUsername.text.toString().trim()
+                val email = etMail.text.toString().trim()
                 val password = etPassword.text.toString().trim()
                 if (username.isEmpty()) {
                     ToastUtils.showShortSafe("Username cannot be empty")
@@ -35,6 +33,8 @@ class RegisterActivity : BaseActivity(), RegisterContract.View, View.OnClickList
                     } else if (password.length < 6) {
                         ToastUtils.showShortSafe("Password is too short to register")
                     } else {
+                        val user = _User()
+
                         user.username = username
                         user.password = password
                         user.email = email
@@ -62,26 +62,15 @@ class RegisterActivity : BaseActivity(), RegisterContract.View, View.OnClickList
         ToastUtils.showShortSafe(msg)
     }
 
-    lateinit var etUserName: EditText
-    lateinit var etPassword: EditText
-    lateinit var etEmail: EditText
-    val user = _User()
+    val presenter = RegisterPresenter(RegisterModel(), this)
 
-    val model = RegisterModel()
-    val presenter = RegisterPresenter(model, this)
-
-    @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-        val actionBar = supportActionBar
-        actionBar?.title = "Register"
-        actionBar?.setDisplayHomeAsUpEnabled(true)
-        findViewById<Button>(R.id.bt_register).setOnClickListener(this)
+        supportActionBar?.title = "Register"
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        btRegister.setOnClickListener(this)
 
         progressDialog.setContent("Registering...")
-        etUserName = findViewById(R.id.et_username)
-        etEmail = findViewById(R.id.et_mail)
-        etPassword = findViewById(R.id.et_password)
     }
 }

@@ -21,6 +21,7 @@ import com.yetland.crazy.core.utils.LogUtils
 import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
+import kotlinx.android.synthetic.main.item_follower.view.*
 
 /**
  * @Name: FollowHolder
@@ -29,11 +30,11 @@ import com.ynchinamobile.hexinlvxing.R
  */
 class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), FollowContract.View {
 
-    var ivFollowAvatar = view.findViewById<ImageView>(R.id.iv_follow_avatar)
-    var ivUnFollow = view.findViewById<ImageView>(R.id.iv_un_follow)
-    var ivFollow = view.findViewById<ImageView>(R.id.iv_follow)
-    var tvUsername = view.findViewById<TextView>(R.id.tv_name)
-    var llFollowUser = view.findViewById<LinearLayout>(R.id.ll_follow_user)
+    var ivFollowAvatar = view.iv_follow_avatar
+    var ivUnFollow = view.iv_un_follow
+    var ivFollow = view.iv_follow
+    var tvUsername = view.tv_name
+    var llFollowUser = view.ll_follow_user
 
     var follow = Follow()
 
@@ -106,11 +107,11 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
             if (showUser.avatarUrl != null) {
                 Picasso.with(activity)
                         .load(showUser.avatarUrl)
-                        .placeholder(R.mipmap.huas)
+                        .placeholder(R.mipmap.image_default)
                         .into(ivFollowAvatar)
             } else {
                 Picasso.with(activity)
-                        .load(R.mipmap.huas)
+                        .load(R.mipmap.image_default)
                         .into(ivFollowAvatar)
             }
 

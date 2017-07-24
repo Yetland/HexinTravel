@@ -9,7 +9,7 @@
     tools:context="com.yetland.crazy.bundle.user.FollowActivity">
 
     <com.yetland.crazy.core.base.BaseRecyclerView
-        android:id="@+id/rv_follow"
+        android:id="@+id/rvFollow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </LinearLayout>

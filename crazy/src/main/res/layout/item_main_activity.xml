@@ -24,7 +24,7 @@
                 android:id="@+id/iv_avatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                app:srcCompat="@mipmap/huas" />
+                app:srcCompat="@mipmap/image_default" />
 
             <TextView
                 android:id="@+id/tv_user_name"

@@ -7,7 +7,8 @@ package com.yetland.crazy.core.entity
  * @Date:           2017/7/21
  */
 class Avatar : BaseEntity() {
-    var avatarUrl: Int = 1
+    var checked = false
+    var avatarUrl: Int = 0
     override fun type(typeFactory: TypeFactory): Int {
         return typeFactory.type(this)
     }

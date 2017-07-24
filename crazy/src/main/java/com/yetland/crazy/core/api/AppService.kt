@@ -2,6 +2,7 @@ package com.yetland.crazy.core.api
 
 import com.yetland.crazy.core.constant.DEFAULT_LIMIT
 import com.yetland.crazy.core.entity.*
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -76,4 +77,9 @@ interface AppService {
 
     @DELETE("classes/follower/{id}")
     fun deleteFollow(@Path("id") id: String): Call<BaseResult>
+
+    @Headers("Content-Type: image/png")
+    @POST("/files")
+    fun uploadImage(@Body body: MultipartBody)
+
 }
