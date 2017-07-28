@@ -3,9 +3,13 @@ package com.yetland.crazy.core.api
 import android.util.Log
 import com.google.gson.Gson
 import com.yetland.crazy.core.entity.*
+import com.yetland.crazy.core.utils.Utils
 import okhttp3.RequestBody
 import rx.Observable
 import rx.Subscriber
+import top.zibin.luban.Luban
+import top.zibin.luban.OnCompressListener
+import java.io.File
 import java.io.IOException
 
 /**
@@ -14,6 +18,37 @@ import java.io.IOException
  * @Date:           2017/7/6
  */
 class AppApiImpl : AppApi {
+    override fun uploadImage(file: File): Observable<BaseResult> {
+        Observable.empty<File>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in BaseResult> ->
+
+        })
+    }
+
+    override fun compressImage(file: File): Observable<File> {
+        Observable.empty<File>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in File> ->
+            Luban.with(Utils.getContext())
+                    .load(file)
+                    .setCompressListener((object : OnCompressListener {
+                        override fun onSuccess(compressFile: File?) {
+                            subscriber.onNext(compressFile)
+                        }
+
+                        override fun onError(e: Throwable?) {
+                            subscriber.onError(e)
+                        }
+
+                        override fun onStart() {
+
+                        }
+                    })).launch()
+            subscriber.onCompleted()
+        })
+    }
+
     override fun getUser(objectId: String): Observable<_User> {
         Observable.empty<_User>().subscribe()
         return Observable.create({
@@ -247,11 +282,11 @@ class AppApiImpl : AppApi {
         }
     }
 
-    override fun getActivities(include: String, where: String?,skip: Int, limit: Int): Observable<Data<ActivityInfo>> {
+    override fun getActivities(include: String, where: String?, skip: Int, limit: Int): Observable<Data<ActivityInfo>> {
         Observable.empty<Any>().subscribe()
         return Observable.create { subscriber: Subscriber<in Data<ActivityInfo>> ->
             try {
-                val response = RestApi().appService.getActivity(include, where,"-likeCount,-createdAt", skip, limit).execute()
+                val response = RestApi().appService.getActivity(include, where, "-likeCount,-createdAt", skip, limit).execute()
 
                 if (response.isSuccessful) {
                     subscriber.onNext(response.body())

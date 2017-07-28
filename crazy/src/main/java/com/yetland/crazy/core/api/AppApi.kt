@@ -2,6 +2,7 @@ package com.yetland.crazy.core.api
 
 import com.yetland.crazy.core.entity.*
 import rx.Observable
+import java.io.File
 
 /**
  * @Name:           AppApi
@@ -24,4 +25,7 @@ interface AppApi {
     fun getFollow(where: String, include: String, order: String, skip: Int, limit: Int): Observable<Data<Follow>>
     fun follow(follow: CommitFollow): Observable<Follow>
     fun unFollow(objectId: String): Observable<BaseResult>
+
+    fun compressImage(file: File): Observable<File>
+    fun uploadImage(file: File): Observable<BaseResult>
 }

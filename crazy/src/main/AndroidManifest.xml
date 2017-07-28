@@ -43,6 +43,7 @@
         <activity
             android:name="com.yetland.crazy.bundle.user.UserAvatarActivity"
             android:theme="@style/ThemeFullScreen" />
+        <activity android:name="com.yetland.crazy.bundle.user.CreateActivity"></activity>
     </application>
 
 </manifest>

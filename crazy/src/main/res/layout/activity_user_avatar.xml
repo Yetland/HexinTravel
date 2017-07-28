@@ -20,7 +20,7 @@
             android:theme="?attr/actionBarTheme" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/ivUpload"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"

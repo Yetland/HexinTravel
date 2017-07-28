@@ -11,7 +11,8 @@ import android.support.v4.app.FragmentPagerAdapter
  */
 class UserDetailAdapter constructor(fragmentManager: FragmentManager,
                                     list: ArrayList<Fragment>,
-                                    titleList: ArrayList<String>) : FragmentPagerAdapter(fragmentManager) {
+                                    titleList: ArrayList<String>) :
+        FragmentPagerAdapter(fragmentManager) {
 
 
     var list = ArrayList<Fragment>()
