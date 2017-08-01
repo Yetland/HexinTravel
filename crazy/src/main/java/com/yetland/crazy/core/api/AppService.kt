@@ -49,6 +49,10 @@ interface AppService {
     fun updateActivity(@Path("name") objectId: String,
                        @Body body: RequestBody): Call<BaseResult>
 
+    @POST("classes/Activity")
+    fun createActivity(@Body createActivityInfo: CreateActivityInfo): Call<BaseResult>
+
+
     @POST("classes/Follow")
     fun follow(@Query("followUserId") followUserId: String,
                @Query("followerUserId") followerUserId: String): Call<BaseEntity>

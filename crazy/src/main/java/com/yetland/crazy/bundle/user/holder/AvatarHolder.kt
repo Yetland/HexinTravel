@@ -9,6 +9,7 @@ import com.yetland.crazy.core.entity.Avatar
 import com.yetland.crazy.core.entity.BaseEntity
 import com.ynchinamobile.hexinlvxing.R
 import kotlinx.android.synthetic.main.item_user_avatar.view.*
+import java.io.File
 
 /**
  * @Name:           AvatarHolder
@@ -24,12 +25,27 @@ class AvatarHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view) {
     override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>, activity: Activity) {
         if (t is Avatar) {
             avatar = t
-            if (avatar.avatarUrl != 0) {
-                Picasso.with(context)
-                        .load(avatar.avatarUrl)
-                        .placeholder(R.mipmap.ic_avatar_1)
-                        .into(ivAvatar)
+            when (t.type) {
+                Avatar.IMAGE_TYPE.INT_RES -> {
+                    if (avatar.avatarUrl != 0) {
+                        Picasso.with(context)
+                                .load(avatar.avatarUrl)
+                                .placeholder(R.mipmap.ic_avatar_1)
+                                .into(ivAvatar)
+                    }
+                }
+                Avatar.IMAGE_TYPE.STRING_PATH_RES -> {
+                    if (avatar.avatarPath.isNotEmpty()) {
+                        Picasso.with(context)
+                                .load(File(avatar.avatarPath))
+                                .placeholder(R.mipmap.ic_avatar_1)
+                                .resize(200,200)
+                                .centerCrop()
+                                .into(ivAvatar)
+                    }
+                }
             }
+
             if (avatar.checked) {
                 cbAvatar.visibility = View.VISIBLE
                 cbAvatar.isChecked = true

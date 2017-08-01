@@ -20,3 +20,9 @@ class ActivityInfo : BaseEntity() {
     var commentCount: Int = 0
 
 }
+
+class CreateActivityInfo {
+    var creator: Point? = null
+    var title: String = ""
+    var url: String = ""
+}

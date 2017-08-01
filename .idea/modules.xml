@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HexinTravel.iml" filepath="$PROJECT_DIR$/HexinTravel.iml" />
       <module fileurl="file://$PROJECT_DIR$/crazy/crazy.iml" filepath="$PROJECT_DIR$/crazy/crazy.iml" />
-      <module fileurl="file://D:\WorkSpace\AndroidStudio\HexinTravel\crazy\kotlintest.iml" filepath="D:\WorkSpace\AndroidStudio\HexinTravel\crazy\kotlintest.iml" />
     </modules>
   </component>
 </project>

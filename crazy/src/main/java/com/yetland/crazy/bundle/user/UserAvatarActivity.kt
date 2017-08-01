@@ -20,7 +20,7 @@ import com.ynchinamobile.hexinlvxing.R.id.*
 import kotlinx.android.synthetic.main.activity_user_avatar.*
 import java.io.File
 
-class UserAvatarActivity : BaseActivity(), RecyclerViewListener, UploadImageContract.View, UserDataContract.View,
+class UserAvatarActivity : BaseActivity(), UploadImageContract.View, UserDataContract.View,
         OnRecyclerViewItemClickListener {
 
     val presenter = UploadImagePresenter(UploadImageModel(), this)
@@ -51,7 +51,6 @@ class UserAvatarActivity : BaseActivity(), RecyclerViewListener, UploadImageCont
         supportActionBar?.title = "AvatarList"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        rvUserAvatar.recyclerViewListener = this
         rvUserAvatar.canLoadMore = false
         rvUserAvatar.canRefresh = false
         rvUserAvatar.layoutManager = GridLayoutManager(activity, 3)
@@ -111,12 +110,6 @@ class UserAvatarActivity : BaseActivity(), RecyclerViewListener, UploadImageCont
         list.addAll(avatarList)
         rvUserAvatar.onDefaultComplete(list, 0)
     }
-
-    override fun onRefresh() {}
-
-    override fun onLoadMore() {}
-
-    override fun onErrorClick() {}
 
     override fun compressImage(file: File) {
         progressDialog.show()

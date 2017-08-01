@@ -34,7 +34,9 @@
         <activity android:name="com.yetland.crazy.bundle.main.MainActivity" />
         <activity android:name="com.yetland.crazy.bundle.travel.TravelActivity" />
         <activity android:name="com.yetland.crazy.bundle.destination.DestinationActivity" />
-        <activity android:name="com.yetland.crazy.bundle.user.UserDataActivity" />
+        <activity
+            android:name="com.yetland.crazy.bundle.user.UserDataActivity"
+            android:theme="@style/ThemeFullScreen" />
         <activity android:name="com.yetland.crazy.bundle.main.detail.DetailActivity" />
         <activity android:name="com.yetland.crazy.bundle.user.mine.MineActivity" />
         <activity android:name="com.yetland.crazy.bundle.user.mine.MineCommentActivity" />
@@ -45,7 +47,19 @@
         <activity
             android:name="com.yetland.crazy.bundle.user.UserAvatarActivity"
             android:theme="@style/ThemeFullScreen" />
-        <activity android:name="com.yetland.crazy.bundle.user.CreateActivity"></activity>
+        <activity
+            android:name="com.yetland.crazy.bundle.user.CreateActivity"
+            android:theme="@style/ThemeFullScreen" />
+
+        <activity
+            android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/ThemeFullScreen" />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ThemeFullScreen" />
     </application>
 
 </manifest>

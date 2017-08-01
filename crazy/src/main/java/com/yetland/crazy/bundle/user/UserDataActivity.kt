@@ -33,6 +33,8 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_data)
+
+        setSupportActionBar(toolbar2)
         supportActionBar?.title = "Me"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -50,11 +52,10 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
             getUser(currentLoginUser.objectId)
         }
         getUser(currentLoginUser.objectId)
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        MenuInflater(activity).inflate(R.menu.menu_user, menu)
-        return super.onCreateOptionsMenu(menu)
+        ivAdd.setOnClickListener({
+            startActivity(Intent(this, CreateActivity::class.java))
+        })
     }
 
     override fun onClick(view: View) {

@@ -22,6 +22,26 @@ import java.io.IOException
  * @Date:           2017/7/6
  */
 class AppApiImpl : AppApi {
+    override fun createActivity(createActivityInfo: CreateActivityInfo): Observable<BaseResult> {
+        Observable.empty<BaseResult>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in BaseResult> ->
+            try {
+                val response = RestApi().appService.createActivity(createActivityInfo).execute()
+                if (response.isSuccessful) {
+                    subscriber.onNext(response.body())
+                } else {
+                    subscriber.onError(Throwable(response.errorBody().string()))
+                }
+                subscriber.onCompleted()
+
+            } catch (t: Throwable) {
+                subscriber.onError(t)
+                subscriber.onCompleted()
+            }
+        })
+    }
+
     override fun updateUser(user: _User, where: String): Observable<BaseResult> {
         Observable.empty<BaseResult>().subscribe()
         return Observable.create({

@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="#e6e6e6"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e6e6e6"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+        <ImageView
+            android:id="@+id/ivAdd"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="4dp"
+            app:srcCompat="@mipmap/ic_camera" />
+    </RelativeLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srlUserData"
@@ -32,7 +55,7 @@
                     android:id="@+id/ivAvatar"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@mipmap/image_default"/>
+                    android:src="@mipmap/image_default" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -50,7 +73,7 @@
                         android:maxLines="1"
                         android:text="TextView"
                         android:textColor="@color/defaultTextColor"
-                        android:textSize="16sp"/>
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tvEmail"
@@ -61,7 +84,7 @@
                         android:maxLines="1"
                         android:text="TextView"
                         android:textColor="@color/gray"
-                        android:textSize="14sp"/>
+                        android:textSize="14sp" />
 
 
                 </LinearLayout>
@@ -69,7 +92,7 @@
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@mipmap/ic_edit"/>
+                    android:src="@mipmap/ic_edit" />
 
 
             </LinearLayout>
@@ -87,7 +110,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="6dp"
-                    app:srcCompat="@mipmap/ic_my_activity"/>
+                    app:srcCompat="@mipmap/ic_my_activity" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -96,13 +119,14 @@
                     android:layout_weight="1"
                     android:text="我的活动"
                     android:textColor="@color/defaultTextColor"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    app:srcCompat="@mipmap/ic_arrow_right"/>
+                    app:srcCompat="@mipmap/ic_arrow_right" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/llMyComment"
                 android:layout_width="match_parent"
@@ -117,7 +141,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="6dp"
-                    app:srcCompat="@mipmap/ic_comment"/>
+                    app:srcCompat="@mipmap/ic_comment" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -126,12 +150,12 @@
                     android:layout_weight="1"
                     android:text="我的评论"
                     android:textColor="@color/defaultTextColor"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    app:srcCompat="@mipmap/ic_arrow_right"/>
+                    app:srcCompat="@mipmap/ic_arrow_right" />
             </LinearLayout>
 
             <LinearLayout
@@ -148,7 +172,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="6dp"
-                    app:srcCompat="@mipmap/ic_my_followee"/>
+                    app:srcCompat="@mipmap/ic_my_followee" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -157,13 +181,14 @@
                     android:layout_weight="1"
                     android:text="关注我的"
                     android:textColor="@color/defaultTextColor"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    app:srcCompat="@mipmap/ic_arrow_right"/>
+                    app:srcCompat="@mipmap/ic_arrow_right" />
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/llMyFollowee"
                 android:layout_width="match_parent"
@@ -178,7 +203,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="6dp"
-                    app:srcCompat="@mipmap/ic_my_follow"/>
+                    app:srcCompat="@mipmap/ic_my_follow" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -187,12 +212,12 @@
                     android:layout_weight="1"
                     android:text="我关注的"
                     android:textColor="@color/defaultTextColor"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    app:srcCompat="@mipmap/ic_arrow_right"/>
+                    app:srcCompat="@mipmap/ic_arrow_right" />
             </LinearLayout>
 
             <LinearLayout
@@ -209,7 +234,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="6dp"
-                    app:srcCompat="@mipmap/ic_log_out"/>
+                    app:srcCompat="@mipmap/ic_log_out" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -218,12 +243,12 @@
                     android:layout_weight="1"
                     android:text="退出登录"
                     android:textColor="@color/defaultTextColor"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    app:srcCompat="@mipmap/ic_arrow_right"/>
+                    app:srcCompat="@mipmap/ic_arrow_right" />
             </LinearLayout>
 
 

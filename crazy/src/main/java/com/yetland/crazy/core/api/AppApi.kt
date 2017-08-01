@@ -18,6 +18,8 @@ interface AppApi {
 
     fun getActivities(include: String, where: String?, skip: Int, limit: Int): Observable<Data<ActivityInfo>>
     fun updateActivity(activityId: String, where: String): Observable<BaseResult>
+    fun createActivity(createActivityInfo: CreateActivityInfo): Observable<BaseResult>
+
     fun followUser(followUserId: String, followerUserId: String): Observable<BaseEntity>
     fun getComment(map: HashMap<String, String>, skip: Int, limit: Int): Observable<Data<Comment>>
     fun getMyComment(map: HashMap<String, String>, skip: Int, limit: Int): Observable<Data<MyComment>>
