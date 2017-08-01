@@ -22,16 +22,17 @@ import com.ynchinamobile.hexinlvxing.R
 import kotlinx.android.synthetic.main.activity_user_data.*
 
 class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.View {
+    override fun updateUser(user: _User, map: HashMap<String, Any>) {}
 
+    override fun updateUserSuccess() {}
 
-    val model = UserDataModel()
-    val presenter = UserDataPresenter(model, this)
+    override fun updateUserFailed(msg: String) {}
 
-    lateinit var user: _User
+    val presenter = UserDataPresenter(UserDataModel(), this)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_data)
-        user = SharedPreferencesUtils.getUserInfo()
         supportActionBar?.title = "Me"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -42,13 +43,13 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
         llMyComment.setOnClickListener(this)
         llMyActivity.setOnClickListener(this)
 
-        setUserData(user)
+        setUserData(currentLoginUser)
 
         srlUserData.isRefreshing = true
         srlUserData.setOnRefreshListener {
-            getUser(user.objectId)
+            getUser(currentLoginUser.objectId)
         }
-        getUser(user.objectId)
+        getUser(currentLoginUser.objectId)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -61,7 +62,7 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
             R.id.llUser -> {
                 val intent = Intent(activity, UserDetailActivity::class.java)
                 val bundle = Bundle()
-                bundle.putSerializable("showUser", user)
+                bundle.putSerializable("showUser", currentLoginUser)
                 intent.putExtras(bundle)
                 startActivity(intent)
             }
@@ -119,7 +120,11 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
     override fun getUserSuccess(user: _User) {
         srlUserData.isRefreshing = false
         SharedPreferencesUtils.saveUserInfo(user)
-        this.user = user
         setUserData(user)
+    }
+
+    override fun onDataChanged() {
+        super.onDataChanged()
+        setUserData(currentLoginUser)
     }
 }

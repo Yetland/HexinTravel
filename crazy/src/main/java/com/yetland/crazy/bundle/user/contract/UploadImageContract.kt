@@ -12,6 +12,7 @@ import top.zibin.luban.Luban
 import android.support.annotation.NonNull
 import com.yetland.crazy.core.api.AppApiImpl
 import com.yetland.crazy.core.base.RxSchedulers
+import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.utils.Utils
 import rx.Subscriber
 import rx.schedulers.Schedulers

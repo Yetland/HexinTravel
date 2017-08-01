@@ -38,6 +38,7 @@ class UserDetailActivity : BaseActivity(), FollowContract.View {
 
     var presenter = FollowPresenter(FollowModel(), this)
 
+    var isMe = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_detail)
@@ -63,27 +64,8 @@ class UserDetailActivity : BaseActivity(), FollowContract.View {
         }
 
         dealFollow()
+        setUserData()
 
-        ivFollow.setOnClickListener({
-            if (!isLogin) {
-                showLogin()
-            } else {
-                val commitFollow = CommitFollow()
-                commitFollow.follower = Point("_User", currentLoginUser.objectId)
-                commitFollow.user = Point("_User", currentShowUser.objectId)
-                follow(commitFollow)
-            }
-        })
-        ivAvatar.setOnClickListener({
-            startActivity(Intent(activity, UserAvatarActivity::class.java))
-        })
-
-        if (currentShowUser.avatarUrl != null) {
-            Picasso.with(activity)
-                    .load(currentShowUser.avatarUrl)
-                    .placeholder(R.mipmap.image_default)
-                    .into(ivAvatar)
-        }
 
         val titleList = arrayListOf("Follower", "Followee", "Activity")
         val list = ArrayList<Fragment>()
@@ -106,24 +88,53 @@ class UserDetailActivity : BaseActivity(), FollowContract.View {
         tabLayout.setupWithViewPager(viewPager)
     }
 
+    private fun setUserData() {
+        supportActionBar?.title = currentShowUser.username
+
+        if (isMe)
+            ivAvatar.setOnClickListener({
+                startActivity(Intent(activity, UserAvatarActivity::class.java))
+            })
+
+        if (currentShowUser.avatarUrl != null) {
+            Picasso.with(activity)
+                    .load(currentShowUser.avatarUrl)
+                    .placeholder(R.mipmap.image_default)
+                    .into(ivAvatar)
+        }
+    }
+
     override fun onDataChanged() {
+        if (isUserChanged && isMe) {
+            currentShowUser = currentLoginUser
+            setUserData()
+        }
         dealFollow()
     }
 
     private fun dealFollow() {
-
-        supportActionBar?.title = currentShowUser.username
-
         ivFollow.visibility = View.VISIBLE
 
         if (isLogin) {
-            if (currentLoginUser.objectId == currentShowUser.objectId)
+            if (currentLoginUser.objectId == currentShowUser.objectId) {
+                isMe = true
                 ivFollow.visibility = View.GONE
+            }
             val followId = SharedPreferencesUtils.getFollowList()
             if (followId.contains(currentShowUser.objectId)) {
                 ivFollow.visibility = View.GONE
             }
         }
+        ivFollow.setOnClickListener({
+            if (!isLogin) {
+                showLogin()
+            } else {
+                val commitFollow = CommitFollow()
+                commitFollow.follower = Point("_User", currentLoginUser.objectId)
+                commitFollow.user = Point("_User", currentShowUser.objectId)
+                follow(commitFollow)
+            }
+        })
     }
 
     override fun getFollower(map: HashMap<String, Any>, page: Int) {

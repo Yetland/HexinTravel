@@ -70,6 +70,7 @@ class LoginActivity : BaseActivity(), LoginContract.View, FollowContract.View {
     override fun loginSuccess(user: _User) {
 
         SharedPreferencesUtils.saveUserInfo(user)
+        SharedPreferencesUtils.saveString(SharedPreferencesConstant.KEY_SESSION_TOKEN, user.sessionToken!!)
         val map = HashMap<String, Any>()
         map.put("follower", Point("_User", user.objectId))
         getFollower(map, -1)

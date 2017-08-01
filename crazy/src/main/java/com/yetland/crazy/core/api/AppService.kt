@@ -32,6 +32,12 @@ interface AppService {
     @POST("users")
     fun register(@Body user: _User): Call<_User>
 
+    @PUT("users/{uid}")
+    fun updateUser(@Header("X-LC-Session") header: String,
+                   @Path("uid") uid: String,
+                   @Body body: RequestBody): Call<BaseResult>
+
+
     @GET("classes/Activity")
     fun getActivity(@Query("include") creator: String,
                     @Query("where") where: String? = "{}",
@@ -79,7 +85,7 @@ interface AppService {
     fun deleteFollow(@Path("id") id: String): Call<BaseResult>
 
     @Headers("Content-Type: image/png")
-    @POST("/files")
-    fun uploadImage(@Body body: MultipartBody)
+    @POST("files/{name}")
+    fun uploadImage(@Path("name") name: String, @Body body: RequestBody): Call<BaseResult>
 
 }

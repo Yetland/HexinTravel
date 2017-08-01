@@ -10,6 +10,7 @@ object SharedPreferencesConstant {
     val PREF_NAME = "appPref"
     val KEY_USER = "user"
     val KEY_FOLLOWER_LIST = "followList"
+    val KEY_SESSION_TOKEN = "sessionToken"
     val LOGON_SUCCESS: Int = 102000
 }
 

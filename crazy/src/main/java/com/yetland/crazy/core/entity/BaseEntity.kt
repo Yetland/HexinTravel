@@ -30,6 +30,7 @@ abstract class BaseEntity : Serializable {
 class BaseResult {
     var objectId: String = ""
     var updateAt: String = ""
+    var url: String? = null
 }
 
 class Point(var className: String, var objectId: String) {

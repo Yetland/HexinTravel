@@ -345,6 +345,7 @@ public final class ImageUtils {
         Date date = new Date(System.currentTimeMillis());
         String filename = format.format(date);
         File file = new File(Environment.getExternalStorageDirectory(), filename + ".png");
+        FileUtils.createFileByDeleteOldFile(file);
         try {
             FileOutputStream fos = new FileOutputStream(file);
             try {

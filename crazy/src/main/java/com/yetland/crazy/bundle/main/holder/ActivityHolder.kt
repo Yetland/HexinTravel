@@ -30,6 +30,7 @@ import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 import com.afollestad.materialdialogs.MaterialDialog
 import com.yetland.crazy.bundle.user.UserDetailActivity
+import com.yetland.crazy.core.utils.ImageUtils
 import kotlinx.android.synthetic.main.item_comment.view.*
 import kotlinx.android.synthetic.main.item_main_activity.view.*
 
@@ -135,7 +136,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
             ivPhoto.adjustViewBounds = true
             Picasso.with(context)
                     .load(activityInfo.url!!.split(";")[0])
-//                        .transform(transform)
+                    .transform(transform)
                     .placeholder(R.mipmap.img_custom)
                     .into(ivPhoto)
         }
@@ -298,21 +299,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
 
     val transform = (object : Transformation {
         override fun transform(source: Bitmap): Bitmap {
-            val size = minOf(source.width, source.height)
-            val x = (source.width.minus(size)).div(2)
-            val y = (source.height.minus(size)).div(2)
-            LogUtils.e("transformBefore", "width = ${source.width}, " +
-                    "height = ${source.height} , " +
-                    "size = $size , " +
-                    "x = $x , " +
-                    "y = $y")
-            val result = Bitmap.createBitmap(source, x, y, size, size)
-            if (result != source) {
-                source.recycle()
-            }
-            LogUtils.e("transformAfter", "width = ${result.width}, " +
-                    "height = ${result.height} , " +
-                    "size = $size")
+            val result = ImageUtils.compressByQuality(source, (100 * 1024).toLong(), true)
             return result
         }
 

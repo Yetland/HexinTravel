@@ -1,9 +1,13 @@
 package com.yetland.crazy.core.api
 
+import android.content.SharedPreferences
 import android.util.Log
 import com.google.gson.Gson
+import com.yetland.crazy.core.constant.SharedPreferencesConstant
 import com.yetland.crazy.core.entity.*
+import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.Utils
+import okhttp3.MediaType
 import okhttp3.RequestBody
 import rx.Observable
 import rx.Subscriber
@@ -18,11 +22,51 @@ import java.io.IOException
  * @Date:           2017/7/6
  */
 class AppApiImpl : AppApi {
+    override fun updateUser(user: _User, where: String): Observable<BaseResult> {
+        Observable.empty<BaseResult>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in BaseResult> ->
+            try {
+                val sessionToken = SharedPreferencesUtils.getString(SharedPreferencesConstant.KEY_SESSION_TOKEN)
+
+                if (sessionToken.isEmpty()) {
+                    subscriber.onError(Throwable("User sessionToken is null"))
+                    subscriber.onCompleted()
+                } else {
+                    val body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), where)
+                    val response = RestApi().appService.updateUser(sessionToken, user.objectId, body).execute()
+                    if (response.isSuccessful) {
+                        subscriber.onNext(response.body())
+                    } else {
+                        subscriber.onError(Throwable(response.errorBody().string()))
+                    }
+                    subscriber.onCompleted()
+                }
+            } catch (t: IOException) {
+                subscriber.onError(t)
+                subscriber.onCompleted()
+            }
+        })
+    }
+
     override fun uploadImage(file: File): Observable<BaseResult> {
         Observable.empty<File>().subscribe()
         return Observable.create({
             subscriber: Subscriber<in BaseResult> ->
-
+            try {
+                val response = RestApi().appService.
+                        uploadImage(file.name,
+                                RequestBody.create(MediaType.parse("image/*"), file)).execute()
+                if (response.isSuccessful) {
+                    subscriber.onNext(response.body())
+                } else {
+                    subscriber.onError(Throwable(response.errorBody().string()))
+                }
+                subscriber.onCompleted()
+            } catch (t: IOException) {
+                subscriber.onError(t)
+                subscriber.onCompleted()
+            }
         })
     }
 
@@ -30,22 +74,28 @@ class AppApiImpl : AppApi {
         Observable.empty<File>().subscribe()
         return Observable.create({
             subscriber: Subscriber<in File> ->
-            Luban.with(Utils.getContext())
-                    .load(file)
-                    .setCompressListener((object : OnCompressListener {
-                        override fun onSuccess(compressFile: File?) {
-                            subscriber.onNext(compressFile)
-                        }
+            try {
+                Luban.with(Utils.getContext())
+                        .load(file)
+                        .setCompressListener((object : OnCompressListener {
+                            override fun onSuccess(compressFile: File?) {
+                                subscriber.onNext(compressFile)
+                                subscriber.onCompleted()
+                            }
 
-                        override fun onError(e: Throwable?) {
-                            subscriber.onError(e)
-                        }
+                            override fun onError(e: Throwable?) {
+                                subscriber.onError(e)
+                                subscriber.onCompleted()
+                            }
 
-                        override fun onStart() {
+                            override fun onStart() {
 
-                        }
-                    })).launch()
-            subscriber.onCompleted()
+                            }
+                        })).launch()
+            } catch (t: IOException) {
+                subscriber.onError(t)
+                subscriber.onCompleted()
+            }
         })
     }
 

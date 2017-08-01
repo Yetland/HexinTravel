@@ -2,29 +2,30 @@ package com.yetland.crazy.bundle.user
 
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
-import com.yetland.crazy.bundle.user.contract.UploadImageContract
-import com.yetland.crazy.bundle.user.contract.UploadImageModel
-import com.yetland.crazy.bundle.user.contract.UploadImagePresenter
+import com.yetland.crazy.bundle.user.contract.*
 import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.base.OnRecyclerViewItemClickListener
 import com.yetland.crazy.core.base.RecyclerViewListener
 import com.yetland.crazy.core.entity.Avatar
 import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.entity.BaseResult
+import com.yetland.crazy.core.entity._User
 import com.yetland.crazy.core.utils.ImageUtils
+import com.yetland.crazy.core.utils.ImageUtils.compressImage
 import com.yetland.crazy.core.utils.LogUtils
+import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
-import com.ynchinamobile.hexinlvxing.R.id.rvUserAvatar
-import com.ynchinamobile.hexinlvxing.R.id.toolbar2
+import com.ynchinamobile.hexinlvxing.R.id.*
 import kotlinx.android.synthetic.main.activity_user_avatar.*
 import java.io.File
 
-class UserAvatarActivity : BaseActivity(), RecyclerViewListener, UploadImageContract.View,
+class UserAvatarActivity : BaseActivity(), RecyclerViewListener, UploadImageContract.View, UserDataContract.View,
         OnRecyclerViewItemClickListener {
 
-
     val presenter = UploadImagePresenter(UploadImageModel(), this)
+    val userDataPresenter = UserDataPresenter(UserDataModel(), this)
+    var avatarUrl = ""
     var avatarList = ArrayList<Avatar>()
     var avatarId = listOf(R.mipmap.ic_avatar_1, R.mipmap.ic_avatar_2,
             R.mipmap.ic_avatar_3, R.mipmap.ic_avatar_4,
@@ -111,33 +112,67 @@ class UserAvatarActivity : BaseActivity(), RecyclerViewListener, UploadImageCont
         rvUserAvatar.onDefaultComplete(list, 0)
     }
 
-    override fun onRefresh() {
-    }
+    override fun onRefresh() {}
 
-    override fun onLoadMore() {
-    }
+    override fun onLoadMore() {}
 
-    override fun onErrorClick() {
-    }
+    override fun onErrorClick() {}
 
     override fun compressImage(file: File) {
+        progressDialog.show()
         presenter.compressImage(file)
     }
 
     override fun compressImageSuccess(file: File) {
-        ToastUtils.showShortSafe("compressImageSuccess")
+        uploadImage(file)
     }
 
     override fun compressImageFailed(msg: String) {
-        ToastUtils.showShortSafe("compressImageFailed -> $msg")
+        progressDialog.dismiss()
+        ToastUtils.showShortSafe("compressImageFailed")
     }
 
     override fun uploadImage(file: File) {
+        presenter.uploadImage(file)
     }
 
     override fun uploadImageFailed(msg: String) {
+        progressDialog.dismiss()
+        ToastUtils.showShortSafe("uploadImageFailed")
     }
 
     override fun uploadImageSuccess(result: BaseResult) {
+        if (isLogin) {
+            val map = HashMap<String, Any>()
+            avatarUrl = result.url!!
+            map.put("avatarUrl", avatarUrl)
+            updateUser(currentLoginUser, map)
+        } else {
+            progressDialog.dismiss()
+        }
     }
+
+    override fun getUser(objectId: String) {}
+
+    override fun getUserFailed(msg: String) {}
+
+    override fun getUserSuccess(user: _User) {}
+
+    override fun updateUser(user: _User, map: HashMap<String, Any>) {
+        userDataPresenter.updateUser(user, map)
+    }
+
+    override fun updateUserSuccess() {
+        progressDialog.dismiss()
+        ToastUtils.showShortSafe("updateUserSuccess")
+        currentLoginUser.avatarUrl = avatarUrl
+        SharedPreferencesUtils.saveUserInfo(currentLoginUser)
+        finish()
+    }
+
+    override fun updateUserFailed(msg: String) {
+        progressDialog.dismiss()
+        ToastUtils.showShortSafe("updateUserFailed")
+    }
+
 }

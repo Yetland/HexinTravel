@@ -38,7 +38,7 @@ class MineActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
         rvMyActivity.recyclerViewListener = this
         rvMyActivity.onLoading()
 
-        if (isUserExist(currentLoginUser)) {
+        if (!isUserExist(currentLoginUser)) {
             rvMyActivity.onLoadError("User is null , try to logout then login")
             rvMyActivity.isErrorClickable = false
         } else {

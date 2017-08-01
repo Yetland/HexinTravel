@@ -166,6 +166,12 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
         SharedPreferencesUtils.saveUserInfo(user)
     }
 
+    override fun updateUser(user: _User, map: HashMap<String, Any>) {}
+
+    override fun updateUserSuccess() {}
+
+    override fun updateUserFailed(msg: String) {}
+
     override fun getFollower(map: HashMap<String, Any>, page: Int) {
         followPresent.getFollower(Gson().toJson(map), page)
     }
