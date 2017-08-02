@@ -63,5 +63,4 @@ dependencies {
     implementation 'top.zibin:Luban:1.1.2'
     implementation 'cn.finalteam.rxgalleryfinal:library:1.1.1'
     implementation 'com.tbruyelle.rxpermissions:rxpermissions:0.9.4@aar'
-
 }

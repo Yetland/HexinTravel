@@ -28,4 +28,5 @@ object IntentResultCode {
     val LOG_IN = 2002
     val REGISTER_SUCCESS = 2003
     val MAIN_TO_DETAIL_RESULT = 2004
+    val ACTIVITY_DELETE = 2005
 }

@@ -52,6 +52,8 @@ interface AppService {
     @POST("classes/Activity")
     fun createActivity(@Body createActivityInfo: CreateActivityInfo): Call<BaseResult>
 
+    @DELETE("classes/{class}/{objectId}")
+    fun deleteClass(@Path("class") className: String, @Path("objectId") objectId: String): Call<BaseResult>
 
     @POST("classes/Follow")
     fun follow(@Query("followUserId") followUserId: String,

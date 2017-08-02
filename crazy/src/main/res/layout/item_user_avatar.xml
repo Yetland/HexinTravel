@@ -32,5 +32,15 @@
             android:clickable="false"
             android:focusable="false" />
 
+        <ImageView
+            android:id="@+id/iv_remove"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignEnd="@+id/iv_user_avatar"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/iv_user_avatar"
+            android:layout_margin="4dp"
+            android:src="@mipmap/ic_remove" />
+
     </RelativeLayout>
 </LinearLayout>

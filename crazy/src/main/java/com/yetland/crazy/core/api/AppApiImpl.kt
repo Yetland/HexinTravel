@@ -1,6 +1,5 @@
 package com.yetland.crazy.core.api
 
-import android.content.SharedPreferences
 import android.util.Log
 import com.google.gson.Gson
 import com.yetland.crazy.core.constant.SharedPreferencesConstant
@@ -22,6 +21,25 @@ import java.io.IOException
  * @Date:           2017/7/6
  */
 class AppApiImpl : AppApi {
+    override fun deleteActivity(activityId: String): Observable<BaseResult> {
+        Observable.empty<BaseResult>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in BaseResult> ->
+            try {
+                val response = RestApi().appService.deleteClass("Activity", activityId).execute()
+                if (response.isSuccessful) {
+                    subscriber.onNext(response.body())
+                } else {
+                    subscriber.onError(Throwable(response.errorBody().string()))
+                }
+                subscriber.onCompleted()
+            } catch (t: Throwable) {
+                subscriber.onError(t)
+                subscriber.onCompleted()
+            }
+        })
+    }
+
     override fun createActivity(createActivityInfo: CreateActivityInfo): Observable<BaseResult> {
         Observable.empty<BaseResult>().subscribe()
         return Observable.create({

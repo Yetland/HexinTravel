@@ -11,7 +11,6 @@ import com.yetland.crazy.core.base.BaseActivity
 import com.yetland.crazy.core.base.OnRecyclerViewItemClickListener
 import com.yetland.crazy.core.entity.*
 import com.yetland.crazy.core.utils.FileUtils
-import com.yetland.crazy.core.utils.ImageUtils
 import com.yetland.crazy.core.utils.LogUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
@@ -58,7 +57,7 @@ class CreateActivity : BaseActivity(), OnRecyclerViewItemClickListener, UploadIm
                 imagePath.map { File(it) }
                         .forEach {
                             if (FileUtils.isFileExists(it)) {
-                                uploadImage(it)
+                                compressImage(it)
                             }
                         }
             }
@@ -78,9 +77,18 @@ class CreateActivity : BaseActivity(), OnRecyclerViewItemClickListener, UploadIm
                             val result = t.result
                             for (m in result) {
                                 LogUtils.e("size = ${m.length},path = ${m.originalPath}")
+
+                                avatarList = rvPhoto.adapter.mList
+                                imagePath = ArrayList()
+                                avatarList
+                                        .filterIsInstance<Avatar>()
+                                        .filter { it.type == Avatar.IMAGE_TYPE.STRING_PATH_RES }
+                                        .forEach { imagePath.add(it.avatarPath) }
+
                                 if (imagePath.size < 3 && !imagePath.contains(m.originalPath)) {
                                     val avatar = Avatar()
                                     imagePath.add(m.originalPath)
+                                    avatar.openType = Avatar.OPEN_TYPE.CREATE_ACTIVITY
                                     avatar.type = Avatar.IMAGE_TYPE.STRING_PATH_RES
                                     avatar.avatarPath = m.originalPath
                                     avatarList.add(avatar)
@@ -113,16 +121,20 @@ class CreateActivity : BaseActivity(), OnRecyclerViewItemClickListener, UploadIm
     }
 
     override fun compressImage(file: File) {
+        progressDialog.show()
+        uploadImagePresenter.compressImage(file)
     }
 
     override fun compressImageSuccess(file: File) {
+        uploadImage(file)
     }
 
     override fun compressImageFailed(msg: String) {
+        progressDialog.dismiss()
+        ToastUtils.showShortSafe("compressImageFailed")
     }
 
     override fun uploadImage(file: File) {
-        progressDialog.show()
         uploadImagePresenter.uploadImage(file)
     }
 

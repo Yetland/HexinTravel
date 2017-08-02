@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Show4</string>
     <string name="desc_welcome_bg">欢迎页背景图</string>
+
+    <string name="title_activity_image">ImageActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

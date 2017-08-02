@@ -22,7 +22,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.yetland.crazy.bundle.welcome.WelcomeActivity"
-            android:theme="@style/ThemeFullScreen">
+            android:theme="@style/FullscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,7 +37,9 @@
         <activity
             android:name="com.yetland.crazy.bundle.user.UserDataActivity"
             android:theme="@style/ThemeFullScreen" />
-        <activity android:name="com.yetland.crazy.bundle.main.detail.DetailActivity" />
+        <activity
+            android:name="com.yetland.crazy.bundle.main.detail.DetailActivity"
+            android:theme="@style/ThemeFullScreen" />
         <activity android:name="com.yetland.crazy.bundle.user.mine.MineActivity" />
         <activity android:name="com.yetland.crazy.bundle.user.mine.MineCommentActivity" />
         <activity android:name="com.yetland.crazy.bundle.user.FollowActivity" />
@@ -50,7 +52,6 @@
         <activity
             android:name="com.yetland.crazy.bundle.user.CreateActivity"
             android:theme="@style/ThemeFullScreen" />
-
         <activity
             android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
             android:exported="true"
@@ -60,6 +61,9 @@
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeFullScreen" />
+        <activity
+            android:name="com.yetland.crazy.bundle.user.ImageActivity"
+            android:theme="@style/FullscreenTheme" />
     </application>
 
 </manifest>

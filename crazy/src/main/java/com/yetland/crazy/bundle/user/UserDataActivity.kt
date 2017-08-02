@@ -105,6 +105,7 @@ class UserDataActivity : BaseActivity(), View.OnClickListener, UserDataContract.
         if (!TextUtils.isEmpty(user.avatarUrl)) {
             Picasso.with(activity)
                     .load(user.avatarUrl)
+                    .placeholder(R.mipmap.image_default)
                     .into(ivAvatar)
         }
     }

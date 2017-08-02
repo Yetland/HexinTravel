@@ -7,7 +7,6 @@ import com.yetland.crazy.bundle.main.contract.MainContract
 import com.yetland.crazy.bundle.main.contract.MainModel
 import com.yetland.crazy.bundle.main.contract.MainPresent
 import com.yetland.crazy.core.base.BaseActivity
-import com.yetland.crazy.core.base.BaseRecyclerView
 import com.yetland.crazy.core.base.RecyclerViewListener
 import com.yetland.crazy.core.constant.IntentResultCode
 import com.yetland.crazy.core.entity.ActivityInfo
@@ -15,16 +14,13 @@ import com.yetland.crazy.core.entity.BaseEntity
 import com.yetland.crazy.core.entity.Data
 import com.yetland.crazy.core.entity.Point
 import com.yetland.crazy.core.utils.LogUtils
-import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.ynchinamobile.hexinlvxing.R
+import kotlinx.android.synthetic.main.activity_mine.*
 
 class MineActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
 
-
-    lateinit var rvMyActivity: BaseRecyclerView
     val map = HashMap<String, Any>()
-    val model = MainModel()
-    val presenter = MainPresent(model, this)
+    val presenter = MainPresent(MainModel(), this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +29,6 @@ class MineActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
         supportActionBar?.title = "MyActivity"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        rvMyActivity = findViewById(R.id.rv_my_activity)
         rvMyActivity.initView(activity)
         rvMyActivity.recyclerViewListener = this
         rvMyActivity.onLoading()
@@ -100,6 +95,13 @@ class MineActivity : BaseActivity(), MainContract.View, RecyclerViewListener {
                         rvMyActivity.adapter.mList[position] = activityInfo
                         rvMyActivity.adapter.notifyDataSetChanged()
                     }
+                }
+            }
+            IntentResultCode.ACTIVITY_DELETE -> {
+                val position = data?.getIntExtra("position", 0)
+                if (position != null) {
+                    rvMyActivity.adapter.mList.removeAt(position)
+                    rvMyActivity.adapter.notifyDataSetChanged()
                 }
             }
         }

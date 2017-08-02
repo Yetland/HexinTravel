@@ -9,13 +9,12 @@ import com.yetland.crazy.core.entity.Data
 import com.yetland.crazy.core.entity.MyComment
 import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.ynchinamobile.hexinlvxing.R
+import kotlinx.android.synthetic.main.activity_mine_comment.*
 
 class MineCommentActivity : BaseActivity(), MyCommentContract.View, RecyclerViewListener {
 
 
-    val model = MyCommentModel()
-    var presenter = MyCommentPresenter(model, this)
-    lateinit var rvMyComment: BaseRecyclerView
+    var presenter = MyCommentPresenter(MyCommentModel(), this)
     val map = HashMap<String, String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +24,6 @@ class MineCommentActivity : BaseActivity(), MyCommentContract.View, RecyclerView
         supportActionBar?.title = "MyComment"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        rvMyComment = findViewById(R.id.rv_my_comment)
         rvMyComment.initView(activity)
         rvMyComment.onLoading()
         rvMyComment.recyclerViewListener = this

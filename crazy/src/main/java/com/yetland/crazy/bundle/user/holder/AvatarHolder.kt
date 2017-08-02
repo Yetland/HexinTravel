@@ -21,6 +21,7 @@ class AvatarHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view) {
     var avatar = Avatar()
     var ivAvatar = view.iv_user_avatar
     var cbAvatar = view.cb_user_avatar
+    var ivRemove = view.iv_remove
 
     override fun setData(t: BaseEntity, position: Int, adapter: BaseAdapter<BaseEntity>, activity: Activity) {
         if (t is Avatar) {
@@ -39,10 +40,23 @@ class AvatarHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view) {
                         Picasso.with(context)
                                 .load(File(avatar.avatarPath))
                                 .placeholder(R.mipmap.ic_avatar_1)
-                                .resize(200,200)
+                                .resize(200, 200)
                                 .centerCrop()
                                 .into(ivAvatar)
                     }
+                }
+            }
+
+            when (t.openType) {
+                Avatar.OPEN_TYPE.CHOOSE_IMAGE -> {
+                    ivRemove.visibility = View.GONE
+                }
+                Avatar.OPEN_TYPE.CREATE_ACTIVITY -> {
+                    ivRemove.visibility = View.VISIBLE
+                    ivRemove.setOnClickListener({
+                        adapter.mList.removeAt(position)
+                        adapter.notifyDataSetChanged()
+                    })
                 }
             }
 

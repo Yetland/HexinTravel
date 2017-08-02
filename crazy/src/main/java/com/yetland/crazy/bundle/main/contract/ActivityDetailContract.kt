@@ -31,12 +31,16 @@ class ActivityDetailContract {
         fun updateActivitySuccess()
         fun updateActivityFailed(msg: String)
 
+        fun deleteActivity(activityId: String)
+        fun deleteActivitySuccess()
+        fun deleteActivityFailed(msg: String)
     }
 
     interface Model : BaseModel {
         fun getComment(map: HashMap<String, String>, page: Int): Observable<Data<Comment>>
         fun writeComment(comment: CommitComment): Observable<BaseResult>
         fun updateActivity(activityId: String, where: String): Observable<BaseResult>
+        fun deleteActivity(activityId: String): Observable<BaseResult>
 
     }
 
@@ -44,11 +48,16 @@ class ActivityDetailContract {
         abstract fun getComment(map: HashMap<String, String>, page: Int)
         abstract fun writeComment(comment: CommitComment)
         abstract fun updateActivity(activityId: String, where: String)
+        abstract fun deleteActivity(activityId: String)
     }
 
 }
 
 class ActivityDetailModel : ActivityDetailContract.Model {
+    override fun deleteActivity(activityId: String): Observable<BaseResult> {
+        return AppApiImpl().deleteActivity(activityId).compose(RxSchedulers.io_main())
+    }
+
     override fun updateActivity(activityId: String, where: String): Observable<BaseResult> {
         return AppApiImpl().updateActivity(activityId, where).compose(RxSchedulers.io_main())
     }
@@ -64,6 +73,15 @@ class ActivityDetailModel : ActivityDetailContract.Model {
 
 class ActivityDetailPresenter constructor(model: ActivityDetailModel, view: ActivityDetailContract.View) :
         ActivityDetailContract.Presenter(model, view) {
+    override fun deleteActivity(activityId: String) {
+        rxManager.add(mModel.deleteActivity(activityId).subscribe({
+            mView.deleteActivitySuccess()
+        }, {
+            t ->
+            mView.deleteActivityFailed(t.message!!)
+        }))
+    }
+
     override fun updateActivity(activityId: String, where: String) {
         rxManager.add(mModel.updateActivity(activityId, where).subscribe({
             mView.updateActivitySuccess()

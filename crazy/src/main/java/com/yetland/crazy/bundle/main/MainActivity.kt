@@ -151,6 +151,13 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
                     rvMainList.adapter.notifyDataSetChanged()
                 }
             }
+            IntentResultCode.ACTIVITY_DELETE -> {
+                val position = data?.getIntExtra("position", 0)
+                if (position != null) {
+                    rvMainList.adapter.mList.removeAt(position)
+                    rvMainList.adapter.notifyDataSetChanged()
+                }
+            }
         }
         super.onActivityResult(requestCode, resultCode, data)
     }

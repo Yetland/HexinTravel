@@ -9,7 +9,7 @@
     tools:context="com.yetland.crazy.bundle.user.mine.MineActivity">
 
     <com.yetland.crazy.core.base.BaseRecyclerView
-        android:id="@+id/rv_my_activity"
+        android:id="@+id/rvMyActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </LinearLayout>

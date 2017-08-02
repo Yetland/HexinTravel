@@ -2,6 +2,7 @@ package com.yetland.crazy.bundle.main.detail
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.google.gson.Gson
 import com.yetland.crazy.bundle.main.contract.ActivityDetailContract
@@ -16,6 +17,7 @@ import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 import kotlinx.android.synthetic.main.activity_detail.*
+import kotlinx.android.synthetic.main.include_action_bar.*
 
 class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerViewListener {
 
@@ -30,12 +32,25 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+
+        setSupportActionBar(toolbar2)
         supportActionBar?.title = "Detail"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val bundle = activity.intent.extras
         activityInfo = bundle.getSerializable("activityInfo") as ActivityInfo
         holderPosition = bundle.getInt("position")
+        ivAction.setImageResource(R.mipmap.ic_delete)
+
+        if (isLogin && activityInfo.creator.objectId == currentLoginUser.objectId) {
+            ivAction.visibility = View.VISIBLE
+            ivAction.setOnClickListener({
+                progressDialog.show()
+                deleteActivity(activityInfo.objectId)
+            })
+        } else {
+            ivAction.visibility = View.GONE
+        }
 
         rvActivityDetail.initView(this)
         rvActivityDetail.recyclerViewListener = this
@@ -163,4 +178,22 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
         }
         super.onBackPressed()
     }
+
+    override fun deleteActivity(activityId: String) {
+        presenter.deleteActivity(activityId)
+    }
+
+    override fun deleteActivitySuccess() {
+        progressDialog.dismiss()
+        val intent = Intent()
+        intent.putExtra("position", holderPosition)
+        setResult(IntentResultCode.ACTIVITY_DELETE, intent)
+        finish()
+    }
+
+    override fun deleteActivityFailed(msg: String) {
+        progressDialog.dismiss()
+        ToastUtils.showShortSafe("deleteActivityFailed")
+    }
+
 }

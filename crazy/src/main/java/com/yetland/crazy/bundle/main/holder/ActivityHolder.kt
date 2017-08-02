@@ -29,6 +29,7 @@ import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 import com.afollestad.materialdialogs.MaterialDialog
+import com.yetland.crazy.bundle.user.ImageActivity
 import com.yetland.crazy.bundle.user.UserDetailActivity
 import com.yetland.crazy.core.utils.ImageUtils
 import kotlinx.android.synthetic.main.item_comment.view.*
@@ -46,8 +47,9 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     var presenter = ActivityHolderPresenter(ActivityHolderModel(), this)
     var followPresenter = FollowPresenter(FollowModel(), this)
 
+    var llActivity = itemView.ll_activity
+    var tvDeleted = itemView.tv_deleted
     var tvTitle = itemView.tv_title
-    var tvContent = itemView.tv_content
     var ivPhoto = itemView.iv_photo
     var ivAvatar = itemView.iv_avatar
     var tvUserName = itemView.tv_user_name
@@ -93,6 +95,9 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
             if (comment.activity.objectId.isNotEmpty()) {
                 comment.activity.clickable = false
                 setData(comment.activity)
+            } else {
+                llActivity.visibility = View.GONE
+                tvDeleted.visibility = View.VISIBLE
             }
             setCommentData(comment)
         } else if (t is ActivityInfo) {
@@ -119,7 +124,6 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         activityInfo = t
         updatedActivityInfo = activityInfo
         tvTitle.text = activityInfo.title
-        tvContent.text = activityInfo.content
         tvTime.text = activityInfo.createdAt
 
         ivLike.setImageDrawable(context.resources.getDrawable(R.mipmap.ic_like))
@@ -139,6 +143,11 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                     .transform(transform)
                     .placeholder(R.mipmap.img_custom)
                     .into(ivPhoto)
+            ivPhoto.setOnClickListener({
+                val intent = Intent(mActivity, ImageActivity::class.java)
+                intent.putExtra("url", activityInfo.url)
+                mActivity.startActivity(intent)
+            })
         }
         activityCreator = activityInfo.creator
         tvUserName.text = activityCreator.username
@@ -153,7 +162,6 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
 
         if (activityInfo.clickable) {
             itemView.setOnClickListener(this)
-            llComment.setOnClickListener(this)
         }
 
         if (followId.contains(activityCreator.objectId)) {
@@ -190,11 +198,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
             R.id.iv_follow -> {
                 if (currentUser.objectId.isNotEmpty()) {
 
-                    progressDialog = MaterialDialog.Builder(mActivity)
-                            .content("Committing")
-                            .progress(true, 0)
-                            .cancelable(false)
-                            .show()
+                    progressDialog.show()
                     val commitFollow = CommitFollow()
                     commitFollow.follower = Point("_User", currentUser.objectId)
                     commitFollow.user = Point("_User", activityCreator.objectId)
@@ -222,9 +226,6 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                     showLogin()
                     ToastUtils.showShortSafe("Please login")
                 }
-            }
-            R.id.ll_comment -> {
-                LogUtils.e("commentClick")
             }
         }
     }
