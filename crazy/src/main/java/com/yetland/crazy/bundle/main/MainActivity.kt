@@ -1,6 +1,5 @@
 package com.yetland.crazy.bundle.main
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
@@ -12,7 +11,6 @@ import com.yetland.crazy.bundle.main.contract.MainPresent
 import com.yetland.crazy.bundle.user.UserDataActivity
 import com.yetland.crazy.bundle.user.contract.*
 import com.yetland.crazy.core.base.BaseActivity
-import com.yetland.crazy.core.base.BaseRecyclerView
 import com.yetland.crazy.core.base.RecyclerViewListener
 import com.yetland.crazy.core.constant.IntentRequestCode
 import com.yetland.crazy.core.constant.IntentResultCode

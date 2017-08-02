@@ -17,8 +17,6 @@ import com.ynchinamobile.hexinlvxing.R
 open class BaseAdapter<T> constructor(activity: Activity) : RecyclerView.Adapter<BaseViewHolder<T>>() {
 
     var mList = ArrayList<T>()
-    val isHasFooter = 0
-    val isHasHeader = 0
     val mActivity = activity
 
     override fun onBindViewHolder(holder: BaseViewHolder<T>?, position: Int) {
