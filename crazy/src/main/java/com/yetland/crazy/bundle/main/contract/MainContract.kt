@@ -53,6 +53,9 @@ class MainPresent(model: MainModel, view: MainContract.View) : MainContract.Pres
 
 class MainModel : MainContract.Model {
     override fun getActivities(where: String?, skip: Int): Observable<Data<ActivityInfo>> {
-        return AppApiImpl().getActivities("creator", where, skip * DEFAULT_LIMIT, DEFAULT_LIMIT).compose(RxSchedulers.new_thread())
+        return AppApiImpl().getActivities("creator,forwardActivity,forwardActivity.creator",
+                where,
+                skip * DEFAULT_LIMIT,
+                DEFAULT_LIMIT).compose(RxSchedulers.new_thread())
     }
 }

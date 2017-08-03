@@ -32,6 +32,8 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.yetland.crazy.bundle.user.ImageActivity
 import com.yetland.crazy.bundle.user.UserDetailActivity
 import com.yetland.crazy.core.utils.ImageUtils
+import kotlinx.android.synthetic.main.include_activity_forward.view.*
+import kotlinx.android.synthetic.main.include_activity_photo.view.*
 import kotlinx.android.synthetic.main.item_comment.view.*
 import kotlinx.android.synthetic.main.item_main_activity.view.*
 
@@ -57,8 +59,20 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     var tvLike = itemView.tv_like
     var ivLike = itemView.iv_like
     var llLike = itemView.ll_like
+
     var llComment = itemView.ll_comment
-    var llActivityCreator = itemView.ll_activity_creator
+    var llForward = itemView.ll_forward
+    var tvForward = itemView.tv_forward
+    val ivForwardPhoto = itemView.iv_forward_photo
+
+    val inForward = itemView.in_forward
+    val tvForwardUserName = itemView.tv_forward_user_name
+    val tvForwardTitle = itemView.tv_forward_title
+    val tvForwardDeleted = itemView.tv_forward_deleted
+    val llForwardDetail = itemView.ll_forward_detail
+    val llForwardSeeBefore = itemView.ll_forward_see_before
+
+    val ivHot = itemView.iv_hot
 
     var tvComment = itemView.tv_comment
     var ivFollow = itemView.iv_follow
@@ -135,20 +149,76 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
 
         tvLike.text = activityInfo.likeCount.toString()
         tvComment.text = activityInfo.commentCount.toString()
+        tvForward.text = activityInfo.forwardCount.toString()
 
-        if (!TextUtils.isEmpty(activityInfo.url)) {
-            ivPhoto.adjustViewBounds = true
-            Picasso.with(context)
-                    .load(activityInfo.url!!.split(";")[0])
-                    .transform(transform)
-                    .placeholder(R.mipmap.img_custom)
-                    .into(ivPhoto)
-            ivPhoto.setOnClickListener({
-                val intent = Intent(mActivity, ImageActivity::class.java)
-                intent.putExtra("url", activityInfo.url)
-                mActivity.startActivity(intent)
-            })
+        if (activityInfo.likeCount > 99) {
+            ivHot.visibility = View.VISIBLE
+        } else {
+            ivHot.visibility = View.GONE
         }
+        if (activityInfo.forward) {
+
+            ivPhoto.visibility = View.GONE
+            inForward.visibility = View.VISIBLE
+            if (activityInfo.forwardActivity == null) {
+                tvForwardDeleted.visibility = View.VISIBLE
+                llForwardDetail.visibility = View.GONE
+            } else {
+                tvForwardDeleted.visibility = View.GONE
+                llForwardDetail.visibility = View.VISIBLE
+
+                val forwardActivity = activityInfo.forwardActivity
+                val userName = "@" + forwardActivity!!.creator.username
+                tvForwardUserName.text = userName
+                tvForwardTitle.text = forwardActivity.title
+
+                if (forwardActivity.url.isNotEmpty()) {
+                    ivForwardPhoto.visibility = View.VISIBLE
+                    ivForwardPhoto.adjustViewBounds = true
+                    Picasso.with(context)
+                            .load(forwardActivity.url.split(";")[0])
+                            .transform(transform)
+                            .placeholder(R.mipmap.img_custom)
+                            .into(ivForwardPhoto)
+                    ivForwardPhoto.setOnClickListener({
+                        val intent = Intent(mActivity, ImageActivity::class.java)
+                        intent.putExtra("url", forwardActivity.url)
+                        mActivity.startActivity(intent)
+                    })
+                } else {
+                    ivForwardPhoto.visibility = View.GONE
+                }
+
+                if (forwardActivity.forward) {
+                    llForwardSeeBefore.visibility = View.VISIBLE
+                    llForwardSeeBefore.setOnClickListener(this)
+                } else {
+                    llForwardSeeBefore.visibility = View.GONE
+                }
+
+                tvForwardUserName.setOnClickListener(this)
+                llForwardDetail.setOnClickListener(this)
+            }
+        } else {
+            ivPhoto.visibility = View.VISIBLE
+            inForward.visibility = View.GONE
+            if (activityInfo.url.isNotEmpty()) {
+                ivPhoto.adjustViewBounds = true
+                Picasso.with(context)
+                        .load(activityInfo.url.split(";")[0])
+                        .transform(transform)
+                        .placeholder(R.mipmap.img_custom)
+                        .into(ivPhoto)
+                ivPhoto.setOnClickListener({
+                    val intent = Intent(mActivity, ImageActivity::class.java)
+                    intent.putExtra("url", activityInfo.url)
+                    mActivity.startActivity(intent)
+                })
+            } else {
+                ivPhoto.visibility = View.GONE
+            }
+        }
+
         activityCreator = activityInfo.creator
         tvUserName.text = activityCreator.username
         if (activityCreator.avatarUrl != null) {
@@ -172,33 +242,65 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
 
         ivFollow.setOnClickListener(this)
         llLike.setOnClickListener(this)
-        llActivityCreator.setOnClickListener(this)
+        llForward.setOnClickListener(this)
+        ivAvatar.setOnClickListener(this)
+        tvUserName.setOnClickListener(this)
     }
 
     override fun onClick(view: View) {
         if (view == itemView) {
-            LogUtils.e("itemViewClick")
-            val intent = Intent(mActivity, DetailActivity::class.java)
-            val bundle = Bundle()
-            bundle.putSerializable("activityInfo", updatedActivityInfo)
-            bundle.putInt("position", holderPosition)
-            intent.putExtras(bundle)
-            mActivity.startActivityForResult(intent, IntentRequestCode.MAIN_TO_DETAIL)
+            gotoActivityDetail(activityInfo.objectId, holderPosition)
         }
         when (view.id) {
-            R.id.ll_activity_creator -> {
-                val intent = Intent(mActivity, UserDetailActivity::class.java)
-                val bundle = Bundle()
-                bundle.putSerializable("showUser", activityCreator)
-                intent.putExtras(bundle)
+            R.id.ll_forward_see_before -> {
+                gotoActivityDetail(activityInfo.forwardActivity!!.forwardActivity!!.objectId, holderPosition)
 
-                mActivity.startActivityForResult(intent, IntentRequestCode.MAIN_TO_USER_DATA)
             }
+            R.id.ll_forward_detail -> {
+                gotoActivityDetail(activityInfo.forwardActivity!!.objectId, holderPosition)
+            }
+            R.id.ll_forward -> {
+                if (currentUser.objectId.isEmpty()) {
+                    showLogin()
+                    ToastUtils.showShortSafe("Please login")
+                } else {
+                    val dialog = MaterialDialog.Builder(mActivity)
+                    dialog.title("转发")
+                            .inputRange(1, 150)
+                            .input("Write something", null, false, {
+                                d, input ->
+                                if (input.isEmpty()) {
+                                    ToastUtils.showShortSafe("Empty content")
+                                } else {
+                                    d.dismiss()
+                                    val forwardActivity = Point("Activity", activityInfo.objectId)
+                                    val creator = Point("_User", currentUser.objectId)
 
+                                    val c = CreateActivityInfo()
+                                    c.creator = creator
+                                    c.forwardActivity = forwardActivity
+                                    c.title = input.toString().trim()
+                                    c.forward = true
+                                    forward(c)
+                                }
+                            })
+                            .positiveText("评论")
+                            .negativeText("取消")
+                            .show()
+                }
+            }
+            R.id.tv_user_name -> {
+                gotoUserDetail(activityCreator)
+            }
+            R.id.iv_avatar -> {
+                gotoUserDetail(activityCreator)
+            }
+            R.id.tv_forward_user_name -> {
+                gotoUserDetail(activityInfo.forwardActivity!!.creator)
+            }
             R.id.iv_follow -> {
                 if (currentUser.objectId.isNotEmpty()) {
 
-                    progressDialog.show()
                     val commitFollow = CommitFollow()
                     commitFollow.follower = Point("_User", currentUser.objectId)
                     commitFollow.user = Point("_User", activityCreator.objectId)
@@ -210,6 +312,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                 }
             }
             R.id.ll_like -> {
+                // TODO 增加策略需要改变
                 LogUtils.e("likeClick")
                 if (currentUser.objectId.isNotEmpty()) {
                     val map = HashMap<String, Any>()
@@ -230,13 +333,40 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         }
     }
 
+    private fun gotoActivityDetail(objectId: String, position: Int) {
+        LogUtils.e("itemViewClick")
+        val intent = Intent(mActivity, DetailActivity::class.java)
+        intent.putExtra("activityId", objectId)
+        intent.putExtra("position", position)
+        mActivity.startActivityForResult(intent, IntentRequestCode.MAIN_TO_DETAIL)
+    }
+
+    private fun gotoUserDetail(user: _User) {
+        val intent = Intent(mActivity, UserDetailActivity::class.java)
+        val bundle = Bundle()
+        bundle.putSerializable("showUser", user)
+        intent.putExtras(bundle)
+        mActivity.startActivityForResult(intent, IntentRequestCode.MAIN_TO_USER_DATA)
+    }
+
+    override fun forward(createActivityInfo: CreateActivityInfo) {
+        progressDialog.show()
+        presenter.forward(createActivityInfo)
+    }
+
+    override fun forwardSuccess() {
+        progressDialog.dismiss()
+        ToastUtils.showShortSafe("forwardSuccess")
+    }
+
+    override fun forwardFailed(msg: String) {
+        progressDialog.dismiss()
+        ToastUtils.showShortSafe("forwardFailed")
+    }
+
     override fun like(activityId: String, where: String) {
         LogUtils.e(where)
         presenter.like(activityId, where)
-    }
-
-    override fun cancelLike(activityId: String, where: String) {
-        presenter.cancelLike(activityId, where)
     }
 
     override fun likeSuccess() {
@@ -251,10 +381,6 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         LogUtils.e("likeSuccess")
     }
 
-    override fun cancelLikeSuccess() {
-        LogUtils.e("cancelLikeSuccess")
-    }
-
     override fun fail(errorMsg: String) {
         ToastUtils.showShortSafe(errorMsg)
     }
@@ -264,6 +390,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     }
 
     override fun follow(follow: CommitFollow) {
+        progressDialog.show()
         followPresenter.follow(follow)
     }
 

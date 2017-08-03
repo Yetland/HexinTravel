@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:padding="4dp">
 
-    <ImageView
+    <com.yetland.crazy.core.widget.CircleImageView
         android:id="@+id/iv_comment_avatar"
         android:layout_width="30dp"
         android:layout_height="30dp"

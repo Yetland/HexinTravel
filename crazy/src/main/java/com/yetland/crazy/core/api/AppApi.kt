@@ -16,6 +16,7 @@ interface AppApi {
     fun login(username: String, password: String): Observable<_User>
     fun register(user: _User): Observable<_User>
 
+    fun getActivity(objectId: String, include: String): Observable<ActivityInfo>
     fun getActivities(include: String, where: String?, skip: Int, limit: Int): Observable<Data<ActivityInfo>>
     fun updateActivity(activityId: String, where: String): Observable<BaseResult>
     fun createActivity(createActivityInfo: CreateActivityInfo): Observable<BaseResult>
@@ -25,6 +26,7 @@ interface AppApi {
     fun getComment(map: HashMap<String, String>, skip: Int, limit: Int): Observable<Data<Comment>>
     fun getMyComment(map: HashMap<String, String>, skip: Int, limit: Int): Observable<Data<MyComment>>
     fun writeComment(comment: CommitComment): Observable<BaseResult>
+    fun deleteAllComment(where: String): Observable<BaseResult>
 
     fun getFollow(where: String, include: String, order: String, skip: Int, limit: Int): Observable<Data<Follow>>
     fun follow(follow: CommitFollow): Observable<Follow>

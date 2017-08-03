@@ -7,6 +7,8 @@
     android:orientation="vertical"
     tools:context="com.yetland.crazy.bundle.user.mine.MineCommentActivity">
 
+    <include layout="@layout/include_action_bar_text" />
+
     <com.yetland.crazy.core.base.BaseRecyclerView
         android:id="@+id/rvMyComment"
         android:layout_width="match_parent"

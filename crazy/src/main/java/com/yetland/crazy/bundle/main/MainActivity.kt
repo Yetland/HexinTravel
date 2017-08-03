@@ -2,6 +2,7 @@ package com.yetland.crazy.bundle.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import com.google.gson.Gson
@@ -21,6 +22,8 @@ import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
 import kotlinx.android.synthetic.main.activity_main.*
+import android.view.KeyEvent.KEYCODE_BACK
+
 
 class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
         FollowContract.View, RecyclerViewListener {
@@ -206,5 +209,19 @@ class MainActivity : BaseActivity(), MainContract.View, UserDataContract.View,
     }
 
     override fun unFollowFailed(msg: String) {
+    }
+
+    var exitTime: Long = 0
+    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.repeatCount == 0) {
+            if (System.currentTimeMillis() - exitTime > 2000) {
+                ToastUtils.showShortSafe("再按一次退出")
+                exitTime = System.currentTimeMillis()
+            } else {
+                finish()
+            }
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 }

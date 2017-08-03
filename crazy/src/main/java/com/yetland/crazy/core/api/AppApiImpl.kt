@@ -21,6 +21,44 @@ import java.io.IOException
  * @Date:           2017/7/6
  */
 class AppApiImpl : AppApi {
+    override fun deleteAllComment(where: String): Observable<BaseResult> {
+        Observable.empty<BaseResult>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in BaseResult> ->
+            try {
+                val response = RestApi().appService.deleteAll("Comment", where).execute()
+                if (response.isSuccessful) {
+                    subscriber.onNext(response.body())
+                } else {
+                    subscriber.onError(Throwable(response.errorBody().string()))
+                }
+                subscriber.onCompleted()
+            } catch (t: Throwable) {
+                subscriber.onError(t)
+                subscriber.onCompleted()
+            }
+        })
+    }
+
+    override fun getActivity(objectId: String, include: String): Observable<ActivityInfo> {
+        Observable.empty<ActivityInfo>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in ActivityInfo> ->
+            try {
+                val response = RestApi().appService.getActivity(objectId, include).execute()
+                if (response.isSuccessful) {
+                    subscriber.onNext(response.body())
+                } else {
+                    subscriber.onError(Throwable(response.errorBody().string()))
+                }
+                subscriber.onCompleted()
+            } catch (t: Throwable) {
+                subscriber.onError(t)
+                subscriber.onCompleted()
+            }
+        })
+    }
+
     override fun deleteActivity(activityId: String): Observable<BaseResult> {
         Observable.empty<BaseResult>().subscribe()
         return Observable.create({

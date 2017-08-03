@@ -22,7 +22,7 @@ abstract class BaseEntity : Serializable {
     var updatedAt: String? = null
     var createdAt: String = ""
 
-    var url: String? = null
+    var url: String = ""
     @Transient var clickable = true
     abstract fun type(typeFactory: TypeFactory): Int
 }

@@ -36,31 +36,33 @@
         <activity android:name="com.yetland.crazy.bundle.destination.DestinationActivity" />
         <activity
             android:name="com.yetland.crazy.bundle.user.UserDataActivity"
-            android:theme="@style/ThemeFullScreen" />
+            android:theme="@style/NoActionBar" />
         <activity
             android:name="com.yetland.crazy.bundle.main.detail.DetailActivity"
-            android:theme="@style/ThemeFullScreen" />
+            android:theme="@style/NoActionBar" />
         <activity android:name="com.yetland.crazy.bundle.user.mine.MineActivity" />
-        <activity android:name="com.yetland.crazy.bundle.user.mine.MineCommentActivity" />
+        <activity
+            android:name="com.yetland.crazy.bundle.user.mine.MineCommentActivity"
+            android:theme="@style/NoActionBar" />
         <activity android:name="com.yetland.crazy.bundle.user.FollowActivity" />
         <activity
             android:name="com.yetland.crazy.bundle.user.UserDetailActivity"
-            android:theme="@style/ThemeFullScreen" />
+            android:theme="@style/NoActionBar" />
         <activity
             android:name="com.yetland.crazy.bundle.user.UserAvatarActivity"
-            android:theme="@style/ThemeFullScreen" />
+            android:theme="@style/NoActionBar" />
         <activity
             android:name="com.yetland.crazy.bundle.user.CreateActivity"
-            android:theme="@style/ThemeFullScreen" />
+            android:theme="@style/NoActionBar" />
         <activity
             android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/ThemeFullScreen" />
+            android:theme="@style/NoActionBar" />
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/ThemeFullScreen" />
+            android:theme="@style/NoActionBar" />
         <activity
             android:name="com.yetland.crazy.bundle.user.ImageActivity"
             android:theme="@style/FullscreenTheme" />

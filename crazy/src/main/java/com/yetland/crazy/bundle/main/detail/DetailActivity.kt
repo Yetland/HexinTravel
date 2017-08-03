@@ -26,7 +26,8 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
     var list = ArrayList<BaseEntity>()
     var map = HashMap<String, String>()
     lateinit var activityInfo: ActivityInfo
-    var holderPosition = 0
+    lateinit var activityId: String
+    var holderPosition = -1
     lateinit var user: _User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,29 +38,21 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
         supportActionBar?.title = "Detail"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val bundle = activity.intent.extras
-        activityInfo = bundle.getSerializable("activityInfo") as ActivityInfo
-        holderPosition = bundle.getInt("position")
-        ivAction.setImageResource(R.mipmap.ic_delete)
+        activityId = intent.getStringExtra("activityId")
+        holderPosition = intent.getIntExtra("position", -1)
 
-        if (isLogin && activityInfo.creator.objectId == currentLoginUser.objectId) {
-            ivAction.visibility = View.VISIBLE
-            ivAction.setOnClickListener({
-                progressDialog.show()
-                deleteActivity(activityInfo.objectId)
-            })
-        } else {
-            ivAction.visibility = View.GONE
-        }
+        user = SharedPreferencesUtils.getUserInfo()
+
+        ivAction.setImageResource(R.mipmap.ic_delete)
+        ivAction.visibility = View.GONE
+
 
         rvActivityDetail.initView(this)
         rvActivityDetail.recyclerViewListener = this
         rvActivityDetail.onLoading()
 
-        map.put("activityId", activityInfo.objectId)
-        getComment(map, 0)
+        fabEdit.visibility = View.GONE
 
-        user = SharedPreferencesUtils.getUserInfo()
         fabEdit.setOnClickListener({
             if (user.objectId.isEmpty() || user.objectId.isEmpty()) {
                 ToastUtils.showShortSafe("Please login")
@@ -92,6 +85,39 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
                         .show()
             }
         })
+
+        getActivity(activityId)
+    }
+
+    override fun getActivity(activityId: String) {
+        presenter.getActivity(activityId)
+    }
+
+    override fun getActivitySuccess(activityInfo: ActivityInfo) {
+        this.activityInfo = activityInfo
+        if (this.activityInfo.objectId.isNotEmpty()) {
+
+            if (isLogin && this.activityInfo.creator.objectId == currentLoginUser.objectId) {
+                ivAction.visibility = View.VISIBLE
+                ivAction.setOnClickListener({
+                    progressDialog.show()
+                    deleteActivity(this.activityInfo.objectId)
+                })
+            } else {
+                ivAction.visibility = View.GONE
+            }
+            fabEdit.visibility = View.VISIBLE
+            map.put("activityId", this.activityInfo.objectId)
+            getComment(map, 0)
+        } else {
+            rvActivityDetail.isErrorClickable = false
+            rvActivityDetail.onLoadError(getString(R.string.forward_deleted))
+        }
+    }
+
+    override fun getActivityFailed(msg: String) {
+        rvActivityDetail.isErrorClickable = false
+        rvActivityDetail.onLoadError(getString(R.string.forward_deleted))
     }
 
     override fun onDataChanged() {
@@ -100,7 +126,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
 
     override fun onRefresh() {
         currentPage = 0
-        getComment(map, currentPage)
+        getActivity(activityId)
     }
 
     override fun onLoadMore() {
@@ -112,7 +138,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
     override fun onErrorClick() {
         currentPage = 0
         rvActivityDetail.onLoading()
-        getComment(map, currentPage)
+        getActivity(activityId)
     }
 
     override fun getComment(map: HashMap<String, String>, page: Int) {
@@ -170,7 +196,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
         LogUtils.e("onBackPressed")
 
         val bundle = Bundle()
-        if (rvActivityDetail.adapter.mList.size > 0 && rvActivityDetail.adapter.mList[0] is ActivityInfo) {
+        if (holderPosition != -1 && rvActivityDetail.adapter.mList.size > 0 && rvActivityDetail.adapter.mList[0] is ActivityInfo) {
             val activityInfo = rvActivityDetail.adapter.mList[0]
             bundle.putSerializable("activityInfo", activityInfo)
             bundle.putInt("position", holderPosition)
@@ -187,7 +213,8 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
         progressDialog.dismiss()
         val intent = Intent()
         intent.putExtra("position", holderPosition)
-        setResult(IntentResultCode.ACTIVITY_DELETE, intent)
+        if (holderPosition != -1)
+            setResult(IntentResultCode.ACTIVITY_DELETE, intent)
         finish()
     }
 

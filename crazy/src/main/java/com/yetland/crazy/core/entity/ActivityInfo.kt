@@ -18,11 +18,15 @@ class ActivityInfo : BaseEntity() {
     var like: String = ""
     var likeCount: Int = 0
     var commentCount: Int = 0
-
+    var forwardCount: Int = 0
+    var forwardActivity: ActivityInfo? = null
+    var forward = false
 }
 
 class CreateActivityInfo {
-    var creator: Point? = null
+    var forwardActivity: Point? = null
+    lateinit var creator: Point
     var title: String = ""
     var url: String = ""
+    var forward = false
 }
