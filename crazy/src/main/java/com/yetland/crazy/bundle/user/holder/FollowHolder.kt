@@ -4,12 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
-import com.yetland.crazy.bundle.user.UserDetailActivity
+import com.yetland.crazy.bundle.user.detail.UserDetailActivity
 import com.yetland.crazy.bundle.user.contract.FollowContract
 import com.yetland.crazy.bundle.user.contract.FollowModel
 import com.yetland.crazy.bundle.user.contract.FollowPresenter

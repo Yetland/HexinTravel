@@ -11,6 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/desc_welcome_bg"
-        android:scaleType="fitXY"
-        android:src="@mipmap/welcome_bg" />
+        android:scaleType="centerCrop"
+        android:src="@mipmap/welcome_bg2"/>
 </LinearLayout>

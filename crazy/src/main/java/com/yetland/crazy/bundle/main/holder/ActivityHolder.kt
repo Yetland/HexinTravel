@@ -4,14 +4,12 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.View
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import com.afollestad.materialdialogs.MaterialDialog
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Transformation
+import com.yetland.crazy.bundle.image.ImageActivity
 import com.yetland.crazy.bundle.main.contract.ActivityHolderContract
 import com.yetland.crazy.bundle.main.contract.ActivityHolderModel
 import com.yetland.crazy.bundle.main.contract.ActivityHolderPresenter
@@ -19,19 +17,17 @@ import com.yetland.crazy.bundle.main.detail.DetailActivity
 import com.yetland.crazy.bundle.user.contract.FollowContract
 import com.yetland.crazy.bundle.user.contract.FollowModel
 import com.yetland.crazy.bundle.user.contract.FollowPresenter
+import com.yetland.crazy.bundle.user.detail.UserDetailActivity
 import com.yetland.crazy.core.base.BaseAdapter
 import com.yetland.crazy.core.base.BaseViewHolder
 import com.yetland.crazy.core.constant.IntentRequestCode
 import com.yetland.crazy.core.constant.SharedPreferencesConstant
 import com.yetland.crazy.core.entity.*
+import com.yetland.crazy.core.utils.ImageUtils
 import com.yetland.crazy.core.utils.LogUtils
 import com.yetland.crazy.core.utils.SharedPreferencesUtils
 import com.yetland.crazy.core.utils.ToastUtils
 import com.ynchinamobile.hexinlvxing.R
-import com.afollestad.materialdialogs.MaterialDialog
-import com.yetland.crazy.bundle.user.ImageActivity
-import com.yetland.crazy.bundle.user.UserDetailActivity
-import com.yetland.crazy.core.utils.ImageUtils
 import kotlinx.android.synthetic.main.include_activity_forward.view.*
 import kotlinx.android.synthetic.main.include_activity_photo.view.*
 import kotlinx.android.synthetic.main.item_comment.view.*
@@ -282,9 +278,17 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                                     c.title = input.toString().trim()
                                     c.forward = true
                                     forward(c)
+
+                                    val map = HashMap<String,Any>()
+                                    val op = Op()
+                                    op.__op = "Increment"
+                                    op.amount = 1
+                                    map.put("forwardCount", op)
+                                    updatedActivityInfo.forwardCount++
+                                    like(activityInfo.objectId,Gson().toJson(map))
                                 }
                             })
-                            .positiveText("评论")
+                            .positiveText("转发")
                             .negativeText("取消")
                             .show()
                 }
@@ -312,7 +316,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                 }
             }
             R.id.ll_like -> {
-                // TODO 增加策略需要改变
+
                 LogUtils.e("likeClick")
                 if (currentUser.objectId.isNotEmpty()) {
                     val map = HashMap<String, Any>()
@@ -322,7 +326,11 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                         updatedActivityInfo.like += currentUser.objectId + ";"
                     }
 
-                    map.put("likeCount", ++updatedActivityInfo.likeCount)
+                    updatedActivityInfo.likeCount++
+                    val op = Op()
+                    op.__op = "Increment"
+                    op.amount = 1
+                    map.put("likeCount", op)
                     val where = Gson().toJson(map)
                     like(activityInfo.objectId, where)
                 } else {
@@ -361,6 +369,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
 
     override fun forwardFailed(msg: String) {
         progressDialog.dismiss()
+        updatedActivityInfo = activityInfo
         ToastUtils.showShortSafe("forwardFailed")
     }
 
@@ -382,6 +391,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     }
 
     override fun fail(errorMsg: String) {
+        updatedActivityInfo = activityInfo
         ToastUtils.showShortSafe(errorMsg)
     }
 

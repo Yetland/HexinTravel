@@ -1,4 +1,4 @@
-package com.yetland.crazy.bundle.user
+package com.yetland.crazy.bundle.image
 
 import android.app.Activity
 import android.support.v4.view.PagerAdapter

@@ -36,3 +36,8 @@ class BaseResult {
 class Point(var className: String, var objectId: String) {
     val __type = "Pointer"
 }
+
+class Op {
+    var __op: String = ""
+    var amount: Int = 0
+}

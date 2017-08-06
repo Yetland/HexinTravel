@@ -1,4 +1,4 @@
-package com.yetland.crazy.bundle.user
+package com.yetland.crazy.bundle.user.detail
 
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager

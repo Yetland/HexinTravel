@@ -282,7 +282,7 @@ class AppApiImpl : AppApi {
             subscriber: Subscriber<in Data<MyComment>> ->
             try {
                 val where = Gson().toJson(map)
-                val response = RestApi().appService.getMyComment("activity,creator,activity.creator",
+                val response = RestApi().appService.getMyComment("activity,creator,activity.creator,activity.forwardActivity,activity.forwardActivity.creator",
                         where, "-createdAt", skip, limit).execute()
                 if (response.isSuccessful) {
                     subscriber.onNext(response.body())

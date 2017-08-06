@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.include_action_bar.*
 
 class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerViewListener {
 
+
     var presenter = ActivityDetailPresenter(ActivityDetailModel(), this)
 
     var list = ArrayList<BaseEntity>()
@@ -78,6 +79,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
                                 c.creatorId = user.objectId
                                 LogUtils.e(Gson().toJson(c))
                                 writeComment(comment)
+
                             }
                         })
                         .positiveText("评论")
@@ -97,6 +99,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
         this.activityInfo = activityInfo
         if (this.activityInfo.objectId.isNotEmpty()) {
 
+            this.activityInfo.clickable = false
             if (isLogin && this.activityInfo.creator.objectId == currentLoginUser.objectId) {
                 ivAction.visibility = View.VISIBLE
                 ivAction.setOnClickListener({
@@ -164,9 +167,13 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
     }
 
     override fun writeCommentSuccess(result: BaseResult) {
-        val map1 = HashMap<String, Any>()
-        map1.put("commentCount", ++activityInfo.commentCount)
-        updateActivity(activityInfo.objectId, Gson().toJson(map1))
+
+        val map = HashMap<String, Any>()
+        val op = Op()
+        op.__op = "Increment"
+        op.amount = 1
+        map.put("commentCount", op)
+        updateActivity(activityInfo.objectId, Gson().toJson(map))
     }
 
     override fun writeCommentFailed(msg: String) {
@@ -181,6 +188,7 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
 
     override fun updateActivitySuccess() {
         progressDialog.dismiss()
+        activityInfo.commentCount++
         rvActivityDetail.swipeRefreshLayout.isRefreshing = true
         currentPage = 0
         getComment(map, currentPage)
@@ -222,5 +230,4 @@ class DetailActivity : BaseActivity(), ActivityDetailContract.View, RecyclerView
         progressDialog.dismiss()
         ToastUtils.showShortSafe("deleteActivityFailed")
     }
-
 }

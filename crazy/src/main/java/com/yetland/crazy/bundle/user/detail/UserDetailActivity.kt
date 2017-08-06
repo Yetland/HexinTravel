@@ -1,4 +1,4 @@
-package com.yetland.crazy.bundle.user
+package com.yetland.crazy.bundle.user.detail
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.ImageView
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
+import com.yetland.crazy.bundle.user.UserAvatarActivity
 import com.yetland.crazy.bundle.user.contract.FollowContract
 import com.yetland.crazy.bundle.user.contract.FollowModel
 import com.yetland.crazy.bundle.user.contract.FollowPresenter

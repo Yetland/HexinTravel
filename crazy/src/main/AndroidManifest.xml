@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ynchinamobile.hexinlvxing">
+          package="com.ynchinamobile.hexinlvxing">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:name="com.yetland.crazy.core.app.HexinApplication"
@@ -24,48 +24,46 @@
             android:name="com.yetland.crazy.bundle.welcome.WelcomeActivity"
             android:theme="@style/FullscreenTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.yetland.crazy.bundle.user.login.LoginActivity" />
-        <activity android:name="com.yetland.crazy.bundle.user.register.RegisterActivity" />
-        <activity android:name="com.yetland.crazy.bundle.main.MainActivity" />
-        <activity android:name="com.yetland.crazy.bundle.travel.TravelActivity" />
-        <activity android:name="com.yetland.crazy.bundle.destination.DestinationActivity" />
+        <activity android:name="com.yetland.crazy.bundle.user.login.LoginActivity"/>
+        <activity android:name="com.yetland.crazy.bundle.user.register.RegisterActivity"/>
         <activity
-            android:name="com.yetland.crazy.bundle.user.UserDataActivity"
-            android:theme="@style/NoActionBar" />
+            android:name="com.yetland.crazy.bundle.main.MainActivity"
+            android:theme="@style/NoActionBar"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name="com.yetland.crazy.bundle.main.detail.DetailActivity"
-            android:theme="@style/NoActionBar" />
-        <activity android:name="com.yetland.crazy.bundle.user.mine.MineActivity" />
+            android:theme="@style/NoActionBar"/>
+        <activity android:name="com.yetland.crazy.bundle.user.mine.MineActivity"/>
         <activity
             android:name="com.yetland.crazy.bundle.user.mine.MineCommentActivity"
-            android:theme="@style/NoActionBar" />
-        <activity android:name="com.yetland.crazy.bundle.user.FollowActivity" />
+            android:theme="@style/NoActionBar"/>
+        <activity android:name="com.yetland.crazy.bundle.user.FollowActivity"/>
         <activity
-            android:name="com.yetland.crazy.bundle.user.UserDetailActivity"
-            android:theme="@style/NoActionBar" />
+            android:name="com.yetland.crazy.bundle.user.detail.UserDetailActivity"
+            android:theme="@style/NoActionBar"/>
         <activity
             android:name="com.yetland.crazy.bundle.user.UserAvatarActivity"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar"/>
         <activity
             android:name="com.yetland.crazy.bundle.user.CreateActivity"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar"/>
         <activity
             android:name="cn.finalteam.rxgalleryfinal.ui.activity.MediaActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar"/>
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+            android:theme="@style/NoActionBar"/>
         <activity
-            android:name="com.yetland.crazy.bundle.user.ImageActivity"
-            android:theme="@style/FullscreenTheme" />
+            android:name="com.yetland.crazy.bundle.image.ImageActivity"
+            android:theme="@style/FullscreenTheme"/>
     </application>
 
 </manifest>

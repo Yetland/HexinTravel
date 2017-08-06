@@ -1,4 +1,4 @@
-package com.yetland.crazy.bundle.user
+package com.yetland.crazy.bundle.user.detail
 
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RatingBar
 import com.google.gson.Gson
 import com.yetland.crazy.bundle.main.contract.MainContract
 import com.yetland.crazy.bundle.main.contract.MainModel
