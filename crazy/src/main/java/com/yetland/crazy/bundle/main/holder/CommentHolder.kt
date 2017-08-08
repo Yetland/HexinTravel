@@ -39,7 +39,7 @@ class CommentHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view) {
 
                 Picasso.with(context)
                         .load(creator.avatarUrl)
-                        .placeholder(R.mipmap.image_default)
+                        .placeholder(R.mipmap.image_load_1_1)
                         .into(ivAvatar)
             }
         }

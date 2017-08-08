@@ -189,7 +189,7 @@ class MeFragment : BaseFragment(), View.OnClickListener, UserDataContract.View {
         if (!TextUtils.isEmpty(user.avatarUrl)) {
             Picasso.with(activity)
                     .load(user.avatarUrl)
-                    .placeholder(R.mipmap.image_default)
+                    .placeholder(R.mipmap.image_load_1_1)
                     .into(ivAvatar)
         }
     }

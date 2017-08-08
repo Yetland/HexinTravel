@@ -41,3 +41,7 @@ class Op {
     var __op: String = ""
     var amount: Int = 0
 }
+
+class Dot {
+    var selected = false
+}

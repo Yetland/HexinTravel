@@ -100,7 +100,7 @@ class UserDetailActivity : BaseActivity(), FollowContract.View {
         if (currentShowUser.avatarUrl != null) {
             Picasso.with(activity)
                     .load(currentShowUser.avatarUrl)
-                    .placeholder(R.mipmap.image_default)
+                    .placeholder(R.mipmap.image_load_1_1)
                     .into(ivAvatar)
         }
     }

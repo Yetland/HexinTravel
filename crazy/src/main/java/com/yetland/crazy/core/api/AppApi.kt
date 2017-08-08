@@ -11,6 +11,8 @@ import java.io.File
  */
 interface AppApi {
 
+    fun getBanner(): Observable<Data<Banner>>
+
     fun updateUser(user: _User, where: String): Observable<BaseResult>
     fun getUser(objectId: String): Observable<_User>
     fun login(username: String, password: String): Observable<_User>

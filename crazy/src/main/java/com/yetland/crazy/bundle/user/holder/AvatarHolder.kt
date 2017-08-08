@@ -31,7 +31,7 @@ class AvatarHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view) {
                     if (avatar.avatarUrl != 0) {
                         Picasso.with(context)
                                 .load(avatar.avatarUrl)
-                                .placeholder(R.mipmap.ic_avatar_1)
+                                .placeholder(R.mipmap.image_load_1_1)
                                 .into(ivAvatar)
                     }
                 }
@@ -39,7 +39,7 @@ class AvatarHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view) {
                     if (avatar.avatarPath.isNotEmpty()) {
                         Picasso.with(context)
                                 .load(File(avatar.avatarPath))
-                                .placeholder(R.mipmap.ic_avatar_1)
+                                .placeholder(R.mipmap.image_load_1_1)
                                 .resize(200, 200)
                                 .centerCrop()
                                 .into(ivAvatar)

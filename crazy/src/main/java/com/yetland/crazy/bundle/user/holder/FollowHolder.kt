@@ -104,7 +104,7 @@ class FollowHolder constructor(view: View) : BaseViewHolder<BaseEntity>(view), F
             if (showUser.avatarUrl != null) {
                 Picasso.with(activity)
                         .load(showUser.avatarUrl)
-                        .placeholder(R.mipmap.image_default)
+                        .placeholder(R.mipmap.image_load_1_1)
                         .into(ivFollowAvatar)
             } else {
                 Picasso.with(activity)

@@ -42,7 +42,7 @@ class ImageAdapter constructor(activity: Activity, urls: ArrayList<String>) : Pa
         if (imgUrl.isNotEmpty()) {
             Picasso.with(mActivity)
                     .load(imgUrl)
-                    .placeholder(R.mipmap.img_custom)
+                    .placeholder(R.mipmap.image_load_1_1)
                     .into(iv)
         }
 

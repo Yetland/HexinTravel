@@ -21,6 +21,25 @@ import java.io.IOException
  * @Date:           2017/7/6
  */
 class AppApiImpl : AppApi {
+    override fun getBanner(): Observable<Data<Banner>> {
+        Observable.empty<Banner>().subscribe()
+        return Observable.create({
+            subscriber: Subscriber<in Data<Banner>> ->
+            try {
+                val response = RestApi().appService.getBanner().execute()
+                if (response.isSuccessful) {
+                    subscriber.onNext(response.body())
+                } else {
+                    subscriber.onError(Throwable(response.errorBody().string()))
+                }
+                subscriber.onCompleted()
+            } catch (t: Throwable) {
+                subscriber.onError(t)
+                subscriber.onCompleted()
+            }
+        })
+    }
+
     override fun deleteAllComment(where: String): Observable<BaseResult> {
         Observable.empty<BaseResult>().subscribe()
         return Observable.create({

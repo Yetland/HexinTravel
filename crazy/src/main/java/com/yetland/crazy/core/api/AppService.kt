@@ -23,6 +23,9 @@ interface AppService {
      * DELETE /classes/{class}/{objectId} 删除对象
      */
 
+    @GET("classes/Banner")
+    fun getBanner(): Call<Data<Banner>>
+
     @DELETE("classes/{class}/{objectId}")
     fun deleteClass(@Path("class") className: String, @Path("objectId") objectId: String): Call<BaseResult>
 

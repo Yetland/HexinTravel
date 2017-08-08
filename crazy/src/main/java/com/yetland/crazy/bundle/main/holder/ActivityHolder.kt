@@ -125,7 +125,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         if (creator.avatarUrl!!.isNotEmpty()) {
             Picasso.with(context)
                     .load(creator.avatarUrl)
-                    .placeholder(R.mipmap.image_default)
+                    .placeholder(R.mipmap.image_load_1_1)
                     .into(ivCommentAvatar)
         }
     }
@@ -174,7 +174,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                     Picasso.with(context)
                             .load(forwardActivity.url.split(";")[0])
                             .transform(transform)
-                            .placeholder(R.mipmap.img_custom)
+                            .placeholder(R.mipmap.image_load_1_1)
                             .into(ivForwardPhoto)
                     ivForwardPhoto.setOnClickListener({
                         val intent = Intent(mActivity, ImageActivity::class.java)
@@ -203,7 +203,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                 Picasso.with(context)
                         .load(activityInfo.url.split(";")[0])
                         .transform(transform)
-                        .placeholder(R.mipmap.img_custom)
+                        .placeholder(R.mipmap.image_load_1_1)
                         .into(ivPhoto)
                 ivPhoto.setOnClickListener({
                     val intent = Intent(mActivity, ImageActivity::class.java)
@@ -220,7 +220,7 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
         if (activityCreator.avatarUrl != null) {
             Picasso.with(context)
                     .load(activityCreator.avatarUrl)
-                    .placeholder(R.mipmap.image_default)
+                    .placeholder(R.mipmap.image_load_1_1)
                     .into(ivAvatar)
         } else {
             ivAvatar.setImageDrawable(context.resources.getDrawable(R.mipmap.image_default))
@@ -326,7 +326,6 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
                         updatedActivityInfo.like += currentUser.objectId + ";"
                     }
 
-                    updatedActivityInfo.likeCount++
                     val op = Op()
                     op.__op = "Increment"
                     op.amount = 1
@@ -379,12 +378,13 @@ class ActivityHolder constructor(itemView: View) : BaseViewHolder<BaseEntity>(it
     }
 
     override fun likeSuccess() {
+        updatedActivityInfo.likeCount++
         activityInfo = updatedActivityInfo
         if (comment.activity.objectId.isNotEmpty()) {
             comment.activity = updatedActivityInfo
             adapter.mList[holderPosition] = comment
         } else {
-            adapter.mList[holderPosition] = updatedActivityInfo
+            adapter.mList[holderPosition] = activityInfo
         }
         adapter.notifyItemChanged(holderPosition)
         LogUtils.e("likeSuccess")
