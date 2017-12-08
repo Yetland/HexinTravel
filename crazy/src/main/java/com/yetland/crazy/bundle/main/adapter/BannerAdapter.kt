@@ -20,8 +20,8 @@ import kotlinx.android.synthetic.main.item_banner_image.view.*
  */
 class BannerAdapter constructor(activity: Activity, list: ArrayList<Banner>) : PagerAdapter() {
 
-    val mActivity = activity
-    val mLIst = list
+    private val mActivity = activity
+    private val mLIst = list
     lateinit var currentView: View
     lateinit var ivBanner: ImageView
     lateinit var tvDesc: TextView
