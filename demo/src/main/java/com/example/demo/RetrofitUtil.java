@@ -2,7 +2,6 @@ package com.example.demo;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -20,16 +19,37 @@ public class RetrofitUtil {
 
     private OkHttpClient mOkHttpClient;
     private HttpLoggingInterceptor mHttpLoggingInterceptor;
+    private Interceptor mInterceptor;
     private Retrofit mRetrofit;
     private Api mApi;
 
-    public RetrofitUtil() {
-        mHttpLoggingInterceptor = new HttpLoggingInterceptor();
-        mHttpLoggingInterceptor.setLevel(BuildConfig.DEBUG ?
-                HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
+    RetrofitUtil() {
+        initLoggingInterceptor();
+        initNetworkInterceptor();
+        initOkHttpClient();
+        initRetrofit();
+        mApi = mRetrofit.create(Api.class);
+    }
 
+    private void initRetrofit() {
+        mRetrofit = new Retrofit.Builder()
+                .client(mOkHttpClient)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .baseUrl("https://leancloud.cn:443/1.1/")
+                .build();
+    }
 
-        Interceptor interceptor = new Interceptor() {
+    private void initOkHttpClient() {
+        mOkHttpClient = new OkHttpClient.Builder()
+                .addInterceptor(mHttpLoggingInterceptor)
+                .addNetworkInterceptor(mInterceptor)
+                .readTimeout(8000, TimeUnit.MILLISECONDS)
+                .writeTimeout(8000, TimeUnit.MILLISECONDS)
+                .build();
+    }
+
+    private void initNetworkInterceptor() {
+        mInterceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request original = chain.request();
@@ -42,18 +62,12 @@ public class RetrofitUtil {
                 return chain.proceed(request);
             }
         };
-        mOkHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(mHttpLoggingInterceptor)
-                .addNetworkInterceptor(interceptor)
-                .readTimeout(8000, TimeUnit.MILLISECONDS)
-                .writeTimeout(8000, TimeUnit.MILLISECONDS)
-                .build();
-        mRetrofit = new Retrofit.Builder()
-                .client(mOkHttpClient)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .baseUrl("https://leancloud.cn:443/1.1/")
-                .build();
-        mApi = mRetrofit.create(Api.class);
+    }
+
+    private void initLoggingInterceptor() {
+        mHttpLoggingInterceptor = new HttpLoggingInterceptor();
+        mHttpLoggingInterceptor.setLevel(BuildConfig.DEBUG ?
+                HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
     }
 
     public Api getApi() {
