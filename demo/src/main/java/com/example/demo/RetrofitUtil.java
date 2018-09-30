@@ -3,6 +3,8 @@ package com.example.demo;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -23,6 +25,7 @@ public class RetrofitUtil {
     private Retrofit mRetrofit;
     private Api mApi;
 
+    @Inject
     RetrofitUtil() {
         initLoggingInterceptor();
         initNetworkInterceptor();

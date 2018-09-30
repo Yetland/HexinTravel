@@ -18,4 +18,9 @@ public class UserModule {
         return new User("Apple", 11);
     }
 
+//    @ActivityScope
+//    @Provides
+//    RetrofitUtil provideRetrofit(User user) {
+//        return new RetrofitUtil(user);
+//    }
 }

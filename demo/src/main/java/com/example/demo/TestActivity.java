@@ -27,7 +27,8 @@ public class TestActivity extends AppCompatActivity {
     @Inject
     User mUser;
 
-    RetrofitUtil mRetrofitUtil = new RetrofitUtil();
+    @Inject
+    RetrofitUtil mRetrofitUtil;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,23 +45,11 @@ public class TestActivity extends AppCompatActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mRetrofitUtil.getApi().load().enqueue(new Callback<String>() {
-//                    @Override
-//                    public void onResponse(Call<String> call, Response<String> response) {
-//                        Log.e("onResponse", "onResponse: ");
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<String> call, Throwable t) {
-//                        Log.e("onResponse", "onFailure: ");
-//
-//                    }
-//                });
                 mRetrofitUtil.getApi().login("yetland", "123").enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        Toast.makeText(mActivity, "onResponse", Toast.LENGTH_SHORT).show();
-                        Log.e("onResponse", "onResponse: " + response.toString());
+                        Toast.makeText(mActivity, "onResponse: " + response.body(), Toast.LENGTH_SHORT).show();
+                        Log.e("onResponse", "onResponse: " + response.body());
                     }
 
                     @Override
