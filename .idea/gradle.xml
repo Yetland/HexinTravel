@@ -8,7 +8,12 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/crazy" />
+            <option value="$PROJECT_DIR$/annotation" />
+            <option value="$PROJECT_DIR$/compiler" />
+            <option value="$PROJECT_DIR$/demo" />
+            <option value="$PROJECT_DIR$/invoke" />
+            <option value="$PROJECT_DIR$/leetCode" />
+            <option value="$PROJECT_DIR$/router" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

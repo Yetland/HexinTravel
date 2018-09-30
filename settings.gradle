@@ -1,1 +1,1 @@
-include ':crazy'
+include  ':leetCode', ':demo', ':invoke', ':router', ':compiler', ':annotation'
